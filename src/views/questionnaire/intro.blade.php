@@ -1,4 +1,4 @@
-@extends('bf_layout')
+@extends('questionnaire::bf_layout')
 
 @section('content')
 
@@ -10,7 +10,7 @@
         <h2>{{ $questionnaire->title }}</h2>
         <p>{{ $questionnaire->intro }}</p>
 
-        @component('components.button-link')
+        @component('questionnaire::components.button-link')
             @slot('href')
                 {{ $url }}
             @endslot

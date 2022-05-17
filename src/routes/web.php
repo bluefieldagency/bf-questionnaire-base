@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/*
+ * routing with attribute binding :slug doesn't work from within a package, leave those routes in the main stuff for now
+ *
 Route::name('questionnaire.')->group(function() {
     Route::get('questionnaire/{questionnaire:slug}', [QuestionnaireController::class, 'index'])->name('intro');
     Route::get('questionnaire/{questionnaire:slug}/completed', [CompletedController::class, 'index'])->name('completed');
@@ -23,3 +26,4 @@ Route::name('questionnaire.')->group(function() {
     Route::get('questionnaire/{questionnaire:slug}/{page:slug}', [PageController::class, 'index'])->name('page');
     Route::post('questionnaire/{questionnaire:slug}/{page:slug}', [PageController::class, 'store']);
 });
+*/

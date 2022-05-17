@@ -12,7 +12,7 @@ class PageController extends Controller
 
     public function index(Questionnaire $questionnaire, Page $page)
     {
-        return view('questionnaire.page', compact('questionnaire', 'page'));
+        return view('questionnaire::questionnaire.page', compact('questionnaire', 'page'));
     }
 
     public function store(PageRequest $request, Questionnaire $questionnaire, Page $page)

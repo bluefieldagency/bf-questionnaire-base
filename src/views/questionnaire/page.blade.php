@@ -1,4 +1,4 @@
-@extends('bf_layout')
+@extends('questionnaire::bf_layout')
 
 @section('header')
     <header>
@@ -26,11 +26,11 @@
 
                     <div class="error-form">{{ $errors->first('question_' . $question->id . '_answer') }}</div>
 
-                    @include('question_types.' . $question->question_type->type)
+                    @include('questionnaire::question_types.' . $question->question_type->type)
                 </div>
             @endforeach
 
-            @component('components.button')
+            @component('questionnaire::components.button')
                 @slot('type')
                     submit
                 @endslot

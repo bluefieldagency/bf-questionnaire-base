@@ -1,4 +1,4 @@
-@extends('bf_layout')
+@extends('questionnaire::bf_layout')
 
 @section('content')
 

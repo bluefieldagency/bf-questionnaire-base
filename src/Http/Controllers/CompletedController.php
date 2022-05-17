@@ -20,7 +20,7 @@ class CompletedController extends Controller
             return redirect(route('questionnaire.intro', [$questionnaire]));
         }
 
-        return view('questionnaire.completed', compact('questionnaire', 'questionnaireEntry'));
+        return view('questionnaire::questionnaire.completed', compact('questionnaire', 'questionnaireEntry'));
     }
 
 }
