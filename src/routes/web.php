@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\CompletedController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\QuestionnaireController;
+use Questionnaire\Http\Controllers\CompletedController;
+use Questionnaire\Http\Controllers\PageController;
+use Questionnaire\Http\Controllers\QuestionnaireController;
 use Illuminate\Support\Facades\Route;
 
 /*

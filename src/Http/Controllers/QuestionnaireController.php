@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Questionnaire\Http\Controllers;
 
-use App\Models\Questionnaire;
+use Questionnaire\Models\Questionnaire;
 
 class QuestionnaireController extends Controller
 {

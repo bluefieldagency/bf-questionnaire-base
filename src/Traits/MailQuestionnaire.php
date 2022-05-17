@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Traits;
+namespace Questionnaire\Traits;
 
-use App\Models\QuestionnaireEntry;
+use Questionnaire\Models\QuestionnaireEntry;
 
 trait MailQuestionnaire
 {

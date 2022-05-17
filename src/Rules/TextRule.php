@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Rules;
+namespace Questionnaire\Rules;
 
-use App\Models\Page;
-use App\Models\Question;
+use Questionnaire\Models\Page;
+use Questionnaire\Models\Question;
 use Illuminate\Contracts\Validation\Rule;
 
 class TextRule implements Rule

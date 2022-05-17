@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Questionnaire\Http\Controllers;
 
-use App\Models\Questionnaire;
-use App\Models\QuestionnaireEntry;
+use Questionnaire\Models\Questionnaire;
+use Questionnaire\Models\QuestionnaireEntry;
 
 class CompletedController extends Controller
 {
