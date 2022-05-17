@@ -1,11 +1,11 @@
 <?php
 
-namespace Questionnaire\Http\Controllers;
+namespace Bluefield\Questionnaire\Http\Controllers;
 
-use Questionnaire\Http\Requests\PageRequest;
-use Questionnaire\Models\Page;
-use Questionnaire\Models\Questionnaire;
-use Questionnaire\Models\QuestionnaireEntry;
+use Bluefield\Questionnaire\Http\Requests\PageRequest;
+use Bluefield\Questionnaire\Models\Page;
+use Bluefield\Questionnaire\Models\Questionnaire;
+use Bluefield\Questionnaire\Models\QuestionnaireEntry;
 
 class PageController extends Controller
 {

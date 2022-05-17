@@ -1,6 +1,6 @@
 <?php
 
-namespace Huisaanhuis\Providers;
+namespace Bluefield\Questionnaire\Providers;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -15,7 +15,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
 		/*
 		'Illuminate\Mail\Events\MessageSent' => [
-			'Questionnaire\Listeners\MessageSentListener',
+			'Bluefield\Questionnaire\Listeners\MessageSentListener',
 		],
 		*/
     ];

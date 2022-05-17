@@ -1,6 +1,6 @@
 <?php
 
-namespace Huisaanhuis\Providers;
+namespace Bluefield\Questionnaire\Providers;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -31,7 +31,9 @@ class AppServiceProvider extends ServiceProvider
 //            'MorphOrder' => Order::class,
 //        ]);
 
-        $this->registerPublishing();
+        $this->publishes([
+            __DIR__ . '/../config/questionnaire.php' => config_path('questionnaire.php'),
+        ], 'questionnaire-config');
 	}
 
 	/**
@@ -44,17 +46,5 @@ class AppServiceProvider extends ServiceProvider
 		Carbon::setLocale('nl');
 		setlocale(LC_TIME, 'nl_NL.utf8');
 	}
-
-    /**
-     * Register the package's publisable resources
-     *
-     * @return void
-     */
-    protected function registerPublishing()
-    {
-        $this->publishes([
-            __DIR__ . '/../config/questionnaire.php' => config_path('questionnaire.php'),
-        ], 'questionnaire-config');
-    }
 
 }

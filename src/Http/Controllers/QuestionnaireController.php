@@ -1,8 +1,8 @@
 <?php
 
-namespace Questionnaire\Http\Controllers;
+namespace Bluefield\Questionnaire\Http\Controllers;
 
-use Questionnaire\Models\Questionnaire;
+use Bluefield\Questionnaire\Models\Questionnaire;
 
 class QuestionnaireController extends Controller
 {

@@ -16,13 +16,18 @@
     },
     "autoload": {
         "psr-4": {
-            "Questionnaire\\": "src/"
+            "Bluefield\\Questionnaire\\": "src/"
         },
         "files": [
             "src/helpers.php"
         ]
     },
     "extra": {
+        "laravel": {
+            "providers": [
+                "BLuefield\\Questionnaire\\Providers\\AppServiceProvider"
+            ]
+        },
         "branch-alias": {
             "dev-master": "master",
             "dev-develop": "develop"

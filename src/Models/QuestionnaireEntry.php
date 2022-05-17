@@ -1,6 +1,6 @@
 <?php
 
-namespace Questionnaire\Models;
+namespace Bluefield\Questionnaire\Models;
 
 use GregoryDuckworth\Encryptable\EncryptableTrait;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
