@@ -1,0 +1,31 @@
+{
+    "name": "immensenl/bf_questionnaire_base",
+    "description": "The base repo to build questionnaires upon",
+    "license" : "BSD-3-Clause-Attribution",
+    "authors" : [
+        {
+            "name": "Erik Holdorp",
+            "email": "e.holdorp@bleufield.eu",
+            "homepage": "https://bluefield.eu"
+        }
+    ],
+    "require": {
+        "php": ">=8.0.2",
+        "gregoryduckworth/encryptable": "^1.0",
+        "spatie/eloquent-sortable": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Questionnaire\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "master",
+            "dev-develop": "develop"
+        }
+    }
+}

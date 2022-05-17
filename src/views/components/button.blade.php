@@ -1,0 +1,1 @@
+<input type="{{ $type }}" class="button" value="{{ $label }}">
