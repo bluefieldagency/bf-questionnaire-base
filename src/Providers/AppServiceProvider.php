@@ -30,6 +30,8 @@ class AppServiceProvider extends ServiceProvider
 //        Relation::morphMap([
 //            'MorphOrder' => Order::class,
 //        ]);
+
+        $this->registerPublishing();
 	}
 
 	/**
