@@ -16,10 +16,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::name('questionnaire.')->group(function() {
     Route::get('questionnaire/{questionnaire:slug}', [QuestionnaireController::class, 'index'])->name('intro');
     Route::get('questionnaire/{questionnaire:slug}/completed', [CompletedController::class, 'index'])->name('completed');
