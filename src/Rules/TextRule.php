@@ -1,9 +1,9 @@
 <?php
 
-namespace Bluefield\Questionnaire\Rules;
+namespace Questionnaire\Rules;
 
-use Bluefield\Questionnaire\Models\Page;
-use Bluefield\Questionnaire\Models\Question;
+use Questionnaire\Models\Page;
+use Questionnaire\Models\Question;
 use Illuminate\Contracts\Validation\Rule;
 
 class TextRule implements Rule

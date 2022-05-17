@@ -1,6 +1,6 @@
 <?php
 
-namespace Bluefield\Questionnaire\Models;
+namespace Questionnaire\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

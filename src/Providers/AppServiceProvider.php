@@ -1,6 +1,6 @@
 <?php
 
-namespace Bluefield\Questionnaire\Providers;
+namespace Questionnaire\Providers;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\Relation;

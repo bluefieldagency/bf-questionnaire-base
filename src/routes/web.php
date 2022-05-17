@@ -1,8 +1,8 @@
 <?php
 
-use Bluefield\Questionnaire\Http\Controllers\CompletedController;
-use Bluefield\Questionnaire\Http\Controllers\PageController;
-use Bluefield\Questionnaire\Http\Controllers\QuestionnaireController;
+use Questionnaire\Http\Controllers\CompletedController;
+use Questionnaire\Http\Controllers\PageController;
+use Questionnaire\Http\Controllers\QuestionnaireController;
 use Illuminate\Support\Facades\Route;
 
 /*

@@ -1,6 +1,6 @@
 <?php
 
-namespace Bluefield\Questionnaire\Providers;
+namespace Questionnaire\Providers;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;

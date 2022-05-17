@@ -1,8 +1,8 @@
 <?php
 
-namespace Bluefield\Questionnaire\Traits;
+namespace Questionnaire\Traits;
 
-use Bluefield\Questionnaire\Models\QuestionnaireEntry;
+use Questionnaire\Models\QuestionnaireEntry;
 
 trait MailQuestionnaire
 {

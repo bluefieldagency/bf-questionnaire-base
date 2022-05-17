@@ -1,8 +1,8 @@
 <?php
 
-namespace Bluefield\Questionnaire\Http\Requests;
+namespace Questionnaire\Http\Requests;
 
-use Bluefield\Questionnaire\Rules\CheckboxRule;
+use Questionnaire\Rules\CheckboxRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PageRequest extends FormRequest
@@ -34,7 +34,7 @@ class PageRequest extends FormRequest
             foreach($page->questions as $question) {
                 $type = ucfirst($question->question_type->type);
 
-                $ruleClass = 'Bluefield\\Questionnaire\\Rules\\' . $type . 'Rule';
+                $ruleClass = 'Questionnaire\\Rules\\' . $type . 'Rule';
 
                 $rules = [new $ruleClass($page, $question)];
 
