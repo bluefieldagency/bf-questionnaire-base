@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Questionnaire\Traits\OptionsTrait;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
 
@@ -17,6 +18,7 @@ class Question extends Model implements Sortable
     use HasFactory;
     use SortableTrait;
     use SoftDeletes;
+    use OptionsTrait;
 
     protected $fillable = [
         'title',
@@ -56,6 +58,13 @@ class Question extends Model implements Sortable
     public function buildSortQuery()
     {
         return static::query()->where('page_id', $this->page_id);
+    }
+
+    public function getAnswer($answerId)
+    {
+        $answers = $this->answers->keyBy('id');
+
+        return $answers[$answerId];
     }
 
 }

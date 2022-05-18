@@ -28,7 +28,7 @@ class PageController extends Controller
         }
 
         // No more pages to do? Then we are done!
-        $this->completeQuestionnaire($questionnaire, $page);
+        $this->completeQuestionnaire($questionnaire);
 
         return redirect(route('questionnaire.completed', [$questionnaire->slug]));
     }
@@ -68,15 +68,114 @@ class PageController extends Controller
         return null;
     }
 
-    protected function completeQuestionnaire(Questionnaire $questionnaire, Page $page)
+    public function calculateScores(Questionnaire $questionnaire, QuestionnaireEntry $questionnaireEntry)
+    {
+        $questionnaire->load([
+            'pages',
+            'pages.questions',
+            'pages.questions.answers',
+            'pages.questions.question_category',
+            'pages.questions.question_type',
+        ]);
+
+        $scoreTotal = 0;
+        $scorePerQuestion = [];
+        $scorePerCaterogryTotal = [];
+        $scoreableQuestions = 0;
+        $scoreableQuestionsPerCaterogry = [];
+        $averageScorePerCaterogry = [];
+
+        foreach($questionnaire->pages as $page) {
+            foreach($page->questions as $question) {
+                if ($question->hasOptions()) {
+                    $score = 0;
+
+                    if ($question->hasOption('data_type', 'score')) {
+                        $scoreableQuestions++;
+
+                        $answer = $questionnaireEntry->getAnswer($question);
+
+                        if ($question->question_type->type == 'radio') {
+                            $anwserModel = $question->getAnswer($answer);
+
+                            $score = $anwserModel->getOption('score');
+                        } else if ($question->question_type->type == 'checkbox') {
+                            foreach($answer as $key => $value) {
+                                $anwserModel = $question->getAnswer($key);
+
+                                $score += $anwserModel->getOption('score');
+                            }
+
+                            if ($question->hasOption('score_max')) {
+                                $scoreMax = $question->getOption('score_max');
+
+                                if ($scoreMax > 0 & $score > $scoreMax) {
+                                    $score = $scoreMax;
+                                }
+                            }
+                        }
+
+                        if ( ! isset($scorePerQuestion[$question->id])) {
+                            $scorePerQuestion[$question->id] = $score;
+                        }
+                    }
+
+                    $scoreTotal += $score;
+
+                    if ($question->question_category) {
+                        $categoryId = $question->question_category->id;
+
+                        if ( ! isset($scorePerCaterogryTotal[$categoryId])) {
+                            $scorePerCaterogryTotal[$categoryId] = 0;
+                        }
+                        $scorePerCaterogryTotal[$categoryId] += $score;
+
+                        if ( ! isset($scoreableQuestionsPerCaterogry[$categoryId])) {
+                            $scoreableQuestionsPerCaterogry[$categoryId] = 0;
+                        }
+                        $scoreableQuestionsPerCaterogry[$categoryId]++;
+
+                        if ( ! isset($averageScorePerCaterogry[$categoryId])) {
+                            $averageScorePerCaterogry[$categoryId] = 0;
+                        }
+
+                        $averageScorePerCaterogry[$categoryId] = round(($scorePerCaterogryTotal[$categoryId] / $scoreableQuestionsPerCaterogry[$categoryId]), 0);
+                    }
+                }
+            }
+        }
+
+//        dd([
+//            'scoreableQuestions' => $scoreableQuestions,
+//            'scoreTotal' => $scoreTotal,
+//            'scorePerCaterogryTotal' => $scorePerCaterogryTotal,
+//            'scoreableQuestionsPerCaterogry' => $scoreableQuestionsPerCaterogry,
+//            'averageScorePerCaterogry' => $averageScorePerCaterogry,
+//            'scorePerQuestion' => $scorePerQuestion,
+//        ]);
+
+        return [
+            'scoreableQuestions' => $scoreableQuestions,
+            'scoreTotal' => $scoreTotal,
+            'scorePerCaterogryTotal' => $scorePerCaterogryTotal,
+            'scoreableQuestionsPerCaterogry' => $scoreableQuestionsPerCaterogry,
+            'averageScorePerCaterogry' => $averageScorePerCaterogry,
+            'scorePerQuestion' => $scorePerQuestion,
+        ];
+    }
+
+    protected function completeQuestionnaire(Questionnaire $questionnaire)
     {
         $questionnaireEntry = $this->storeEntry($questionnaire);
 
         session([('questionnaire.filled.' . $questionnaireEntry->id) => $questionnaireEntry->id]);
 
+        $questionnaireEntry->scores = $this->calculateScores($questionnaire, $questionnaireEntry);
+        $questionnaireEntry->save();
+
         $this->handler = app($questionnaire->handler_class);
 
-        $this->handler->complete($questionnaire);
+        $this->handler->complete($questionnaire, $scores);
 
         session()->forget([
             'questionnaire.name',

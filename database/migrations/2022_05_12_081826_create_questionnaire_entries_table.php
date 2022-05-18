@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->longText('answers');
+            $table->json('scores')->nullable();
             $table->timestamps();
         });
     }

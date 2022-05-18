@@ -1,6 +1,6 @@
 <?php
 
-use Questionnaire\Http\Controllers\CompletedController;
+use App\Http\Controllers\CompletedController;
 use Questionnaire\Http\Controllers\PageController;
 use Questionnaire\Http\Controllers\QuestionnaireController;
 use Illuminate\Support\Facades\Route;
