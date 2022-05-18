@@ -4,8 +4,8 @@ namespace Questionnaire\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Questionnaire extends Model
@@ -31,14 +31,19 @@ class Questionnaire extends Model
         'is_active' => 'boolean',
     ];
 
-    public function legal_page(): HasOne
+    public function legal_page(): BelongsTo
     {
-        return $this->hasOne(Page::class);
+        return $this->belongsTo(Page::class);
     }
 
     public function pages(): HasMany
     {
         return $this->hasMany(Page::class);
+    }
+
+    public function question_categories(): HasMany
+    {
+        return $this->hasMany(QuestionCategory::class);
     }
 
     public function questionnaire_entries(): HasMany

@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('question_categories', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('questionnaire_id')->constrained();
             $table->string('title')->nullable();
             $table->text('intro')->nullable();
+            $table->json('options')->nullable();
             $table->tinyInteger('order_column');
             $table->boolean('is_active')->default(1);
             $table->timestamps();

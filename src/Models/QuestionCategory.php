@@ -2,6 +2,7 @@
 
 namespace Questionnaire\Models;
 
+use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,11 +21,13 @@ class QuestionCategory extends Model implements Sortable
     protected $fillable = [
         'title',
         'intro',
+        'options',
         'order_column',
         'is_active',
     ];
 
     protected $casts = [
+        'options' => AsCollection::class,
         'order_column' => 'integer',
         'is_active' => 'boolean',
     ];
@@ -36,7 +39,7 @@ class QuestionCategory extends Model implements Sortable
 
     public function buildSortQuery()
     {
-        return static::query()->where('page_id', $this->page_id);
+        return static::query()->where('questionnaire_id', $this->questionnaire_id);
     }
 
 }
