@@ -2,9 +2,11 @@
 
 @section('header')
     <header>
-        <div class="wrapper">
-            <div class="header">
-                <img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 header">
+                    <img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}">
+                </div>
             </div>
         </div>
     </header>
@@ -12,13 +14,13 @@
 
 @section('content')
 
-    <div id="questionnaire_page">
+    <div id="questionnaire_page" class="col-sm-8 offset-sm-2">
         <form id="questionnaire_page_{{ $page->id }}" method="POST">
             @csrf
 
             @foreach($page->questions as $question)
                 <div class="form-line">
-                    <h2>{{ $question->title }}</h2>
+                    <h4>{{ $question->title }}</h4>
 
                     @if ( ! empty($question->extra_info))
                         <p>{{ $question->extra_info }}</p>

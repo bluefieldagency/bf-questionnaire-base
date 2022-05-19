@@ -1,1 +1,1 @@
-<a href="{{ $href }}" class="button">{{ $label }} {{--<span class="arrow"></span>--}}</a>
+<a href="{{ $href }}" class="button">{{ $label }}</a>

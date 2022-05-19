@@ -1,3 +1,15 @@
+@section('header')
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 header">
+                    <img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}">
+                </div>
+            </div>
+        </div>
+    </header>
+@endsection
+
 <!doctype html>
 <html lang="en-US">
 
@@ -23,8 +35,10 @@
 
     @yield('header')
 
-    <div class="wrapper">
-        @yield('content')
+    <div class="container">
+        <div class="row">
+            @yield('content')
+        </div>
     </div>
 
     <footer></footer>
