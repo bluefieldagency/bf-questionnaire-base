@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Questionnaire\Traits\OptionsTrait;
 
 class QuestionnaireEntry extends Model
 {
@@ -82,6 +83,22 @@ class QuestionnaireEntry extends Model
         }
 
         return 0;
+    }
+
+    public function setScores($scores)
+    {
+        $this->scores = json_encode($scores);
+
+        $this->scoredScores = $scores;
+    }
+
+    public function setScore($key, $value)
+    {
+        $this->getScores();
+
+        $this->scoredScores[$key] = $value;
+
+        $this->scores = json_encode($this->scoredScores);
     }
 
 }

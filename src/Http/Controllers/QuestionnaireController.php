@@ -24,7 +24,7 @@ class QuestionnaireController extends Controller
 
         $url = route('questionnaire.page', [$questionnaire->slug, $page->slug]);
 
-        return view('questionnaire::questionnaire.intro', compact('questionnaire', 'url'));
+        return view('questionnaire.intro', compact('questionnaire', 'url'));
     }
 
 }
