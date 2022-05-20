@@ -7,6 +7,10 @@ trait OptionsTrait
 
     public function hasOptions()
     {
+        if ( ! $this->options) {
+            return false;
+        }
+        
         return $this->options->isNotEmpty();
     }
 
