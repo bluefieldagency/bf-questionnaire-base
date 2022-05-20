@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('start_button_label')->nullable();
             $table->tinyInteger('time_indicator')->nullable();
             $table->boolean('is_active')->default(1);
+            $table->boolean('has_intro')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });

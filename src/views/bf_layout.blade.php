@@ -43,6 +43,8 @@
 
     <footer></footer>
 
+    @stack('javascript')
+
 </body>
 
 </html>

@@ -24,11 +24,13 @@ class Questionnaire extends Model
         'start_button_label',
         'time_indicator',
         'is_active',
+        'has_intro',
     ];
 
     protected $casts = [
         'time_indicator' => 'integer',
         'is_active' => 'boolean',
+        'has_intro' => 'boolean',
     ];
 
     public function legal_page(): BelongsTo

@@ -15,6 +15,14 @@
 @section('content')
 
     <div id="questionnaire_page" class="col-sm-8 offset-sm-2">
+        @if ( ! empty($page->title))
+            <h1 class="page-title">{{ $page->title }}</h1>
+        @endif
+
+        @if ( ! empty($page->intro))
+            <p class="page-intro">{!! $page->intro !!}</p>
+        @endif
+
         <form id="questionnaire_page_{{ $page->id }}" method="POST">
             @csrf
 
@@ -45,3 +53,19 @@
     </div>
 
 @endsection
+
+@push('javascript')
+
+    <script>
+        document.addEventListener('click', function (event) {
+            if (event.target.matches('.extra-info--trigger')) {
+                var element = document.getElementById(event.target.dataset.target);
+
+                if (element) {
+                    element.classList.toggle('hidden');
+                }
+            }
+        });
+    </script>
+
+@endpush

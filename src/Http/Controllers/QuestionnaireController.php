@@ -13,18 +13,29 @@ class QuestionnaireController extends Controller
             exit('No questionnaire set');
         }
         
-        $questionnaire = Questionnaire::where('slug', config('questionnaire.questionnaire_code'))->firstOrFail();
+        $questionnaire = Questionnaire::where('slug', config('questionnaire.questionnaire_code'))
+            ->with('pages')
+            ->firstOrFail();
 
-        return redirect(route('questionnaire.intro', [$questionnaire]));
+        if ($questionnaire->has_intro) {
+            return redirect(route('questionnaire.intro', [$questionnaire]));
+        }
+
+        return redirect($this->firstPageUrl($questionnaire));
     }
 
     public function index(Questionnaire $questionnaire)
     {
-        $page = $questionnaire->pages()->ordered()->first();
-
-        $url = route('questionnaire.page', [$questionnaire->slug, $page->slug]);
+        $url = $this->firstPageUrl($questionnaire);
 
         return view('questionnaire.intro', compact('questionnaire', 'url'));
+    }
+
+    protected function firstPageUrl(Questionnaire $questionnaire)
+    {
+        $page = $questionnaire->pages()->ordered()->first();
+
+        return route('questionnaire.page', [$questionnaire->slug, $page->slug]);
     }
 
 }
