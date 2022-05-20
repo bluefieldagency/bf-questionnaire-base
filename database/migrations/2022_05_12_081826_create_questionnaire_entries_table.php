@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('questionnaire_entries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('questionnaire_id')->constrained();
-            $table->string('name')->nullable();
-            $table->string('email')->nullable();
+            $table->text('name')->nullable();
+            $table->text('email')->nullable();
             $table->longText('answers');
             $table->json('scores')->nullable();
             $table->timestamps();
