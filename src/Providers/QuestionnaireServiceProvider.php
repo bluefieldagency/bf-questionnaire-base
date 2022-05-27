@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class QuestionnaireServiceProvider extends ServiceProvider
 {
 	/**
 	 * Bootstrap any application services.
@@ -16,6 +16,10 @@ class AppServiceProvider extends ServiceProvider
 	public function boot()
 	{
 		error_reporting(E_ALL ^ E_STRICT ^ E_NOTICE ^ E_USER_NOTICE ^ E_DEPRECATED ^ E_WARNING );
+
+        $this->publishes([
+            __DIR__ . '/../config/questionnaire.php' => config_path('questionnaire.php'),
+        ]);
 
 		$this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
@@ -30,10 +34,6 @@ class AppServiceProvider extends ServiceProvider
 //        Relation::morphMap([
 //            'MorphOrder' => Order::class,
 //        ]);
-
-        $this->publishes([
-            __DIR__ . '/../config/questionnaire.php' => config_path('questionnaire.php'),
-        ], 'questionnaire-config');
 	}
 
 	/**

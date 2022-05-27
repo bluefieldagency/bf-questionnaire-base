@@ -25,7 +25,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Questionnaire\\Providers\\AppServiceProvider"
+                "Questionnaire\\Providers\\QuestionnaireServiceProvider"
             ]
         },
         "branch-alias": {
