@@ -60,6 +60,10 @@
                     elements[nextIndex].classList.add('current');
                     elements[nextIndex].classList.remove('disabled');
 
+                    @if ($questionnaire->getProgressPagesAmount() == 1)
+                        document.getElementById('current_indicator').innerText = nextIndex + 1;
+                    @endif
+
                     General.scrollTo(elements[nextIndex]);
                 }
             }
