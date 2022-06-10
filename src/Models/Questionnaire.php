@@ -94,6 +94,19 @@ class Questionnaire extends Model
         return new Collection();
     }
 
+    public function getProgressStepThisPage(Page $page): int
+    {
+        $this->getProgressPages();
+
+        for($i = 0; $i < sizeof($this->progressPages); $i++) {
+            if ($page->id == $this->progressPages[$i]->id) {
+                return $i + 1;
+            }
+        }
+
+        return 0;
+    }
+
     public function showProgressForThisPage(Page $page): bool
     {
         $this->getProgressPages();

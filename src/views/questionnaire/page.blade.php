@@ -4,7 +4,11 @@
 
     @if ($questionnaire->hasProgressPages() && $questionnaire->showProgressForThisPage($page))
         <div id="progress_bar">
-            <span id="progression" style="width: 5px"></span>
+            @if ($questionnaire->getProgressPagesAmount() > 1)
+                <span id="progression" style="width: {{ ($questionnaire->getProgressStepThisPage($page) / $questionnaire->getProgressPagesAmount()) * 100 }}%"></span>
+            @else
+                <span id="progression" style="width: 5px"></span>
+            @endif
         </div>
     @endif
 

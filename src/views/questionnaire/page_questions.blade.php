@@ -8,7 +8,7 @@
 
 @if ($questionnaire->show_progress_text && $questionnaire->showProgressForThisPage($page))
     @if ($questionnaire->getProgressPagesAmount() > 1)
-        <h2 class="progress-text">Stap <span id="current_indicator">1</span> van de {{ $questionnaire->getProgressPagesAmount() }}</h2>
+        <h2 class="progress-text">Stap <span id="current_indicator">{{ $questionnaire->getProgressStepThisPage($page) }}</span> van de {{ $questionnaire->getProgressPagesAmount() }}</h2>
     @else
         <h2 class="progress-text">Vraag <span id="current_indicator">1</span> van de {{ sizeof($page->questions) }}</h2>
     @endif
