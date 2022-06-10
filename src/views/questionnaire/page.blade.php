@@ -1,55 +1,45 @@
 @extends('questionnaire::bf_layout')
 
-@section('header')
-    <header>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12 header">
-                    <img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}">
-                </div>
-            </div>
-        </div>
-    </header>
-@endsection
-
 @section('content')
 
-    <div id="questionnaire_page" class="col-sm-8 offset-sm-2">
-        @if ( ! empty($page->title))
-            <h1 class="page-title">{{ $page->title }}</h1>
-        @endif
+    <div class="content-container grey-bg questions-padding">
+        <div id="questionnaire_page" class="content-center--small">
+            @if ( ! empty($page->title))
+                <h1 class="page-title">{{ $page->title }}</h1>
+            @endif
 
-        @if ( ! empty($page->intro))
-            <p class="page-intro">{!! $page->intro !!}</p>
-        @endif
+            @if ( ! empty($page->intro))
+                <p class="page-intro">{!! $page->intro !!}</p>
+            @endif
 
-        <form id="questionnaire_page_{{ $page->id }}" method="POST">
-            @csrf
+            <form id="questionnaire_page_{{ $page->id }}" method="POST">
+                @csrf
 
-            @foreach($page->questions as $question)
-                <div class="form-line">
-                    <h4><label for="question_{{ $question->id }}_answer">{{ $question->title }}</label></h4>
+                @foreach($page->questions as $question)
+                    <div class="form-line">
+                        <h4><label for="question_{{ $question->id }}_answer">{{ $question->title }}</label></h4>
 
-                    @if ($question->hasOption('extra_info'))
-                        <p class="extra-info">{{ $question->getOption('extra_info') }}</p>
-                    @endif
+                        @if ($question->hasOption('extra_info'))
+                            <p class="extra-info">{{ $question->getOption('extra_info') }}</p>
+                        @endif
 
-                    <div class="error-form">{{ $errors->first('question_' . $question->id . '_answer') }}</div>
+                        <div class="error-form">{{ $errors->first('question_' . $question->id . '_answer') }}</div>
 
-                    @include('questionnaire::question_types.' . $question->question_type->type)
-                </div>
-            @endforeach
+                        @include('questionnaire::question_types.' . $question->question_type->type)
+                    </div>
+                @endforeach
 
-            @component('questionnaire::components.button')
-                @slot('type')
-                    submit
-                @endslot
+                @component('questionnaire::components.button')
+                    @slot('type')
+                        submit
+                    @endslot
 
-                @slot('label')
-                    {{ $page->continue_button_label ?? __('Continue questionnaire') }}
-                @endslot
-            @endcomponent
-        </form>
+                    @slot('label')
+                        {{ $page->continue_button_label ?? __('Continue questionnaire') }}
+                    @endslot
+                @endcomponent
+            </form>
+        </div>
     </div>
 
 @endsection
