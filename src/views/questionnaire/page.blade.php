@@ -134,6 +134,37 @@
                 setNextCurrent();
             }
         });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(() => {
+                let elements = document.querySelectorAll('.form-line');
+                let foundInput = false;
+
+                if (elements) {
+                    elements.forEach(function(element, index) {
+                        if (element.classList.contains('question-type--radio') || element.classList.contains('question-type--checkbox')) {
+                            answered = element.querySelector('input:checked');
+                            if (answered) {
+                                element.classList.add('answered');
+                                element.classList.remove('current');
+                                foundInput = true;
+                            }
+                        } else if (element.classList.contains('question-type--text') || element.classList.contains('question-type--email')) {
+                            input = element.querySelector('input');
+                            if (input && input.value != '') {
+                                element.classList.add('answered');
+                                element.classList.remove('current');
+                                foundInput = true;
+                            }
+                        }
+                    });
+
+                    if (foundInput) {
+                        setNextCurrent();
+                    }
+                }
+            }, 500);
+        });
     </script>
 
 @endpush
