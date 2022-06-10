@@ -16,11 +16,11 @@ class QuestionType extends Model
 
     protected $fillable = [
         'type',
-        'default_options',
+        'options',
     ];
 
     protected $casts = [
-        'default_options' => AsCollection::class,
+        'options' => AsCollection::class,
     ];
 
 }

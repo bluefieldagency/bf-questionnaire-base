@@ -58,6 +58,7 @@
             if (nextIndex > 0) {
                 if (elements[nextIndex]) {
                     elements[nextIndex].classList.add('current');
+                    elements[nextIndex].classList.remove('disabled');
 
                     General.scrollTo(elements[nextIndex]);
                 }

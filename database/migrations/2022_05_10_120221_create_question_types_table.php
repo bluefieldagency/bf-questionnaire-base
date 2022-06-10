@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('question_types', function (Blueprint $table) {
             $table->id();
             $table->string('type');
-            $table->json('default_options')->nullable();
+            $table->json('options')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -20,7 +20,7 @@
     @if ($page->show_questions_numbered)
         <ol class="questions">
             @foreach($page->questions as $question)
-                <li class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @endif">
+                <li class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @else disabled @endif">
                     <div class="question-content-container">
                         @include('questionnaire::questionnaire.page_question')
                     </div>
@@ -29,7 +29,7 @@
         </ol>
     @else
         @foreach($page->questions as $question)
-            <div class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @endif">
+            <div class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @else disabled @endif">
                 @include('questionnaire::questionnaire.page_question')
             </div>
         @endforeach
@@ -49,5 +49,7 @@
                 {{ $page->continue_button_label ?? __('Continue questionnaire') }}
             @endslot
         @endcomponent
+
+        @stack('email_disclaimer')
     </div>
 </form>
