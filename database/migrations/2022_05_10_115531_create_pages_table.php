@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('continue_button_label')->nullable();
             $table->tinyInteger('order_column');
             $table->boolean('is_active')->default(1);
+            $table->boolean('show_help_aside')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

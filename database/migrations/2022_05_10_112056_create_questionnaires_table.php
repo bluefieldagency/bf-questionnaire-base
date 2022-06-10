@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('questionnaires', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('legal_page_id')->nullable();
+            $table->string('progress_page_ids')->nullable();
             $table->string('handler_class');
             $table->string('company_name');
             $table->text('company_logo');
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->string('start_button_label')->nullable();
             $table->tinyInteger('time_indicator')->nullable();
             $table->boolean('is_active')->default(1);
+            $table->boolean('show_progress_text')->default(1);
             $table->boolean('has_intro')->default(1);
             $table->timestamps();
             $table->softDeletes();

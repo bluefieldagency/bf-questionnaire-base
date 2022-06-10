@@ -24,11 +24,13 @@ class Page extends Model implements Sortable
         'continue_button_label',
         'order_column',
         'is_active',
+        'show_help_aside',
     ];
 
     protected $casts = [
         'order_column' => 'integer',
         'is_active' => 'boolean',
+        'show_help_aside' => 'boolean',
     ];
 
     public function questionnaire(): BelongsTo
