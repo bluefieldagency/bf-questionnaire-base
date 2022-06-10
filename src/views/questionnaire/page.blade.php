@@ -48,7 +48,7 @@
             }
         });
 
-        function setNextCurrent() {
+        function setNextCurrent(doScroll) {
             let elements = document.querySelectorAll('.form-line');
             let nextIndex = 0;
 
@@ -68,7 +68,9 @@
                         document.getElementById('current_indicator').innerText = nextIndex + 1;
                     @endif
 
-                    General.scrollTo(elements[nextIndex]);
+                    if (doScroll) {
+                        General.scrollTo(elements[nextIndex]);
+                    }
                 }
             }
 
@@ -129,7 +131,31 @@
                     parent.classList.remove('answered');
                 }
 
-                setNextCurrent();
+                if (parent.dataset.answer_count > 1) {
+                    if (event.target.dataset.check_method == 'disable_rest') {
+                        // uncheck all other options
+                        let answers = parent.querySelectorAll('input[type="checkbox"]');
+                        answers.forEach(function(element, index) {
+                            if (element.dataset.answer_id !== event.target.dataset.answer_id) {
+                                element.checked = false;
+                            }
+                        });
+
+                        setNextCurrent();
+                    } else {
+                        // uncheck none of the above
+                        let answers = parent.querySelectorAll('input[type="checkbox"]');
+                        answers.forEach(function(element, index) {
+                            if (element.dataset.check_method === 'disable_rest') {
+                                element.checked = false;
+                            }
+                        });
+
+                        setNextCurrent(false);
+                    }
+                } else {
+                    setNextCurrent();
+                }
             }
         });
 
