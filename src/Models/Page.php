@@ -25,12 +25,14 @@ class Page extends Model implements Sortable
         'order_column',
         'is_active',
         'show_help_aside',
+        'show_questions_numbered',
     ];
 
     protected $casts = [
         'order_column' => 'integer',
         'is_active' => 'boolean',
         'show_help_aside' => 'boolean',
+        'show_questions_numbered' => 'boolean',
     ];
 
     public function questionnaire(): BelongsTo

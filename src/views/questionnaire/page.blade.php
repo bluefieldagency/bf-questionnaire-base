@@ -2,9 +2,9 @@
 
 @section('content')
 
-    @if ($questionnaire->hasProgressPages())
+    @if ($questionnaire->hasProgressPages() && $questionnaire->showProgressForThisPage($page))
         <div id="progress_bar">
-            <span id="progression" style="width: 10%"></span>
+            <span id="progression" style="width: 5px"></span>
         </div>
     @endif
 
@@ -41,6 +41,84 @@
                 if (element) {
                     element.classList.toggle('hidden');
                 }
+            }
+        });
+
+        function setNextCurrent() {
+            let elements = document.querySelectorAll('.form-line');
+            let nextIndex = 0;
+
+            elements.forEach(function(element, index) {
+                if (element.classList.contains('current')) {
+                    nextIndex = index + 1;
+                    element.classList.remove('current');
+                }
+            });
+
+            if (nextIndex > 0) {
+                if (elements[nextIndex]) {
+                    elements[nextIndex].classList.add('current');
+
+                    General.scrollTo(elements[nextIndex]);
+                }
+            }
+
+            enableSubmitButton();
+        }
+
+        function enableSubmitButton() {
+            let elements = document.querySelectorAll('.form-line');
+            let questionCount = elements.length;
+
+            let answeredElements = document.querySelectorAll('.form-line.answered');
+            let answeredCount = answeredElements.length;
+
+            let button = document.querySelector('.submit-button');
+
+            if (questionCount == answeredCount) {
+                button.classList.remove('disabled');
+            } else {
+                button.classList.add('disabled');
+            }
+        }
+
+        document.addEventListener('click', function (event) {
+            if (event.target.matches('input[type="radio"]')) {
+                let parent = event.target.closest('.form-line');
+                if (parent) {
+                    parent.classList.add('answered');
+                }
+
+                setNextCurrent();
+            } else if (event.target.matches('input[type="checkbox"]')) {
+                let parent = event.target.closest('.form-line');
+                let answeredCheckbox = parent.querySelector('input:checked');
+                console.log(parent, answeredCheckbox, 'test');
+                if (answeredCheckbox && parent) {
+                    console.log('zet');
+                    parent.classList.add('answered');
+                } else {
+                    parent.classList.remove('answered');
+                }
+
+                setNextCurrent();
+            }
+
+            @if ($questionnaire->hasProgressPages() && $questionnaire->showProgressForThisPage($page))
+                @if ($questionnaire->getProgressPagesAmount() > 1)
+                @else
+                @endif
+            @endif
+        });
+
+        document.addEventListener('keyup', function (event) {
+            if (event.target.matches('input[type="text"]') || event.target.matches('input[type="email"]')) {
+                let parent = event.target.closest('.form-line');
+                if (parent && event.target.value != '') {
+                    parent.classList.add('answered');
+                }
+
+                setNextCurrent();
             }
         });
     </script>

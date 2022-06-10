@@ -14,6 +14,8 @@ class Questionnaire extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $progressPages;
+
     protected $fillable = [
         'progress_page_ids',
         'handler_class',
@@ -66,13 +68,43 @@ class Questionnaire extends Model
         return false;
     }
 
-    public function getProgressPages(): Collection
+    public function getProgressPagesAmount(): int
     {
         if ($this->hasProgressPages()) {
-            return Pages::whereIn('id', $this->progress_page_ids)->get();
+            $this->getProgressPages();
+
+            return sizeof($this->progressPages);
+        }
+
+        return 0;
+    }
+
+    public function getProgressPages(): Collection
+    {
+        if ($this->progressPages) {
+            return $this->progressPages;
+        }
+
+        if ($this->hasProgressPages()) {
+            $this->progressPages = Page::whereIn('id', explode(',', $this->progress_page_ids))->get();
+
+            return $this->progressPages;
         }
 
         return new Collection();
+    }
+
+    public function showProgressForThisPage(Page $page): bool
+    {
+        $this->getProgressPages();
+
+        foreach($this->progressPages as $progressPage) {
+            if ($page->id == $progressPage->id) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

@@ -1,1 +1,1 @@
-<input type="{{ $type }}" class="button" value="{{ $label }}">
+<input type="{{ $type }}" class="button @if(isset($extra_classes)) {{ $extra_classes }} @endif" value="{{ $label }}">

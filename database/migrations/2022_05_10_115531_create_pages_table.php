@@ -23,6 +23,7 @@ return new class extends Migration
             $table->tinyInteger('order_column');
             $table->boolean('is_active')->default(1);
             $table->boolean('show_help_aside')->default(0);
+            $table->boolean('show_questions_numbered')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
