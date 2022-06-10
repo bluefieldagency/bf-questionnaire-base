@@ -64,6 +64,24 @@
             }
 
             enableSubmitButton();
+            setProgress();
+        }
+
+        function setProgress() {
+            @if ($questionnaire->hasProgressPages() && $questionnaire->showProgressForThisPage($page))
+                @if ($questionnaire->getProgressPagesAmount() > 1)
+                @else
+                    let elements = document.querySelectorAll('.form-line');
+                    let questionCount = elements.length;
+
+                    let answeredElements = document.querySelectorAll('.form-line.answered');
+                    let answeredCount = answeredElements.length;
+
+                    let width = (answeredCount / questionCount) * 100;
+
+                    document.getElementById('progression').style.width = width + '%';
+                @endif
+            @endif
         }
 
         function enableSubmitButton() {
@@ -77,6 +95,8 @@
 
             if (questionCount == answeredCount) {
                 button.classList.remove('disabled');
+
+                General.scrollTo(button);
             } else {
                 button.classList.add('disabled');
             }
@@ -93,9 +113,8 @@
             } else if (event.target.matches('input[type="checkbox"]')) {
                 let parent = event.target.closest('.form-line');
                 let answeredCheckbox = parent.querySelector('input:checked');
-                console.log(parent, answeredCheckbox, 'test');
+
                 if (answeredCheckbox && parent) {
-                    console.log('zet');
                     parent.classList.add('answered');
                 } else {
                     parent.classList.remove('answered');
@@ -103,12 +122,6 @@
 
                 setNextCurrent();
             }
-
-            @if ($questionnaire->hasProgressPages() && $questionnaire->showProgressForThisPage($page))
-                @if ($questionnaire->getProgressPagesAmount() > 1)
-                @else
-                @endif
-            @endif
         });
 
         document.addEventListener('keyup', function (event) {
