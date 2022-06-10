@@ -16,15 +16,17 @@
     <ol class="questions">
         @foreach($page->questions as $question)
             <li class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @endif">
-                <h4><label for="question_{{ $question->id }}_answer">{{ $question->title }}</label></h4>
+                <div class="question-content-container">
+                    <h4><label for="question_{{ $question->id }}_answer">{{ $question->title }}</label></h4>
 
-                @if ($question->hasOption('extra_info'))
-                    <p class="extra-info">{{ $question->getOption('extra_info') }}</p>
-                @endif
+                    @if ($question->hasOption('extra_info'))
+                        <p class="extra-info">{{ $question->getOption('extra_info') }}</p>
+                    @endif
 
-                <div class="error-form">{{ $errors->first('question_' . $question->id . '_answer') }}</div>
+                    <div class="error-form">{{ $errors->first('question_' . $question->id . '_answer') }}</div>
 
-                @include('questionnaire::question_types.' . $question->question_type->type)
+                    @include('questionnaire::question_types.' . $question->question_type->type)
+                </div>
             </li>
         @endforeach
     </ol>
