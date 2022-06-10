@@ -1,9 +1,10 @@
 @section('header')
     <header>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12 header">
+        <div class="header-vertical dark-mode">
+            <div class="content-center">
+                <div class="header-horizontal">
                     <img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}">
+                    <a class="large-link contact-link" href="https://www.bluefield.eu/en/contact/" target="_blank">Neem contact op</a>
                 </div>
             </div>
         </div>
@@ -35,13 +36,18 @@
 
     @yield('header')
 
-    <div class="container">
-        <div class="row">
-            @yield('content')
-        </div>
-    </div>
+    @yield('content')
 
-    <footer></footer>
+    <footer>
+        <div class="footer-vertical dark-mode">
+            <div class="content-center">
+                <div class="footer-horizontal">
+                    <img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}">
+                    <span class="copyright aeonik14">&copy; Blue Field Agency</span>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     @stack('javascript')
 
