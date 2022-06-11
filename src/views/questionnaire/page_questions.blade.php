@@ -20,7 +20,7 @@
     @if ($page->show_questions_numbered)
         <ol class="questions">
             @foreach($page->questions as $question)
-                <li class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @else disabled @endif" data-answer_count="{{ sizeof($question->answers) }}">
+                <li class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @else disabled @endif" data-answer_count="{{ sizeof($question->answers) }}" data-question_type="{{ $question->question_type->type }}">
                     <div class="question-content-container">
                         @include('questionnaire::questionnaire.page_question')
                     </div>
@@ -29,7 +29,7 @@
         </ol>
     @else
         @foreach($page->questions as $question)
-            <div class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @else disabled @endif" data-answer_count="{{ sizeof($question->answers) }}">
+            <div class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @else disabled @endif" data-answer_count="{{ sizeof($question->answers) }}" data-question_type="{{ $question->question_type->type }}">
                 @include('questionnaire::questionnaire.page_question')
             </div>
         @endforeach

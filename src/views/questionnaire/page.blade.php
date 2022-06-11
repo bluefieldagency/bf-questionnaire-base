@@ -49,6 +49,10 @@
         });
 
         function setNextCurrent(doScroll) {
+            if (doScroll === undefined) {
+                doScroll = true;
+            }
+
             let elements = document.querySelectorAll('.form-line');
             let nextIndex = 0;
 
@@ -74,7 +78,7 @@
                 }
             }
 
-            enableSubmitButton();
+            enableSubmitButton(doScroll);
             setProgress();
         }
 
@@ -95,7 +99,11 @@
             @endif
         }
 
-        function enableSubmitButton() {
+        function enableSubmitButton(doScroll) {
+            if (doScroll === undefined) {
+                doScroll = true;
+            }
+
             let elements = document.querySelectorAll('.form-line');
             let questionCount = elements.length;
 
@@ -107,7 +115,9 @@
             if (questionCount == answeredCount) {
                 button.classList.remove('disabled');
 
-                General.scrollTo(button);
+                if (doScroll) {
+                    General.scrollTo(button);
+                }
             } else {
                 button.classList.add('disabled');
             }
@@ -131,7 +141,7 @@
                     parent.classList.remove('answered');
                 }
 
-                if (parent.dataset.answer_count > 1) {
+                if (parent.dataset.answer_count > 1 && parent.dataset.question_type === 'checkbox') {
                     if (event.target.dataset.check_method == 'disable_rest') {
                         // uncheck all other options
                         let answers = parent.querySelectorAll('input[type="checkbox"]');

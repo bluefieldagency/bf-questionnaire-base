@@ -1,4 +1,4 @@
-<div class="question-container">
+<div class="question-container @if($question->hasOption('columns')) answers-columns-{{ $question->getOption('columns') }} @endif">
     @foreach($question->answers as $answer)
         <div class="answer-container styled-checkbox">
             <input
@@ -15,10 +15,13 @@
             <label for="question_{{ $question->id }}_answer_{{ $answer->id }}">{{ $answer->title }}</label>
 
             @if ($answer->hasOption('extra_info'))
-                <span class="extra-info--trigger" data-target="extra_info_{{ $question->id }}_{{ $answer->id }}"></span>
-                <div id="extra_info_{{ $question->id }}_{{ $answer->id }}" class="extra-info--container hidden">
-                    <em class="extra-info">{{ $answer->getOption('extra_info') }}</em>
-                </div>
+                <span class="extra-info--trigger" data-target="extra_info_{{ $question->id }}_{{ $answer->id }}">
+                    <div id="extra_info_{{ $question->id }}_{{ $answer->id }}" class="extra-info--container hidden">
+                        <div class="extra-info--background">
+                            <em class="extra-info">{{ $answer->getOption('extra_info') }}</em>
+                        </div>
+                    </div>
+                </span>
             @endif
         </div>
     @endforeach
