@@ -12,7 +12,14 @@ class PageController extends Controller
 
     public function index(Questionnaire $questionnaire, Page $page)
     {
-        return view('questionnaire::questionnaire.page', compact('questionnaire', 'page'));
+        // Determine the previous page, to have a previous step link
+        $previousPage = $this->getPreviousPage($questionnaire, $page);
+        $previousPageUrl = null;
+        if ($previousPage) {
+            $previousPageUrl = route('questionnaire.page', [$questionnaire->slug, $previousPage->slug]);
+        }
+
+        return view('questionnaire::questionnaire.page', compact('questionnaire', 'page', 'previousPageUrl'));
     }
 
     public function store(PageRequest $request, Questionnaire $questionnaire, Page $page)
@@ -49,7 +56,17 @@ class PageController extends Controller
         }
     }
 
+    protected function getPreviousPage(Questionnaire $questionnaire, Page $page)
+    {
+        return $this->getAdjecentPage($questionnaire, $page, 'previous');
+    }
+
     protected function getNextPage(Questionnaire $questionnaire, Page $page)
+    {
+        return $this->getAdjecentPage($questionnaire, $page, 'next');
+    }
+
+    protected function getAdjecentPage(Questionnaire $questionnaire, Page $page, $direction)
     {
         $questionnairePages = $questionnaire->pages()->ordered()->get();
 
@@ -59,10 +76,15 @@ class PageController extends Controller
                 $foundKey = $key;
             }
         }
-        $nextKey = ++$foundKey;
 
-        if (isset($questionnairePages[$nextKey])) {
-            return $questionnairePages[$nextKey];
+        if ($direction == 'previous') {
+            $foundKey--;
+        } else {
+            $foundKey++;
+        }
+
+        if (isset($questionnairePages[$foundKey])) {
+            return $questionnairePages[$foundKey];
         }
 
         return null;

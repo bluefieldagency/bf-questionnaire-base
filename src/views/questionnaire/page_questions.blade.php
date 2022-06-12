@@ -35,7 +35,11 @@
         @endforeach
     @endif
 
-    <div class="buttons-container">
+    <div class="buttons-container @if (isset($previousPageUrl) && $previousPageUrl != '') buttons-container--flex @endif">
+        @if (isset($previousPageUrl) && $previousPageUrl != '')
+            <a class="large-link previous-page-link" href="{{ $previousPageUrl }}">Vorige stap</a>
+        @endif
+
         @component('questionnaire::components.button')
             @slot('type')
                 submit
