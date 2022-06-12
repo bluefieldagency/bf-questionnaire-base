@@ -19,7 +19,12 @@ class PageController extends Controller
             $previousPageUrl = route('questionnaire.page', [$questionnaire->slug, $previousPage->slug]);
         }
 
-        return view('questionnaire::questionnaire.page', compact('questionnaire', 'page', 'previousPageUrl'));
+        $viewTemplate = 'questionnaire::questionnaire.page';
+        if ( ! empty($page->custom_view_template)) {
+            $viewTemplate = $page->custom_view_template;
+        }
+
+        return view($viewTemplate, compact('questionnaire', 'page', 'previousPageUrl'));
     }
 
     public function store(PageRequest $request, Questionnaire $questionnaire, Page $page)

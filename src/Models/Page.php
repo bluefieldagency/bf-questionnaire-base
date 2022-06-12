@@ -22,6 +22,7 @@ class Page extends Model implements Sortable
         'slug',
         'intro',
         'continue_button_label',
+        'custom_view_template',
         'order_column',
         'is_active',
         'show_help_aside',
