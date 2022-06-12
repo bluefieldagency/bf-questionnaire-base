@@ -196,7 +196,7 @@
                     parent.classList.add('answered');
                 }
 
-                setNextCurrent();
+                setNextCurrent(parent);
             }
         });
 
@@ -204,6 +204,7 @@
             setTimeout(() => {
                 let elements = document.querySelectorAll('.form-line');
                 let foundInput = false;
+                let parent = null;
 
                 if (elements) {
                     elements.forEach(function(element, index) {
@@ -222,10 +223,12 @@
                                 foundInput = true;
                             }
                         }
+
+                        parent = element;
                     });
 
                     if (foundInput) {
-                        setNextCurrent();
+                        setNextCurrent(parent);
                     }
                 }
             }, 500);
