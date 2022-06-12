@@ -12,6 +12,10 @@ class PageController extends Controller
 
     public function index(Questionnaire $questionnaire, Page $page)
     {
+        if ( ! $page->is_active) {
+            abort(404);
+        }
+
         // Determine the previous page, to have a previous step link
         $previousPage = $this->getPreviousPage($questionnaire, $page);
         $previousPageUrl = null;
@@ -23,6 +27,15 @@ class PageController extends Controller
         if ( ! empty($page->custom_view_template)) {
             $viewTemplate = $page->custom_view_template;
         }
+
+        $page->load([
+            'questions' => function ($query) {
+                $query->active()->ordered();
+            },
+            'questions.answers' => function ($query) {
+                $query->active()->ordered();
+            }
+        ]);
 
         return view($viewTemplate, compact('questionnaire', 'page', 'previousPageUrl'));
     }
@@ -73,7 +86,7 @@ class PageController extends Controller
 
     protected function getAdjecentPage(Questionnaire $questionnaire, Page $page, $direction)
     {
-        $questionnairePages = $questionnaire->pages()->ordered()->get();
+        $questionnairePages = $questionnaire->pages()->active()->ordered()->get();
 
         $foundKey = null;
         foreach ($questionnairePages as $key => $questionnairePage) {

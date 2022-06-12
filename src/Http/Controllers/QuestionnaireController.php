@@ -14,7 +14,9 @@ class QuestionnaireController extends Controller
         }
         
         $questionnaire = Questionnaire::where('slug', config('questionnaire.questionnaire_code'))
-            ->with('pages')
+            ->with('pages', function($query) {
+                $query->active();
+            })
             ->firstOrFail();
 
         if ($questionnaire->has_intro) {
@@ -33,7 +35,7 @@ class QuestionnaireController extends Controller
 
     protected function firstPageUrl(Questionnaire $questionnaire)
     {
-        $page = $questionnaire->pages()->ordered()->first();
+        $page = $questionnaire->pages()->active()->ordered()->first();
 
         return route('questionnaire.page', [$questionnaire->slug, $page->slug]);
     }
