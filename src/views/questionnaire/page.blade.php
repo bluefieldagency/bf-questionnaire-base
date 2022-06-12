@@ -44,36 +44,52 @@
 
                 if (element) {
                     element.classList.toggle('hidden');
+                    event.target.classList.toggle('open');
                 }
             }
         });
 
-        function setNextCurrent(doScroll) {
+        function setNextCurrent(parent, checkMethod, doScroll) {
             if (doScroll === undefined) {
                 doScroll = true;
             }
 
+            if (checkMethod === undefined) {
+                checkMethod = null;
+            }
+
             let elements = document.querySelectorAll('.form-line');
-            let nextIndex = 0;
 
-            elements.forEach(function(element, index) {
-                if (element.classList.contains('current')) {
-                    nextIndex = index + 1;
-                    element.classList.remove('current');
+            if (parent.classList.contains('current')) {
+                let nextIndex = 0;
+
+                elements.forEach(function(element, index) {
+                    if (element.classList.contains('current')) {
+                        nextIndex = index + 1;
+                        element.classList.remove('current');
+                    }
+                });
+
+                if (nextIndex > 0) {
+                    if (elements[nextIndex]) {
+                        elements[nextIndex].classList.add('current');
+                        elements[nextIndex].classList.remove('disabled');
+
+                        @if ($questionnaire->getProgressPagesAmount() == 1)
+                            document.getElementById('current_indicator').innerText = nextIndex + 1;
+                        @endif
+
+                        if (doScroll) {
+                            General.scrollTo(elements[nextIndex]);
+                        }
+                    }
                 }
-            });
+            } else {
+                if (parent.dataset.question_type === 'checkbox' && checkMethod == 'disable_rest') {
+                    let element = document.querySelector('.form-line.current');
 
-            if (nextIndex > 0) {
-                if (elements[nextIndex]) {
-                    elements[nextIndex].classList.add('current');
-                    elements[nextIndex].classList.remove('disabled');
-
-                    @if ($questionnaire->getProgressPagesAmount() == 1)
-                        document.getElementById('current_indicator').innerText = nextIndex + 1;
-                    @endif
-
-                    if (doScroll) {
-                        General.scrollTo(elements[nextIndex]);
+                    if (element) {
+                        General.scrollTo(element);
                     }
                 }
             }
@@ -130,7 +146,7 @@
                     parent.classList.add('answered');
                 }
 
-                setNextCurrent();
+                setNextCurrent(parent);
             } else if (event.target.matches('input[type="checkbox"]')) {
                 let parent = event.target.closest('.form-line');
                 let answeredCheckbox = parent.querySelector('input:checked');
@@ -141,30 +157,34 @@
                     parent.classList.remove('answered');
                 }
 
-                if (parent.dataset.answer_count > 1 && parent.dataset.question_type === 'checkbox') {
-                    if (event.target.dataset.check_method == 'disable_rest') {
-                        // uncheck all other options
-                        let answers = parent.querySelectorAll('input[type="checkbox"]');
-                        answers.forEach(function(element, index) {
-                            if (element.dataset.answer_id !== event.target.dataset.answer_id) {
-                                element.checked = false;
-                            }
-                        });
+                if (event.target.checked) {
+                    if (parent.dataset.answer_count > 1 && parent.dataset.question_type === 'checkbox') {
+                        if (event.target.dataset.check_method == 'disable_rest') {
+                            // uncheck all other options
+                            let answers = parent.querySelectorAll('input[type="checkbox"]');
+                            answers.forEach(function(element, index) {
+                                if (element.dataset.answer_id !== event.target.dataset.answer_id) {
+                                    element.checked = false;
+                                }
+                            });
 
-                        setNextCurrent();
+                            setNextCurrent(parent, event.target.dataset.check_method);
+                        } else {
+                            // uncheck none of the above
+                            let answers = parent.querySelectorAll('input[type="checkbox"]');
+                            answers.forEach(function(element, index) {
+                                if (element.dataset.check_method === 'disable_rest') {
+                                    element.checked = false;
+                                }
+                            });
+
+                            setNextCurrent(parent, null, false);
+                        }
                     } else {
-                        // uncheck none of the above
-                        let answers = parent.querySelectorAll('input[type="checkbox"]');
-                        answers.forEach(function(element, index) {
-                            if (element.dataset.check_method === 'disable_rest') {
-                                element.checked = false;
-                            }
-                        });
-
-                        setNextCurrent(false);
+                        setNextCurrent(parent);
                     }
                 } else {
-                    setNextCurrent();
+                    enableSubmitButton(false);
                 }
             }
         });
