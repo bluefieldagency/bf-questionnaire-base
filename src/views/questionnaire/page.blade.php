@@ -40,11 +40,30 @@
     <script>
         document.addEventListener('click', function (event) {
             if (event.target.matches('.extra-info--trigger')) {
+                var previousTrigger = document.querySelector('.extra-info--trigger.open');
+                if (previousTrigger && previousTrigger.dataset.answer_id != event.target.dataset.answer_id) {
+                    previousTrigger.classList.remove('open');
+
+                    var previousElement = previousTrigger.querySelector('.extra-info--container');
+                    if (previousElement) {
+                        previousElement.classList.add('hidden');
+                    }
+                }
                 var element = document.getElementById(event.target.dataset.target);
 
                 if (element) {
                     element.classList.toggle('hidden');
                     event.target.classList.toggle('open');
+                }
+            } else {
+                var previousTrigger = document.querySelector('.extra-info--trigger.open');
+                if (previousTrigger) {
+                    previousTrigger.classList.remove('open');
+
+                    var previousElement = previousTrigger.querySelector('.extra-info--container');
+                    if (previousElement) {
+                        previousElement.classList.add('hidden');
+                    }
                 }
             }
         });

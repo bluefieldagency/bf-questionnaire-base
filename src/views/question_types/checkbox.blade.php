@@ -15,7 +15,7 @@
             <label for="question_{{ $question->id }}_answer_{{ $answer->id }}">{{ $answer->title }}</label>
 
             @if ($answer->hasOption('extra_info'))
-                <span class="extra-info--trigger" data-target="extra_info_{{ $question->id }}_{{ $answer->id }}">
+                <span class="extra-info--trigger" data-target="extra_info_{{ $question->id }}_{{ $answer->id }}" data-answer_id="{{ $answer->id }}">
                     <div id="extra_info_{{ $question->id }}_{{ $answer->id }}" class="extra-info--container hidden">
                         <div class="extra-info--background">
                             <em class="extra-info">{{ $answer->getOption('extra_info') }}</em>
