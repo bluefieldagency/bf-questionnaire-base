@@ -2,7 +2,7 @@
     document.addEventListener('click', function (event) {
         if (event.target.matches('.extra-info--trigger')) {
             var previousTrigger = document.querySelector('.extra-info--trigger.open');
-            if (previousTrigger && previousTrigger.dataset.answer_id != event.target.dataset.answer_id) {
+            if (previousTrigger) {
                 previousTrigger.classList.remove('open');
 
                 var previousElement = previousTrigger.querySelector('.extra-info--container');

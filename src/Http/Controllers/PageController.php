@@ -30,6 +30,15 @@ class PageController extends Controller
             $viewTemplate = $page->custom_view_template;
         }
 
+        $skipIterators = null;
+        if ($questionnaire->showProgressForThisPage($page)) {
+            $progressPages = $questionnaire->getProgressPages();
+            for($i = 1; $i < $questionnaire->getProgressStepThisPage($page); $i++) {
+                $skipIterators += $progressPages[$i]->questions->count();
+            }
+        }
+        dd($skipIterators);
+
         return view($viewTemplate, compact('questionnaire', 'page', 'previousPageUrl'));
     }
 
