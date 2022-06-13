@@ -34,20 +34,24 @@
 
 <body>
 
-    @yield('header')
+    <div class="wrapper">
+        @yield('header')
 
-    @yield('content')
+        <div class="wrapper-content">
+            @yield('content')
+        </div>
 
-    <footer>
-        <div class="footer-vertical dark-mode">
-            <div class="content-center">
-                <div class="footer-horizontal">
-                    <img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}">
-                    <span class="copyright aeonik14">&copy; {{ date('Y') }} Blue Field Agency</span>
+        <footer>
+            <div class="footer-vertical dark-mode">
+                <div class="content-center">
+                    <div class="footer-horizontal">
+                        <img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}">
+                        <span class="copyright aeonik14">&copy; {{ date('Y') }} Blue Field Agency</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </footer>
+    </div>
 
     @stack('javascript')
 
