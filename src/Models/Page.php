@@ -22,6 +22,7 @@ class Page extends Model implements Sortable
         'slug',
         'intro',
         'continue_button_label',
+        'custom_view_template',
         'order_column',
         'is_active',
         'show_help_aside',
@@ -48,6 +49,17 @@ class Page extends Model implements Sortable
     public function buildSortQuery()
     {
         return static::query()->where('questionnaire_id', $this->questionnaire_id);
+    }
+
+    /**
+     * Scope a query to only include active entries
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', '1');
     }
 
 }

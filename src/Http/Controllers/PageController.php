@@ -12,6 +12,10 @@ class PageController extends Controller
 
     public function index(Questionnaire $questionnaire, Page $page)
     {
+        if ( ! $page->is_active) {
+            abort(404);
+        }
+
         if ($questionnaire->getProgressStepThisPage($page) > 1) {
             // Determine the previous page, to have a previous step link
             $previousPage = $this->getPreviousPage($questionnaire, $page);
