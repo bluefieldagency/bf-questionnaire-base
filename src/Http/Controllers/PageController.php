@@ -30,16 +30,15 @@ class PageController extends Controller
             $viewTemplate = $page->custom_view_template;
         }
 
-        $skipIterators = null;
-        if ($questionnaire->showProgressForThisPage($page)) {
+        $skipIterators = 1;
+        if ($questionnaire->showProgressForThisPage($page) && $questionnaire->getProgressStepThisPage($page) > 1) {
             $progressPages = $questionnaire->getProgressPages();
-            for($i = 1; $i < $questionnaire->getProgressStepThisPage($page); $i++) {
+            for($i = 0; $i < ($questionnaire->getProgressStepThisPage($page) - 1); $i++) {
                 $skipIterators += $progressPages[$i]->questions->count();
             }
         }
-        dd($skipIterators);
 
-        return view($viewTemplate, compact('questionnaire', 'page', 'previousPageUrl'));
+        return view($viewTemplate, compact('questionnaire', 'page', 'previousPageUrl', 'skipIterators'));
     }
 
     public function store(PageRequest $request, Questionnaire $questionnaire, Page $page)
