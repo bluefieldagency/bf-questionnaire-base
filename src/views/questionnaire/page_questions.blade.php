@@ -20,17 +20,17 @@
     @if ($page->show_questions_numbered)
         <ol class="questions">
             @foreach($page->questions as $question)
-                <li class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @else disabled @endif" data-answer_count="{{ sizeof($question->answers) }}" data-question_type="{{ $question->question_type->type }}">
+                <li class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @elseif( ! in_array($question->question_type->type, ['text', 'email'])) disabled @endif" data-answer_count="{{ sizeof($question->answers) }}" data-question_type="{{ $question->question_type->type }}">
                     <div class="question-content-container">
-                        @include('questionnaire::questionnaire.page_question')
+                        @include('questionnaire::questions.page_question_' . $question->question_type->type)
                     </div>
                 </li>
             @endforeach
         </ol>
     @else
         @foreach($page->questions as $question)
-            <div class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @else disabled @endif" data-answer_count="{{ sizeof($question->answers) }}" data-question_type="{{ $question->question_type->type }}">
-                @include('questionnaire::questionnaire.page_question')
+            <div class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @elseif( ! in_array($question->question_type->type, ['text', 'email'])) disabled @endif" data-answer_count="{{ sizeof($question->answers) }}" data-question_type="{{ $question->question_type->type }}">
+                @include('questionnaire::questions.page_question_' . $question->question_type->type)
             </div>
         @endforeach
     @endif

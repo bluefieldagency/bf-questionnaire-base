@@ -12,11 +12,13 @@ class PageController extends Controller
 
     public function index(Questionnaire $questionnaire, Page $page)
     {
-        // Determine the previous page, to have a previous step link
-        $previousPage = $this->getPreviousPage($questionnaire, $page);
-        $previousPageUrl = null;
-        if ($previousPage) {
-            $previousPageUrl = route('questionnaire.page', [$questionnaire->slug, $previousPage->slug]);
+        if ($questionnaire->getProgressStepThisPage($page) > 1) {
+            // Determine the previous page, to have a previous step link
+            $previousPage = $this->getPreviousPage($questionnaire, $page);
+            $previousPageUrl = null;
+            if ($previousPage) {
+                $previousPageUrl = route('questionnaire.page', [$questionnaire->slug, $previousPage->slug]);
+            }
         }
 
         return view('questionnaire::questionnaire.page', compact('questionnaire', 'page', 'previousPageUrl'));
