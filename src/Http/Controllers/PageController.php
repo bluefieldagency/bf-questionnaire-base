@@ -250,8 +250,6 @@ class PageController extends Controller
     protected function notifyOwner(QuestionnaireEntry $questionnaireEntry)
     {
         dispatch(new SendNotifyQuestionnaireOwner($questionnaireEntry));
-
-        dd('ff stoppen');
     }
 
 }
