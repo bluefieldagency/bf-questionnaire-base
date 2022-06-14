@@ -80,7 +80,7 @@ class NotifyQuestionnaireOwner extends Mailable
         }
 
         return $this->view('questionnaire::mail.notify_owner', ['questionnaireEntry' => $this->questionnaireEntry])
-            ->subject('Data Scan ingevuld door ' . $this->questionnaireEntry->name)
+            ->subject($this->questionnaireEntry->questionnaire->title . ' ingevuld door ' . $this->questionnaireEntry->name)
             ->with([
                 'questionnaire' => $this->questionnaireEntry->questionnaire,
                 'questionnaire_entry' => $this->questionnaireEntry,
