@@ -27,6 +27,7 @@ class Questionnaire extends Model
         'intro',
         'start_button_label',
         'time_indicator',
+        'questionnaire_owner_email',
         'is_active',
         'show_progress_text',
         'has_intro',

@@ -42,7 +42,11 @@
         @endforeach
     @endif
 
-    <div class="buttons-container @if (isset($previousPageUrl) && $previousPageUrl != '') buttons-container--flex @endif">
+    <div
+        class="buttons-container
+            @if (isset($previousPageUrl) && $previousPageUrl != '') buttons-container--flex @endif
+            @if ($page->show_questions_numbered) questions-numbered @endif
+        ">
         @if (isset($previousPageUrl) && $previousPageUrl != '')
             <a class="large-link previous-page-link" href="{{ $previousPageUrl }}">Vorige stap</a>
         @endif

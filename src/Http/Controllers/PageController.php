@@ -2,6 +2,7 @@
 
 namespace Questionnaire\Http\Controllers;
 
+use Questionnaire\Jobs\SendNotifyQuestionnaireOwner;
 use Questionnaire\Http\Requests\PageRequest;
 use Questionnaire\Models\Page;
 use Questionnaire\Models\Questionnaire;
@@ -218,6 +219,8 @@ class PageController extends Controller
 
         $this->handler->complete($questionnaire, $questionnaireEntry, $scores);
 
+        $this->notifyOwner($questionnaireEntry);
+
         session()->forget([
             'questionnaire.name',
             'questionnaire.email',
@@ -242,6 +245,13 @@ class PageController extends Controller
         $questionnaire->questionnaire_entries()->save($questionnaireEntry);
 
         return $questionnaireEntry;
+    }
+
+    protected function notifyOwner(QuestionnaireEntry $questionnaireEntry)
+    {
+        dispatch(new SendNotifyQuestionnaireOwner($questionnaireEntry));
+
+        dd('ff stoppen');
     }
 
 }

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->text('intro')->nullable();
             $table->string('start_button_label')->nullable();
             $table->tinyInteger('time_indicator')->nullable();
+            $table->string('questionnaire_owner_email');
             $table->boolean('is_active')->default(1);
             $table->boolean('show_progress_text')->default(1);
             $table->boolean('has_intro')->default(1);
