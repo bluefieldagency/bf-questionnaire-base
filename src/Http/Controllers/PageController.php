@@ -211,12 +211,12 @@ class PageController extends Controller
 
         session([('questionnaire.filled.' . $questionnaireEntry->id) => $questionnaireEntry->id]);
 
-        $questionnaireEntry->scores = $this->calculateScores($questionnaire, $questionnaireEntry);
+        $questionnaireEntry->setScores($this->calculateScores($questionnaire, $questionnaireEntry));
         $questionnaireEntry->save();
 
         $this->handler = app($questionnaire->handler_class);
 
-        $this->handler->complete($questionnaire, $scores);
+        $this->handler->complete($questionnaire, $questionnaireEntry, $scores);
 
         session()->forget([
             'questionnaire.name',
