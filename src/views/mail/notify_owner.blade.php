@@ -20,6 +20,7 @@
                         <td bgcolor="#faf8f8" align="center">
                             <table role="presentation" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" align="center" width="100%">
                                 <tr>
+                                    <td width="25">&nbsp;</td>
                                     <td>
                                         <h2 class="aeonik30 title">Beste admin,</h2>
                                         <p class="aeonik22">
@@ -30,22 +31,19 @@
                                             @foreach($result as $pageIterator => $page)
                                                 @foreach($page as $line)
                                                     <tr>
-                                                        <td width="25">&nbsp;</td>
                                                         <td style="padding-right: 30px;">{{ $line['question']->title }}:</td>
                                                         <td>{{ $line['answer'] }}</td>
-                                                        <td width="25">&nbsp;</td>
                                                     </tr>
                                                 @endforeach
 
                                                 <tr>
                                                     <td>&nbsp;</td>
                                                     <td>&nbsp;</td>
-                                                    <td>&nbsp;</td>
-                                                    <td>&nbsp;</td>
                                                 </tr>
                                             @endforeach
                                         </table>
                                     </td>
+                                    <td width="25">&nbsp;</td>
                                 </tr>
                             </table>
                         </td>
