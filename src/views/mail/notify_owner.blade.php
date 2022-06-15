@@ -31,8 +31,8 @@
                                             @foreach($result as $pageIterator => $page)
                                                 @foreach($page as $line)
                                                     <tr>
-                                                        <td style="padding-right: 30px;">{{ $line['question']->title }}:</td>
-                                                        <td>{{ $line['answer'] }}</td>
+                                                        <td valign="top" style="padding-right: 30px;">{{ $line['question']->title }}:</td>
+                                                        <td valign="top">{{ $line['answer'] }}</td>
                                                     </tr>
                                                 @endforeach
 
