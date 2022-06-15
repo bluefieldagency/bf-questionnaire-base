@@ -43,7 +43,7 @@ class Page extends Model implements Sortable
 
     public function questions(): HasMany
     {
-        return $this->hasMany(Question::class);
+        return $this->hasMany(Question::class)->ordered();
     }
 
     public function buildSortQuery()

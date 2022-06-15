@@ -26,6 +26,17 @@ class QuestionnaireController extends Controller
         return redirect($this->firstPageUrl($questionnaire));
     }
 
+    public function startAgain()
+    {
+        session()->forget([
+            'questionnaire.name',
+            'questionnaire.email',
+            'questionnaire.page',
+        ]);
+
+        return redirect(route('home'));
+    }
+
     public function index(Questionnaire $questionnaire)
     {
         $url = $this->firstPageUrl($questionnaire);

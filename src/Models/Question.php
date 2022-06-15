@@ -52,7 +52,7 @@ class Question extends Model implements Sortable
 
     public function answers(): HasMany
     {
-        return $this->hasMany(Answer::class);
+        return $this->hasMany(Answer::class)->ordered();
     }
 
     public function buildSortQuery()

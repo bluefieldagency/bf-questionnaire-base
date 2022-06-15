@@ -3,7 +3,7 @@
         <div class="header-vertical dark-mode">
             <div class="content-center">
                 <div class="header-horizontal">
-                    <img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}">
+                    <a href="{{ route('start-again') }}" class="company-logo--container"><img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}"></a>
                     <a class="large-link contact-link" href="https://bluefieldagency.com/connect#form" target="_blank">Neem contact op</a>
                 </div>
             </div>

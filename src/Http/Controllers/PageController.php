@@ -17,6 +17,19 @@ class PageController extends Controller
             abort(404);
         }
 
+        // see if previous pages are filled
+        for($i = 0; $i < $questionnaire->pages->count(); $i++) {
+            $questionnairePage = $questionnaire->pages[$i];
+            if ($questionnairePage->is_active && $questionnairePage->id == $page->id) {
+                $i = $questionnaire->pages->count();
+            }
+            if ($questionnairePage->is_active && $questionnairePage->id != $page->id) {
+                if ( ! session()->has('questionnaire.page.' . $questionnairePage->id)) {
+                    return redirect(route('questionnaire.page', [$questionnaire->slug, $questionnairePage->slug]));
+                }
+            }
+        }
+
         if ($questionnaire->getProgressStepThisPage($page) > 1) {
             // Determine the previous page, to have a previous step link
             $previousPage = $this->getPreviousPage($questionnaire, $page);
