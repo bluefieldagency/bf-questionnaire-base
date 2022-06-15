@@ -2,7 +2,7 @@
     document.addEventListener('click', function (event) {
         if (event.target.matches('.extra-info--trigger')) {
             var previousTrigger = document.querySelector('.extra-info--trigger.open');
-            if (previousTrigger) {
+            if (previousTrigger && previousTrigger.dataset.target != event.target.dataset.target) {
                 previousTrigger.classList.remove('open');
 
                 var previousElement = previousTrigger.querySelector('.extra-info--container');
@@ -10,8 +10,8 @@
                     previousElement.classList.add('hidden');
                 }
             }
-            var element = document.getElementById(event.target.dataset.target);
 
+            var element = document.getElementById(event.target.dataset.target);
             if (element) {
                 element.classList.toggle('hidden');
                 event.target.classList.toggle('open');
