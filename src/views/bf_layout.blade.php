@@ -4,7 +4,7 @@
             <div class="content-center">
                 <div class="header-horizontal">
                     <img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}">
-                    <a class="large-link contact-link" href="https://www.bluefield.eu/en/contact/" target="_blank">Neem contact op</a>
+                    <a class="large-link contact-link" href="https://bluefieldagency.com/connect#form/" target="_blank">Neem contact op</a>
                 </div>
             </div>
         </div>
