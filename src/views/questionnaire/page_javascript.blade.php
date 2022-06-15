@@ -56,7 +56,9 @@
                     elements[nextIndex].classList.remove('disabled');
 
                     @if ($questionnaire->getProgressPagesAmount() == 1)
-                        document.getElementById('current_indicator').innerText = nextIndex + 1;
+                        if (document.getElementById('current_indicator')) {
+                            document.getElementById('current_indicator').innerText = nextIndex + 1;
+                        }
                     @endif
 
                     if (doScroll) {
