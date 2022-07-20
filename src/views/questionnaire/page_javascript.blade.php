@@ -1,30 +1,30 @@
 <script>
     document.addEventListener('click', function (event) {
+        let previousTrigger = document.querySelector('.extra-info--trigger.open');
+        let previousElement = null;
+        if (previousTrigger) {
+            previousElement = previousTrigger.querySelector('.extra-info--container');
+        }
+
         if (event.target.matches('.extra-info--trigger')) {
-            var previousTrigger = document.querySelector('.extra-info--trigger.open');
-            if (previousTrigger && previousTrigger.dataset.target != event.target.dataset.target) {
+            if (previousTrigger && previousTrigger.dataset.target !== event.target.dataset.target) {
                 previousTrigger.classList.remove('open');
 
-                var previousElement = previousTrigger.querySelector('.extra-info--container');
                 if (previousElement) {
                     previousElement.classList.add('hidden');
                 }
             }
 
-            var element = document.getElementById(event.target.dataset.target);
+            let element = document.getElementById(event.target.dataset.target);
             if (element) {
                 element.classList.toggle('hidden');
                 event.target.classList.toggle('open');
             }
         } else {
-            var previousTrigger = document.querySelector('.extra-info--trigger.open');
-            if (previousTrigger) {
-                previousTrigger.classList.remove('open');
+            previousTrigger.classList.remove('open');
 
-                var previousElement = previousTrigger.querySelector('.extra-info--container');
-                if (previousElement) {
-                    previousElement.classList.add('hidden');
-                }
+            if (previousElement) {
+                previousElement.classList.add('hidden');
             }
         }
     });
@@ -67,7 +67,7 @@
                 }
             }
         } else {
-            if (parent.dataset.question_type === 'checkbox' && checkMethod == 'disable_rest') {
+            if (parent.dataset.question_type === 'checkbox' && checkMethod === 'disable_rest') {
                 let element = document.querySelector('.form-line.current');
 
                 if (element) {
@@ -110,7 +110,7 @@
 
         let button = document.querySelector('.submit-button');
 
-        if (questionCount == answeredCount) {
+        if (questionCount === answeredCount) {
             button.classList.remove('disabled');
 
             if (doScroll) {
@@ -141,10 +141,10 @@
 
             if (event.target.checked) {
                 if (parent.dataset.answer_count > 1 && parent.dataset.question_type === 'checkbox') {
-                    if (event.target.dataset.check_method == 'disable_rest') {
-                        // uncheck all other options
+                    if (event.target.dataset.check_method === 'disable_rest') {
+                        // uncheck options
                         let answers = parent.querySelectorAll('input[type="checkbox"]');
-                        answers.forEach(function(element, index) {
+                        answers.forEach(function(element) {
                             if (element.dataset.answer_id !== event.target.dataset.answer_id) {
                                 element.checked = false;
                             }
@@ -152,9 +152,9 @@
 
                         setNextCurrent(parent, event.target.dataset.check_method);
                     } else {
-                        // uncheck none of the above
+                        // uncheck logic for 'none of the above'
                         let answers = parent.querySelectorAll('input[type="checkbox"]');
-                        answers.forEach(function(element, index) {
+                        answers.forEach(function(element) {
                             if (element.dataset.check_method === 'disable_rest') {
                                 element.checked = false;
                             }
@@ -174,7 +174,7 @@
     document.addEventListener('keyup', function (event) {
         if (event.target.matches('input[type="text"]') || event.target.matches('input[type="email"]')) {
             let parent = event.target.closest('.form-line');
-            if (parent && event.target.value != '') {
+            if (parent && event.target.value !== '') {
                 parent.classList.add('answered');
             }
 
@@ -189,17 +189,17 @@
             let parent = null;
 
             if (elements) {
-                elements.forEach(function(element, index) {
+                elements.forEach(function(element) {
                     if (element.classList.contains('question-type--radio') || element.classList.contains('question-type--checkbox')) {
-                        answered = element.querySelector('input:checked');
+                        let answered = element.querySelector('input:checked');
                         if (answered) {
                             element.classList.add('answered');
                             element.classList.remove('current');
                             foundInput = true;
                         }
                     } else if (element.classList.contains('question-type--text') || element.classList.contains('question-type--email')) {
-                        input = element.querySelector('input');
-                        if (input && input.value != '') {
+                        let input = element.querySelector('input');
+                        if (input && input.value !== '') {
                             element.classList.add('answered');
                             element.classList.remove('current');
                             foundInput = true;

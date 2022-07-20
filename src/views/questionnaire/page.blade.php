@@ -20,7 +20,7 @@
                 </main>
                 <aside>
                     <div class="help-content sticky-content">
-                        <h3 class="aeonik24 grey">Hulp nodig?</h3>
+                        <h3 class="aeonik24 grey">@lang('bf::translations.need-help')</h3>
                         <a class="aeonik22" href="mailto:letstalk@bluefieldagency.com">letstalk@bluefieldagency.com</a>
                         <a class="aeonik22" href="tel:+31 85 401 51 65">+31 85 401 51 65</a>
                     </div>
