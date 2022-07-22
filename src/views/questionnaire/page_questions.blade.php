@@ -14,7 +14,7 @@
     @endif
 @endif
 
-<form id="questionnaire_page_{{ $page->id }}" method="POST">
+<form id="questionnaire_page_{{ $page->id }}" method="POST" enctype="multipart/form-data">
     @csrf
 
     @if ($page->show_questions_numbered)
@@ -24,6 +24,7 @@
                     class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @elseif( ! in_array($question->question_type->type, ['text', 'email'])) disabled @endif"
                     data-answer_count="{{ sizeof($question->answers) }}"
                     data-question_type="{{ $question->question_type->type }}"
+                    data-question_id="{{ $question->id }}"
                     @if($skipIterators > 1 && $loop->first)
                         value="{{ $skipIterators }}"
                     @endif
@@ -35,11 +36,18 @@
             @endforeach
         </ol>
     @else
-        @foreach($page->questions as $question)
-            <div class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @elseif( ! in_array($question->question_type->type, ['text', 'email'])) disabled @endif" data-answer_count="{{ sizeof($question->answers) }}" data-question_type="{{ $question->question_type->type }}">
-                @include('questionnaire::questions.page_question_' . $question->question_type->type)
-            </div>
-        @endforeach
+        <div class="questions">
+            @foreach($page->questions as $question)
+                <div
+                    class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @elseif( ! in_array($question->question_type->type, ['text', 'email'])) disabled @endif"
+                    data-answer_count="{{ sizeof($question->answers) }}"
+                    data-question_type="{{ $question->question_type->type }}"
+                    data-question_id="{{ $question->id }}"
+                >
+                    @include('questionnaire::questions.page_question_' . $question->question_type->type)
+                </div>
+            @endforeach
+        </div>
     @endif
 
     <div
