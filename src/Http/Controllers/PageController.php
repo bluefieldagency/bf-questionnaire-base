@@ -68,7 +68,7 @@ class PageController extends Controller
                 if ($question->getOption('allow_additional_uploads') === true) {
                     $handleUploads = true;
                 }
-            } else if ($question->question_type->type == 'file') {
+            } else if (in_array($question->question_type->type, ['file', 'multi_file'])) {
                 $handleUploads = true;
             }
         }
