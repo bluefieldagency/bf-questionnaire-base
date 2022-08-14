@@ -62,14 +62,18 @@ class PageController extends Controller
 
         $page->load('questions.question_type');
 
+        $handleUploads = false;
         foreach($page->questions as $question) {
             if (in_array($question->question_type->type, ['text', 'textarea'])) {
                 if ($question->getOption('allow_additional_uploads') === true) {
-                    $this->handleUploads($page, $question);
+                    $handleUploads = true;
                 }
+            } else if (in_array($question->question_type->type, ['file', 'multi_file'])) {
+                $handleUploads = true;
             }
         }
-        dd(session()->all(), 'niet te ver');
+
+        $this->handleUploads($page, $question);
 
         $this->storeSpecificValues($request, $page);
 

@@ -44,7 +44,9 @@
                     data-question_type="{{ $question->question_type->type }}"
                     data-question_id="{{ $question->id }}"
                 >
-                    @include('questionnaire::questions.page_question_' . $question->question_type->type)
+                    <div class="question-content-container">
+                        @include('questionnaire::questions.page_question_' . $question->question_type->type)
+                    </div>
                 </div>
             @endforeach
         </div>
