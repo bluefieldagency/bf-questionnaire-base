@@ -2,6 +2,7 @@
 
 namespace Questionnaire\Http\Controllers;
 
+use Questionnaire\Models\Page;
 use Questionnaire\Models\Questionnaire;
 
 class QuestionnaireController extends Controller
@@ -35,6 +36,13 @@ class QuestionnaireController extends Controller
         ]);
 
         return redirect(route('home'));
+    }
+
+    public function specificPage($pageCode)
+    {
+        $page = Page::where('slug', $pageCode)->with('questionnaire')->firstOrFail();
+
+        return redirect(route('questionnaire.page', [$page->questionnaire->slug, $page->slug]));
     }
 
     public function index(Questionnaire $questionnaire)
