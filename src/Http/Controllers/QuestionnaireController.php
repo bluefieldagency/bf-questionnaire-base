@@ -10,9 +10,7 @@ class QuestionnaireController extends Controller
 
     public function redirect()
     {
-        if (empty(config('questionnaire.questionnaire_code')) || ! config('questionnaire.questionnaire_code')) {
-            exit('No questionnaire set');
-        }
+        $this->checkForQuestionnaireCode();
         
         $questionnaire = Questionnaire::where('slug', config('questionnaire.questionnaire_code'))
             ->with('pages', function($query) {
@@ -40,7 +38,14 @@ class QuestionnaireController extends Controller
 
     public function specificPage($pageCode)
     {
-        $page = Page::where('slug', $pageCode)->with('questionnaire')->firstOrFail();
+        $this->checkForQuestionnaireCode();
+
+        $page = Page::where('slug', $pageCode)
+            ->whereHas('questionnaire', function($query) {
+                $query->where('slug', config('questionnaire.questionnaire_code'));
+            })
+            ->with('questionnaire')
+            ->firstOrFail();
 
         return redirect(route('questionnaire.page', [$page->questionnaire->slug, $page->slug]));
     }
@@ -57,6 +62,13 @@ class QuestionnaireController extends Controller
         $page = $questionnaire->pages()->active()->ordered()->first();
 
         return route('questionnaire.page', [$questionnaire->slug, $page->slug]);
+    }
+
+    protected function checkForQuestionnaireCode()
+    {
+        if (empty(config('questionnaire.questionnaire_code')) || ! config('questionnaire.questionnaire_code')) {
+            exit('No questionnaire set');
+        }
     }
 
 }
