@@ -5,6 +5,7 @@ namespace Questionnaire\Http\Controllers;
 use Questionnaire\Jobs\SendNotifyQuestionnaireOwner;
 use Questionnaire\Http\Requests\PageRequest;
 use Questionnaire\Models\Page;
+use Questionnaire\Models\Question;
 use Questionnaire\Models\Questionnaire;
 use Questionnaire\Models\QuestionnaireEntry;
 
@@ -57,7 +58,22 @@ class PageController extends Controller
 
     public function store(PageRequest $request, Questionnaire $questionnaire, Page $page)
     {
-        session([('questionnaire.page.' . $page->id) => $request->except('_token')]);
+        session([('questionnaire.page.' . $page->id) => $request->except(array_merge(['_token'], array_keys($_FILES)))]);
+
+        $page->load('questions.question_type');
+
+        $handleUploads = false;
+        foreach($page->questions as $question) {
+            if (in_array($question->question_type->type, ['text', 'textarea'])) {
+                if ($question->getOption('allow_additional_uploads') === true) {
+                    $handleUploads = true;
+                }
+            } else if (in_array($question->question_type->type, ['file', 'multi_file'])) {
+                $handleUploads = true;
+            }
+        }
+
+        $this->handleUploads($page, $question);
 
         $this->storeSpecificValues($request, $page);
 
@@ -84,6 +100,30 @@ class PageController extends Controller
             foreach ($page->questions as $question) {
                 if (isset($question->options['data_type']) && $question->options['data_type'] == $specificValue) {
                     session([('questionnaire.' . $specificValue) => $request->input('question_' . $question->id . '_answer')]);
+                }
+            }
+        }
+    }
+
+    protected function handleUploads(Page $page, Question $question)
+    {
+        if (request()->hasFile('question_' . $question->id . '_answer_file')) {
+            $counter = 0;
+
+            foreach(request()->file('question_' . $question->id . '_answer_file') as $upload) {
+                if ($upload->isValid()) {
+                    $file = $upload->store('temp_attachments');
+
+                    session([('questionnaire.page.' . $page->id . '.file.' . $question->id . '.' . $counter) => [
+                        'original_name' => $upload->getClientOriginalName(),
+                        'stored_as' => $file,
+                    ]]);
+                }
+
+                $counter++;
+
+                if ($question->hasOption('additional_upload_max') && $question->getOption('additional_upload_max') < $counter) {
+                    break;
                 }
             }
         }

@@ -25,6 +25,8 @@ class QuestionnaireServiceProvider extends ServiceProvider
 
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
 
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'bf');
+
 		// make sure the views can be loaded in each application
         // usage: return view('questionnaire::folder.file');
         $this->loadViewsFrom(__DIR__ . '/../views', 'questionnaire');
