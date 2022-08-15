@@ -21,7 +21,19 @@
         <ol class="questions">
             @foreach($page->questions as $question)
                 <li
-                    class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @elseif( ! in_array($question->question_type->type, ['text', 'email'])) disabled @endif"
+                    class="
+                        form-line
+                        question-container
+                        question-type--{{ $question->question_type->type }}
+                        @if ($loop->first)
+                            current
+                        @elseif( ! in_array($question->question_type->type, ['text', 'email']))
+                            disabled
+                        @endif
+                        @if ($question->hasOption('container_border') && $question->hasOption('container_border') === false)
+                            skip-borders
+                        @endif
+                    "
                     data-answer_count="{{ sizeof($question->answers) }}"
                     data-question_type="{{ $question->question_type->type }}"
                     data-question_id="{{ $question->id }}"
@@ -39,7 +51,19 @@
         <div class="questions">
             @foreach($page->questions as $question)
                 <div
-                    class="form-line question-container question-type--{{ $question->question_type->type }} @if ($loop->first) current @elseif( ! in_array($question->question_type->type, ['text', 'email'])) disabled @endif"
+                    class="
+                        form-line
+                        question-container
+                        question-type--{{ $question->question_type->type }}
+                        @if ($loop->first)
+                            current
+                        @elseif( ! in_array($question->question_type->type, ['text', 'email']))
+                            disabled
+                        @endif
+                        @if ($question->hasOption('container_border') && $question->getOption('container_border') === false)
+                            skip-borders
+                        @endif
+                    "
                     data-answer_count="{{ sizeof($question->answers) }}"
                     data-question_type="{{ $question->question_type->type }}"
                     data-question_id="{{ $question->id }}"
