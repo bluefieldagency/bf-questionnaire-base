@@ -35,6 +35,13 @@ class Question extends Model implements Sortable
         'is_required' => 'boolean',
     ];
 
+    public function __construct(array $attributes = [])
+    {
+        $this->setConnection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'));
+
+        parent::__construct($attributes);
+    }
+
     public function page(): BelongsTo
     {
         return $this->belongsTo(Page::class);

@@ -3,16 +3,11 @@
 namespace Questionnaire\Models;
 
 use GregoryDuckworth\Encryptable\EncryptableTrait;
-use Illuminate\Database\Eloquent\Casts\AsCollection;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Questionnaire\Traits\OptionsTrait;
 
 class QuestionnaireEntry extends Model
 {
-    use HasFactory;
     use EncryptableTrait;
 
     protected $givenAnswers = null;
@@ -26,7 +21,7 @@ class QuestionnaireEntry extends Model
     ];
 
     protected $casts = [
-//        'answers' => AsCollection::class, // do not use this, the resulting value will always be null
+//        'answers' => AsCollection::class, // do not use this, the resulting value will always be null, because of the encryption
     ];
 
     /**
@@ -39,6 +34,13 @@ class QuestionnaireEntry extends Model
         'email',
         'answers',
     ];
+
+    public function __construct(array $attributes = [])
+    {
+        $this->setConnection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'));
+
+        parent::__construct($attributes);
+    }
 
     public function questionnaire(): BelongsTo
     {

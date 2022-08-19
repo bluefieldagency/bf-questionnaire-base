@@ -13,7 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('question_types', function (Blueprint $table) {
+        if (Schema::connection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'))->hasTable('question_types')) {
+            return;
+        }
+
+        Schema::connection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'))->create('question_types', function (Blueprint $table) {
             $table->id();
             $table->string('type');
             $table->json('options')->nullable();
@@ -29,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('question_types');
+        Schema::connection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'))->dropIfExists('question_types');
     }
 };

@@ -40,6 +40,13 @@ class Questionnaire extends Model
         'has_intro' => 'boolean',
     ];
 
+    public function __construct(array $attributes = [])
+    {
+        $this->setConnection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'));
+
+        parent::__construct($attributes);
+    }
+
     public function legal_page(): BelongsTo
     {
         return $this->belongsTo(Page::class);

@@ -34,6 +34,13 @@ class QuestionCategory extends Model implements Sortable
         'is_active' => 'boolean',
     ];
 
+    public function __construct(array $attributes = [])
+    {
+        $this->setConnection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'));
+
+        parent::__construct($attributes);
+    }
+
     public function questions(): HasMany
     {
         return $this->hasMany(Question::class);
