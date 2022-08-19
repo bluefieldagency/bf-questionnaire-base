@@ -18,6 +18,10 @@ class PageController extends Controller
             abort(404);
         }
 
+        if ($questionnaire->slug != config('questionnaire.questionnaire_code')) {
+            abort(404);
+        }
+
         // see if previous pages are filled
         for($i = 0; $i < $questionnaire->pages->count(); $i++) {
             $questionnairePage = $questionnaire->pages[$i];
