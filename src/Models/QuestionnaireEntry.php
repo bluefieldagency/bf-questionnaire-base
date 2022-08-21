@@ -2,6 +2,7 @@
 
 namespace Questionnaire\Models;
 
+use App\Models\User;
 use GregoryDuckworth\Encryptable\EncryptableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,6 +46,11 @@ class QuestionnaireEntry extends Model
     public function questionnaire(): BelongsTo
     {
         return $this->belongsTo(Questionnaire::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function getAnswers()
