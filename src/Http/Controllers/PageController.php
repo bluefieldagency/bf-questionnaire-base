@@ -12,13 +12,18 @@ use Questionnaire\Models\QuestionnaireEntry;
 class PageController extends Controller
 {
 
+    protected function getQuestionnaireCode()
+    {
+        return config('questionnaire.questionnaire_code');
+    }
+
     public function index(Questionnaire $questionnaire, Page $page)
     {
         if ( ! $page->is_active) {
             abort(404);
         }
 
-        if ($questionnaire->slug != config('questionnaire.questionnaire_code')) {
+        if ($questionnaire->slug != $this->getQuestionnaireCode()) {
             abort(404);
         }
 
@@ -30,7 +35,7 @@ class PageController extends Controller
             }
             if ($questionnairePage->is_active && $questionnairePage->id != $page->id) {
                 if ( ! session()->has('questionnaire.page.' . $questionnairePage->id)) {
-                    return redirect(route('questionnaire.page', [$questionnaire->slug, $questionnairePage->slug]));
+                    return redirect(route($questionnaire->getRouteNameFor('page'), [$questionnaire->slug, $questionnairePage->slug]));
                 }
             }
         }
@@ -40,7 +45,7 @@ class PageController extends Controller
             $previousPage = $this->getPreviousPage($questionnaire, $page);
             $previousPageUrl = null;
             if ($previousPage) {
-                $previousPageUrl = route('questionnaire.page', [$questionnaire->slug, $previousPage->slug]);
+                $previousPageUrl = route($questionnaire->getRouteNameFor('page'), [$questionnaire->slug, $previousPage->slug]);
             }
         }
 
@@ -84,13 +89,13 @@ class PageController extends Controller
         // Determine the next page to show to the attendee
         $nextPage = $this->getNextPage($questionnaire, $page);
         if ($nextPage) {
-            return redirect(route('questionnaire.page', [$questionnaire->slug, $nextPage->slug]));
+            return redirect(route($questionnaire->getRouteNameFor('page'), [$questionnaire->slug, $nextPage->slug]));
         }
 
         // No more pages to do? Then we are done!
         $this->completeQuestionnaire($questionnaire);
 
-        return redirect(route('questionnaire.completed', [$questionnaire->slug]));
+        return redirect(route($questionnaire->getRouteNameFor('completed'), [$questionnaire->slug]));
     }
 
     protected function storeSpecificValues($request, Page $page)

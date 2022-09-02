@@ -2,17 +2,21 @@
 
 namespace Questionnaire\Models;
 
+use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use Questionnaire\Traits\OptionsTrait;
 
 class Questionnaire extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use OptionsTrait;
 
     protected $progressPages;
 
@@ -28,12 +32,14 @@ class Questionnaire extends Model
         'start_button_label',
         'time_indicator',
         'questionnaire_owner_email',
+        'options',
         'is_active',
         'show_progress_text',
         'has_intro',
     ];
 
     protected $casts = [
+        'options' => AsCollection::class,
         'time_indicator' => 'integer',
         'is_active' => 'boolean',
         'show_progress_text' => 'boolean',
@@ -106,9 +112,11 @@ class Questionnaire extends Model
     {
         $this->getProgressPages();
 
-        for($i = 0; $i < sizeof($this->progressPages); $i++) {
-            if ($page->id == $this->progressPages[$i]->id) {
-                return $i + 1;
+        if ($this->progressPages) {
+            for($i = 0; $i < sizeof($this->progressPages); $i++) {
+                if ($page->id == $this->progressPages[$i]->id) {
+                    return $i + 1;
+                }
             }
         }
 
@@ -126,6 +134,25 @@ class Questionnaire extends Model
         }
 
         return false;
+    }
+
+    public function getRoutePrefix(): mixed
+    {
+        if ($this->hasOption('route_prefix')) {
+            return $this->getOption('route_prefix');
+        }
+
+        return 'questionnaire.';
+    }
+
+    public function getRouteNameFor($suffix): string
+    {
+        $prefix = $this->getRoutePrefix();
+        if ( ! Str::endsWith($prefix, '.')) {
+            $prefix .= '.';
+        }
+
+        return $prefix . $suffix;
     }
 
 }

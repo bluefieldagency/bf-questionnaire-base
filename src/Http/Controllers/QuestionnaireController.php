@@ -8,18 +8,23 @@ use Questionnaire\Models\Questionnaire;
 class QuestionnaireController extends Controller
 {
 
+    protected function getQuestionnaireCode()
+    {
+        return config('questionnaire.questionnaire_code');
+    }
+
     public function redirect()
     {
         $this->checkForQuestionnaireCode();
         
-        $questionnaire = Questionnaire::where('slug', config('questionnaire.questionnaire_code'))
+        $questionnaire = Questionnaire::where('slug', $this->getQuestionnaireCode())
             ->with('pages', function($query) {
                 $query->active();
             })
             ->firstOrFail();
 
         if ($questionnaire->has_intro) {
-            return redirect(route('questionnaire.intro', [$questionnaire]));
+            return redirect(route($questionnaire->getRouteNameFor('intro'), [$questionnaire]));
         }
 
         return redirect($this->firstPageUrl($questionnaire));
@@ -42,12 +47,12 @@ class QuestionnaireController extends Controller
 
         $page = Page::where('slug', $pageCode)
             ->whereHas('questionnaire', function($query) {
-                $query->where('slug', config('questionnaire.questionnaire_code'));
+                $query->where('slug', $this->getQuestionnaireCode());
             })
             ->with('questionnaire')
             ->firstOrFail();
 
-        return redirect(route('questionnaire.page', [$page->questionnaire->slug, $page->slug]));
+        return redirect(route($page->questionnaire->getRouteNameFor('page'), [$page->questionnaire->slug, $page->slug]));
     }
 
     public function index(Questionnaire $questionnaire)
@@ -61,12 +66,12 @@ class QuestionnaireController extends Controller
     {
         $page = $questionnaire->pages()->active()->ordered()->first();
 
-        return route('questionnaire.page', [$questionnaire->slug, $page->slug]);
+        return route($questionnaire->getRouteNameFor('page'), [$questionnaire->slug, $page->slug]);
     }
 
     protected function checkForQuestionnaireCode()
     {
-        if (empty(config('questionnaire.questionnaire_code')) || ! config('questionnaire.questionnaire_code')) {
+        if (empty($this->getQuestionnaireCode()) || ! $this->getQuestionnaireCode()) {
             exit('No questionnaire set');
         }
     }

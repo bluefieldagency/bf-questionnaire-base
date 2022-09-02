@@ -6,10 +6,12 @@ use App\Models\User;
 use GregoryDuckworth\Encryptable\EncryptableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class QuestionnaireEntry extends Model
 {
     use EncryptableTrait;
+    use SoftDeletes;
 
     protected $givenAnswers = null;
     protected $scoredScores = null;
@@ -50,7 +52,7 @@ class QuestionnaireEntry extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->setConnection('mysql')->belongsTo(User::class);
     }
 
     public function getAnswers()
