@@ -69,20 +69,22 @@ class PageController extends Controller
     {
         session([('questionnaire.page.' . $page->id) => $request->except(array_merge(['_token'], array_keys($_FILES)))]);
 
-        $page->load('questions.question_type');
+        $questionnaire->loadCount(['pages' => function($query) {
+            $query->active();
+        }, 'pages.questions' => function($query) {
+            $query->active();
+        }]);
 
-        $handleUploads = false;
-        foreach($page->questions as $question) {
-            if (in_array($question->question_type->type, ['text', 'textarea'])) {
-                if ($question->getOption('allow_additional_uploads') === true) {
-                    $handleUploads = true;
-                }
-            } else if (in_array($question->question_type->type, ['file', 'multi_file'])) {
-                $handleUploads = true;
-            }
+        $totalCount = 0;
+        foreach(session('questionnaire.page') as $pageId => $entries) {
+            $totalCount += sizeof($entries);
         }
 
-        $this->handleUploads($page, $question);
+        session([('questionnaire.progress') => $totalCount]);
+
+        $page->load('questions.question_type');
+
+        $this->handleUploadsForPage($page);
 
         $this->storeSpecificValues($request, $page);
 
@@ -114,25 +116,37 @@ class PageController extends Controller
         }
     }
 
-    protected function handleUploads(Page $page, Question $question)
+    protected function handleUploadsForPage(Page $page)
     {
-        if (request()->hasFile('question_' . $question->id . '_answer_file')) {
-            $counter = 0;
+        foreach($page->questions as $question) {
+            $handleUploads = false;
 
-            foreach(request()->file('question_' . $question->id . '_answer_file') as $upload) {
-                if ($upload->isValid()) {
-                    $file = $upload->store('temp_attachments');
-
-                    session([('questionnaire.page.' . $page->id . '.file.' . $question->id . '.' . $counter) => [
-                        'original_name' => $upload->getClientOriginalName(),
-                        'stored_as' => $file,
-                    ]]);
+            if (in_array($question->question_type->type, ['text', 'textarea'])) {
+                if ($question->getOption('allow_additional_uploads') === true) {
+                    $handleUploads = true;
                 }
+            } else if (in_array($question->question_type->type, ['file', 'multi_file'])) {
+                $handleUploads = true;
+            }
 
-                $counter++;
+            if ($handleUploads && request()->hasFile('question_' . $question->id . '_answer_file')) {
+                $counter = 0;
 
-                if ($question->hasOption('additional_upload_max') && $question->getOption('additional_upload_max') < $counter) {
-                    break;
+                foreach(request()->file('question_' . $question->id . '_answer_file') as $upload) {
+                    if ($upload->isValid()) {
+                        $file = $upload->store('temp_attachments');
+
+                        session([('questionnaire.page.' . $page->id . '.file.' . $question->id . '.' . $counter) => [
+                            'original_name' => $upload->getClientOriginalName(),
+                            'stored_as' => $file,
+                        ]]);
+                    }
+
+                    $counter++;
+
+                    if ($question->hasOption('additional_upload_max') && $question->getOption('additional_upload_max') < $counter) {
+                        break;
+                    }
                 }
             }
         }
@@ -249,15 +263,6 @@ class PageController extends Controller
             }
         }
 
-//        dd([
-//            'scoreableQuestions' => $scoreableQuestions,
-//            'scoreTotal' => $scoreTotal,
-//            'scorePerCaterogryTotal' => $scorePerCaterogryTotal,
-//            'scoreableQuestionsPerCaterogry' => $scoreableQuestionsPerCaterogry,
-//            'averageScorePerCaterogry' => $averageScorePerCaterogry,
-//            'scorePerQuestion' => $scorePerQuestion,
-//        ]);
-
         return [
             'scoreableQuestions' => $scoreableQuestions,
             'scoreTotal' => $scoreTotal,
@@ -275,11 +280,12 @@ class PageController extends Controller
         session([('questionnaire.filled.' . $questionnaireEntry->id) => $questionnaireEntry->id]);
 
         $questionnaireEntry->setScores($this->calculateScores($questionnaire, $questionnaireEntry));
+        $questionnaireEntry->progress = 100;
         $questionnaireEntry->save();
 
         $this->handler = app($questionnaire->handler_class);
 
-        $this->handler->complete($questionnaire, $questionnaireEntry, $scores);
+        $this->handler->complete($questionnaire, $questionnaireEntry, $questionnaireEntry->getScores());
 
         $this->notifyOwner($questionnaireEntry);
 

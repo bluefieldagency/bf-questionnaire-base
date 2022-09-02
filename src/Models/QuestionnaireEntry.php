@@ -7,11 +7,13 @@ use GregoryDuckworth\Encryptable\EncryptableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Questionnaire\Traits\OptionsTrait;
 
 class QuestionnaireEntry extends Model
 {
     use EncryptableTrait;
     use SoftDeletes;
+    use OptionsTrait;
 
     protected $givenAnswers = null;
     protected $scoredScores = null;
@@ -21,10 +23,13 @@ class QuestionnaireEntry extends Model
         'email',
         'answers',
         'scores',
+        'progress',
+        'options',
     ];
 
     protected $casts = [
 //        'answers' => AsCollection::class, // do not use this, the resulting value will always be null, because of the encryption
+//        'options' => AsCollection::class, // do not use this, the resulting value will always be null, because of the encryption
     ];
 
     /**
