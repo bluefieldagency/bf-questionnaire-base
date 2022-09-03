@@ -79,7 +79,6 @@ class PageController extends Controller
         foreach(session('questionnaire.page') as $pageId => $entries) {
             $totalCount += sizeof($entries);
         }
-
         session([('questionnaire.progress') => $totalCount]);
 
         $page->load('questions.question_type');
@@ -281,6 +280,7 @@ class PageController extends Controller
 
         $questionnaireEntry->setScores($this->calculateScores($questionnaire, $questionnaireEntry));
         $questionnaireEntry->progress = 100;
+        $questionnaireEntry->completed = true;
         $questionnaireEntry->save();
 
         $this->handler = app($questionnaire->handler_class);
