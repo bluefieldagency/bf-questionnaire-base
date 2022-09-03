@@ -85,6 +85,8 @@ class PageController extends Controller
                 $totalCount += sizeof($entries);
             }
             session([('questionnaire.progress') => (($totalCount / $totalQuestionCount) * 100)]);
+        } else {
+            session([('questionnaire.progress') => 0]);
         }
 
         $page->load('questions.question_type');
