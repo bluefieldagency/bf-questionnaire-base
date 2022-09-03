@@ -25,13 +25,11 @@ class QuestionnaireEntry extends Model
         'scores',
         'progress',
         'options',
-        'completed',
     ];
 
     protected $casts = [
 //        'answers' => AsCollection::class, // do not use this, the resulting value will always be null, because of the encryption
 //        'options' => AsCollection::class, // do not use this, the resulting value will always be null, because of the encryption
-        'completed' => 'boolean',
     ];
 
     /**

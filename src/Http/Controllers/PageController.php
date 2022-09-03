@@ -69,17 +69,22 @@ class PageController extends Controller
     {
         session([('questionnaire.page.' . $page->id) => $request->except(array_merge(['_token'], array_keys($_FILES)))]);
 
-        $questionnaire->loadCount(['pages' => function($query) {
+        $totalQuestionCount = $totalCount = 0;
+        $questionnaire->load(['pages' => function($query) {
             $query->active();
         }, 'pages.questions' => function($query) {
             $query->active();
         }]);
-
-        $totalCount = 0;
-        foreach(session('questionnaire.page') as $pageId => $entries) {
-            $totalCount += sizeof($entries);
+        foreach($questionnaire->pages as $questionnairePage) {
+            $totalQuestionCount += sizeof($questionnairePage->questions);
         }
-        session([('questionnaire.progress') => $totalCount]);
+
+        if ($totalQuestionCount > 0) {
+            foreach (session('questionnaire.page') as $pageId => $entries) {
+                $totalCount += sizeof($entries);
+            }
+            session([('questionnaire.progress') => (($totalCount / $totalQuestionCount) * 100)]);
+        }
 
         $page->load('questions.question_type');
 
@@ -272,6 +277,14 @@ class PageController extends Controller
         ];
     }
 
+    protected function intermediateStoreQuestionnaire(Questionnaire $questionnaire)
+    {
+        $questionnaireEntry = $this->storeEntry($questionnaire);
+
+        $questionnaireEntry->progress = session('questionnaire.progress');
+        $questionnaireEntry->save();
+    }
+
     protected function completeQuestionnaire(Questionnaire $questionnaire)
     {
         $questionnaireEntry = $this->storeEntry($questionnaire);
@@ -280,7 +293,6 @@ class PageController extends Controller
 
         $questionnaireEntry->setScores($this->calculateScores($questionnaire, $questionnaireEntry));
         $questionnaireEntry->progress = 100;
-        $questionnaireEntry->completed = true;
         $questionnaireEntry->save();
 
         $this->handler = app($questionnaire->handler_class);
