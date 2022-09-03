@@ -69,6 +69,7 @@ class PageController extends Controller
     {
         session([('questionnaire.page.' . $page->id) => $request->except(array_merge(['_token'], array_keys($_FILES)))]);
 
+        // a double loadCont does not work, so have to just load the models
         $totalQuestionCount = $totalCount = 0;
         $questionnaire->load(['pages' => function($query) {
             $query->active();
