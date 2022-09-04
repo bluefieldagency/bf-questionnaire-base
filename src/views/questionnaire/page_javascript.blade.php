@@ -216,13 +216,16 @@
     });
 
     document.addEventListener('keyup', function (event) {
-        if (event.target.matches('input[type="text"]') || event.target.matches('input[type="email"]') || event.target.matches('textarea')) {
-            let parent = event.target.closest('.form-line');
-            if (parent && event.target.value !== '') {
-                parent.classList.add('answered');
-            }
+        let parent = event.target.closest('.form-line');
 
-            setNextCurrent(parent);
+        if (event.target.matches('input[type="text"]') || event.target.matches('input[type="email"]') || event.target.matches('textarea')) {
+            if (parent && event.target.value !== '') {
+                if ((event.target.matches('input[type="email"]') && validateEmail(event.target.value)) || ! event.target.matches('input[type="email"]')) {
+                    parent.classList.add('answered');
+
+                    setNextCurrent(parent);
+                }
+            }
         }
     });
 
@@ -272,4 +275,13 @@
             }
         }, 500);
     });
+
+    function validateEmail(email)
+    {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+            return (true)
+        }
+
+        return (false)
+    }
 </script>
