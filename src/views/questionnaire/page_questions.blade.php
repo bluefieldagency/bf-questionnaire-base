@@ -30,7 +30,10 @@
                         @elseif( ! in_array($question->question_type->type, ['text', 'email']))
                             disabled
                         @endif
-                        @if ($question->hasOption('container_border') && $question->hasOption('container_border') === false)
+                        @if ($question->hasOption('container_border') && $question->getOption('container_border') === false)
+                            skip-borders
+                        @endif
+                        @if ($page->hasOption('container_border') && $page->getOption('container_border') === false)
                             skip-borders
                         @endif
                     "
@@ -61,6 +64,9 @@
                             disabled
                         @endif
                         @if ($question->hasOption('container_border') && $question->getOption('container_border') === false)
+                            skip-borders
+                        @endif
+                        @if ($page->hasOption('container_border') && $page->getOption('container_border') === false)
                             skip-borders
                         @endif
                     "
