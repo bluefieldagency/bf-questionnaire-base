@@ -4,7 +4,14 @@
             <div class="content-center">
                 <div class="header-horizontal">
                     <a href="{{ route('start-again') }}" class="company-logo--container"><img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}"></a>
-                    <a class="large-link contact-link" href="https://bluefieldagency.com/connect#form" target="_blank">@lang('bf::translations.contact-us')</a>
+
+                    @if ($questionnaire->hasOption('intermediate_store_allowed') && $questionnaire->getOption('intermediate_store_allowed') === true)
+                        <a class="large-link intermediate-store-link" href="{{ route('questionnaire.intermediate-store') }}" target="_blank">@lang('bf::translations.intermediate-store')</a>
+                    @endif
+
+                    @if ( ! $questionnaire->hasOption('contact_form_enabled') || ($questionnaire->hasOption('contact_form_enabled') && $questionnaire->getOption('contact_form_enabled') !== false))
+                        <a class="large-link contact-link" href="https://bluefieldagency.com/connect#form" target="_blank">@lang('bf::translations.contact-us')</a>
+                    @endif
                 </div>
             </div>
         </div>

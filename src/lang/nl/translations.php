@@ -8,4 +8,5 @@ return [
     'question' => 'Vraag',
     'of-the' => 'van de',
     'previous-step' => 'Vorige stap',
+    'intermediate-store' => 'Tussentijds opslaan',
 ];
