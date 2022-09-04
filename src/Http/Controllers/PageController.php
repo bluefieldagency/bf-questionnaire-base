@@ -298,9 +298,11 @@ class PageController extends Controller
         $questionnaireEntry->progress = 100;
         $questionnaireEntry->save();
 
-        $this->handler = app($questionnaire->handler_class);
+        if ( ! empty($questionnaire->handler_class)) {
+            $this->handler = app($questionnaire->handler_class);
 
-        $this->handler->complete($questionnaire, $questionnaireEntry, $questionnaireEntry->getScores());
+            $this->handler->complete($questionnaire, $questionnaireEntry, $questionnaireEntry->getScores());
+        }
 
         $this->notifyOwner($questionnaireEntry);
 

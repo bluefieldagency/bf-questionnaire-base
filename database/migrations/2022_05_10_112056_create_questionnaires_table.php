@@ -21,7 +21,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('legal_page_id')->nullable();
             $table->string('progress_page_ids')->nullable();
-            $table->string('handler_class');
+            $table->string('handler_class')->nullable();
             $table->string('company_name');
             $table->text('company_logo');
             $table->string('title');
