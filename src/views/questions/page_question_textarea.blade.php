@@ -3,7 +3,7 @@
 <label for="question_{{ $question->id }}_answer">{{ $question->title }}</label>
 
 @if (($question->hasOption('extra_info') && ! $question->hasOption('extra_info_triggered')) || $question->getOption('extra_info_triggered') !== true)
-    <p class="extra-info">{{ $question->getOption('extra_info') }}</p>
+    <p class="extra-info">{!! $question->getOption('extra_info') !!}</p>
 @endif
 
 @if (($question->hasOption('allow_additional_uploads') && $question->getOption('allow_additional_uploads') === true))

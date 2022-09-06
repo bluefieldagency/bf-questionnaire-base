@@ -1,4 +1,6 @@
 <script>
+    var checkIntermediateStoreLoading = false;
+
     document.addEventListener('click', function (event) {
         // close info overlays which might be open
         let previousTrigger = document.querySelector('.extra-info--trigger.open');
@@ -41,22 +43,17 @@
                     if (questions) {
                         let skipTriggerIndex, skipToIndex = false;
                         questions.forEach(function(element, index) {
-                            console.log(index);
                             if (element.dataset.question_id === questionParent.dataset.question_id) {
-                                console.log('trigger');
                                 skipTriggerIndex = index;
                             }
                             if (element.dataset.question_id === skipToRequest) {
-                                console.log('skipto');
                                 skipToIndex = index;
                             }
                         });
 
                         if (skipTriggerIndex !== false && skipToIndex !== false && skipToIndex > skipTriggerIndex) {
                             questions.forEach(function(element, index) {
-                                console.log('joehoe', index);
                                 if (index > skipTriggerIndex && index < skipToIndex) {
-                                    console.log(index, skipTriggerIndex, skipToIndex);
                                     element.classList.add('skipped');
                                 }
 
@@ -109,16 +106,47 @@
             } else {
                 enableSubmitButton(false);
             }
+        } else if (event.target.matches('.intermediate-store-link')) {
+            event.preventDefault();
+
+            const xmlhttp = new XMLHttpRequest();
+            const url = '{{ route('questionnaire.intermediate-store', ['questionnaire' => $questionnaire, 'page' => $page]) }}';
+            const form = document.getElementById('questionnaire_page_{{ $page->id }}');
+            const formData = new FormData(form);
+            form.classList.add('sending');
+
+            xmlhttp.open("POST", url);
+            xmlhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xmlhttp.send(formData);
+
+            xmlhttp.onreadystatechange = function() {
+                checkIntermediateStoreLoading = false;
+                form.classList.remove('sending');
+
+                if (this.readyState === 4) {
+                    var jsonData = JSON.parse(this.responseText);
+
+                    if (this.status === 200) {
+                        if (jsonData.errors !== undefined) {
+                            General.showErrors(jsonData.errors);
+                        } else {
+                            Notifications.success('@lang('bf::translations.stored')');
+                        }
+                    } else if (this.status === 419) {
+                        alert('{{ __('De sessie was verlopen, de pagina wordt opnieuw ingeladen.')  }}');
+
+                        location.reload();
+                    } else {
+                        General.showErrors(jsonData.errors);
+                    }
+                }
+            };
         }
     });
 
     function setNextCurrent(parent, checkMethod, doScroll, fixedIndex) {
         if (doScroll === undefined) {
             doScroll = true;
-        }
-
-        if (checkMethod === undefined) {
-            checkMethod = null;
         }
 
         if (fixedIndex === undefined) {
@@ -212,9 +240,6 @@
         }
     }
 
-    document.addEventListener('click', function (event) {
-    });
-
     document.addEventListener('keyup', function (event) {
         let parent = event.target.closest('.form-line');
 
@@ -247,30 +272,31 @@
             let elements = document.querySelectorAll('.form-line');
             let foundInput = false;
             let parent = null;
+            let fixedIndex = 0;
 
             if (elements) {
-                elements.forEach(function(element) {
+                elements.forEach(function(element, index) {
                     if (element.classList.contains('question-type--radio') || element.classList.contains('question-type--checkbox')) {
                         let answered = element.querySelector('input:checked');
                         if (answered) {
                             element.classList.add('answered');
-                            element.classList.remove('current');
-                            foundInput = true;
+
+                            parent = element;
+                            fixedIndex = index + 1;
                         }
                     } else if (element.classList.contains('question-type--text') || element.classList.contains('question-type--email')) {
                         let input = element.querySelector('input');
                         if (input && input.value !== '') {
                             element.classList.add('answered');
-                            element.classList.remove('current');
-                            foundInput = true;
+
+                            parent = element;
+                            fixedIndex = index + 1;
                         }
                     }
-
-                    parent = element;
                 });
 
-                if (foundInput) {
-                    setNextCurrent(parent);
+                if (parent) {
+                    setNextCurrent(parent, null, true, fixedIndex);
                 }
             }
         }, 500);

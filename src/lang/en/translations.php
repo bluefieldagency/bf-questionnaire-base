@@ -9,4 +9,5 @@ return [
     'of-the' => 'of',
     'previous-step' => 'Previous step',
     'intermediate-store' => 'Intermediate store',
+    'stored' => 'Stored!',
 ];

@@ -2,10 +2,12 @@
 
 namespace Questionnaire\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Questionnaire\Jobs\SendNotifyQuestionnaireOwner;
 use Questionnaire\Http\Requests\PageRequest;
 use Questionnaire\Models\Page;
-use Questionnaire\Models\Question;
 use Questionnaire\Models\Questionnaire;
 use Questionnaire\Models\QuestionnaireEntry;
 
@@ -68,26 +70,6 @@ class PageController extends Controller
     public function store(PageRequest $request, Questionnaire $questionnaire, Page $page)
     {
         session([('questionnaire.page.' . $page->id) => $request->except(array_merge(['_token'], array_keys($_FILES)))]);
-
-        // a double loadCont does not work, so have to just load the models
-        $totalQuestionCount = $totalCount = 0;
-        $questionnaire->load(['pages' => function($query) {
-            $query->active();
-        }, 'pages.questions' => function($query) {
-            $query->active();
-        }]);
-        foreach($questionnaire->pages as $questionnairePage) {
-            $totalQuestionCount += sizeof($questionnairePage->questions);
-        }
-
-        if ($totalQuestionCount > 0) {
-            foreach (session('questionnaire.page') as $pageId => $entries) {
-                $totalCount += sizeof($entries);
-            }
-            session([('questionnaire.progress') => (($totalCount / $totalQuestionCount) * 100)]);
-        } else {
-            session([('questionnaire.progress') => 0]);
-        }
 
         $page->load('questions.question_type');
 
@@ -280,12 +262,48 @@ class PageController extends Controller
         ];
     }
 
-    protected function intermediateStoreQuestionnaire(Questionnaire $questionnaire)
+    protected function intermediateStoreQuestionnaire(Request $request, Questionnaire $questionnaire, Page $page)
     {
+        session([('questionnaire.page.' . $page->id) => $request->except(array_merge(['_token'], array_keys($_FILES)))]);
+
         $questionnaireEntry = $this->storeEntry($questionnaire);
 
-        $questionnaireEntry->progress = session('questionnaire.progress');
+        $questionnaireEntry->progress = $this->calculateProgressPercentage($questionnaire);
         $questionnaireEntry->save();
+
+        return new JsonResponse(['saved_as' => $questionnaireEntry->id]);
+    }
+
+    protected function calculateProgressPercentage($questionnaire)
+    {
+        $progress = $totalQuestionCount = $totalCount = 0;
+
+        // a double loadCont does not work, so have to just load the models
+        $questionnaire->load(['pages' => function($query) {
+            $query->active();
+        }, 'pages.questions' => function($query) {
+            $query->active();
+        }]);
+
+        foreach($questionnaire->pages as $questionnairePage) {
+            $totalQuestionCount += sizeof($questionnairePage->questions);
+        }
+
+        if ($totalQuestionCount > 0) {
+            foreach (session('questionnaire.page') as $entries) {
+                foreach($entries as $entry) {
+                    if ($entry !== null) {
+                        $totalCount++;
+                    }
+                }
+            }
+
+            $progress = (($totalCount / $totalQuestionCount) * 100);
+        }
+
+        session([('questionnaire.progress') => $progress]);
+
+        return $progress;
     }
 
     protected function completeQuestionnaire(Questionnaire $questionnaire)
@@ -315,7 +333,13 @@ class PageController extends Controller
 
     protected function storeEntry(Questionnaire $questionnaire)
     {
-        $questionnaireEntry = new QuestionnaireEntry();
+        if (session()->has('questionnaire.id')) {
+            $questionnaireEntry = QuestionnaireEntry::find(session('questionnaire.id'));
+        }
+
+        if ( ! $questionnaireEntry) {
+            $questionnaireEntry = new QuestionnaireEntry();
+        }
 
         if (session()->has('questionnaire.name')) {
             $questionnaireEntry->name = session('questionnaire.name');
@@ -327,7 +351,13 @@ class PageController extends Controller
 
         $questionnaireEntry->answers = json_encode(session('questionnaire.page'));
 
+        if (Auth::user()) {
+            // do not use associate, as that does not work with multiple databases
+            $questionnaireEntry->user_id = Auth::user()->id;
+        }
         $questionnaire->questionnaire_entries()->save($questionnaireEntry);
+
+        session(['questionnaire.id' => $questionnaireEntry->id]);
 
         return $questionnaireEntry;
     }

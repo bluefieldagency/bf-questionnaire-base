@@ -14,7 +14,7 @@
     @endif
 @endif
 
-<form id="questionnaire_page_{{ $page->id }}" method="POST" enctype="multipart/form-data">
+<form id="questionnaire_page_{{ $page->id }}"  method="POST" enctype="multipart/form-data">
     @csrf
 
     @if ($page->show_questions_numbered)

@@ -1,12 +1,14 @@
 @section('header')
-    <header>
+    <header id="sticky-nav-bar">
         <div class="header-vertical dark-mode">
             <div class="content-center">
                 <div class="header-horizontal">
                     <a href="{{ route('start-again') }}" class="company-logo--container"><img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}"></a>
 
                     @if ($questionnaire->hasOption('intermediate_store_allowed') && $questionnaire->getOption('intermediate_store_allowed') === true)
-                        <a class="large-link intermediate-store-link" href="{{ route('questionnaire.intermediate-store') }}" target="_blank">@lang('bf::translations.intermediate-store')</a>
+                        @if ($questionnaire->hasProgressPages() && $questionnaire->showProgressForThisPage($page))
+                            <a class="large-link intermediate-store-link" href="{{ route('questionnaire.intermediate-store', ['questionnaire' => $questionnaire, 'page' => $page]) }}" target="_blank">@lang('bf::translations.intermediate-store')</a>
+                        @endif
                     @endif
 
                     @if ( ! $questionnaire->hasOption('contact_form_enabled') || ($questionnaire->hasOption('contact_form_enabled') && $questionnaire->getOption('contact_form_enabled') !== false))
@@ -47,6 +49,8 @@
         <div class="wrapper-content">
             @yield('content')
         </div>
+
+        <div id="notification_container"></div>
 
         <footer>
             <div class="footer-vertical dark-mode">

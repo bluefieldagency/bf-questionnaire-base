@@ -9,4 +9,5 @@ return [
     'of-the' => 'van de',
     'previous-step' => 'Vorige stap',
     'intermediate-store' => 'Tussentijds opslaan',
+    'stored' => 'Opgeslagen!',
 ];
