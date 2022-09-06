@@ -46,6 +46,12 @@
                 >
                     <div class="question-content-container">
                         @include('questionnaire::questions.page_question_' . $question->question_type->type)
+
+                        @if ($question->hasOption('additional_questions'))
+                            @foreach($question->getOption('additional_questions') as $additionalQuestion)
+                                @include('questionnaire::questions.page_question_' . $additionalQuestion['type'])
+                            @endforeach
+                        @endif
                     </div>
                 </li>
             @endforeach
