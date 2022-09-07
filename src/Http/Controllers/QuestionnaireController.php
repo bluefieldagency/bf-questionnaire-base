@@ -35,6 +35,7 @@ class QuestionnaireController extends Controller
         session()->forget([
             'questionnaire.name',
             'questionnaire.email',
+            'questionnaire.project_name',
             'questionnaire.page',
         ]);
 

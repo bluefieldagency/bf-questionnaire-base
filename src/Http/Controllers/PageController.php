@@ -98,6 +98,7 @@ class PageController extends Controller
         $specificValues = [
             'name',
             'email',
+            'project_name',
         ];
 
         foreach ($specificValues as $specificValue) {
@@ -331,6 +332,7 @@ class PageController extends Controller
         session()->forget([
             'questionnaire.name',
             'questionnaire.email',
+            'questionnaire.project_name',
             'questionnaire.page',
         ]);
     }
@@ -351,6 +353,10 @@ class PageController extends Controller
 
         if (session()->has('questionnaire.email')) {
             $questionnaireEntry->email = session('questionnaire.email');
+        }
+
+        if (session()->has('questionnaire.project_name')) {
+            $questionnaireEntry->project_name = session('questionnaire.project_name');
         }
 
         $questionnaireEntry->answers = json_encode(session('questionnaire.page'));
