@@ -116,4 +116,9 @@ class QuestionnaireEntry extends Model
         $this->scores = json_encode($this->scoredScores);
     }
 
+    public function isComplete()
+    {
+        return $this->progress >= 100;
+    }
+
 }

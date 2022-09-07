@@ -53,4 +53,9 @@ trait OptionsTrait
         return $defaultValue;
     }
 
+    public function addOption($key, $value)
+    {
+        return $this->options->put($key, $value);
+    }
+
 }

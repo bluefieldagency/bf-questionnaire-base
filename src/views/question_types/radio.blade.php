@@ -20,6 +20,9 @@
             @if ($answer->hasOption('skip_to'))
                 data-skip="{{ $answer->getOption('skip_to') }}"
             @endif
+            @if ($answer->hasOption('data_type'))
+                data-data_type="{{ $answer->getOption('data_type') }}"
+            @endif
         >
         <label for="question_{{ $question->id }}_answer_{{ $answer->id }}">{{ $answer->title }}</label>
     </div>

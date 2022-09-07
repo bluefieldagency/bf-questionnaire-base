@@ -42,6 +42,10 @@ class PageController extends Controller
             }
         }
 
+        $page->load(['questions' => function($query) {
+            $query->whereNull('parent_id');
+        }, 'questions.children']);
+
         if ($questionnaire->getProgressStepThisPage($page) > 1) {
             // Determine the previous page, to have a previous step link
             $previousPage = $this->getPreviousPage($questionnaire, $page);

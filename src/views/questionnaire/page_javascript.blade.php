@@ -34,6 +34,30 @@
                 parent.classList.add('answered');
             }
 
+            // questions can have additonal questions (children), which are triggered by specific answer data types
+            if (parent.classList.contains('has-children') && event.target.dataset.data_type !== undefined) {
+                let additionalChildrenContainer = parent.querySelector('ul.additional-questions-container');
+                if (additionalChildrenContainer) {
+                    additionalChildrenContainer.classList.remove('visible');
+
+                    let additionalChildren = parent.querySelectorAll('li.additional-question-container')
+                    if (additionalChildren) {
+                        additionalChildren.forEach(function (element, index) {
+                            element.classList.remove('visible');
+                        });
+                    }
+
+                    additionalChildren = parent.querySelectorAll('li[data-answer_trigger="' + event.target.dataset.data_type + '"]');
+                    if (additionalChildren) {
+                        additionalChildrenContainer.classList.add('visible');
+
+                        additionalChildren.forEach(function (element, index) {
+                            element.classList.add('visible');
+                        });
+                    }
+                }
+            }
+
             if (event.target.matches('.skip-trigger')) {
                 let skipToRequest = event.target.dataset.skip;
                 let questionParent = event.target.closest('.question-container');

@@ -18,7 +18,7 @@ return new class extends Migration
         }
 
         Schema::connection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'))->table('questionnaire_entries', function (Blueprint $table) {
-            $table->bigInteger('user_id')->after('questionnaire_id')->nullable()->index();
+            $table->unsignedBigInteger('user_id')->after('questionnaire_id')->nullable()->index();
         });
     }
 

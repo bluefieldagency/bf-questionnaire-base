@@ -47,6 +47,16 @@ class Question extends Model implements Sortable
         return $this->belongsTo(Page::class);
     }
 
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Question::class, 'parent_id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(Question::class, 'parent_id');
+    }
+
     public function question_category(): BelongsTo
     {
         return $this->belongsTo(QuestionCategory::class);

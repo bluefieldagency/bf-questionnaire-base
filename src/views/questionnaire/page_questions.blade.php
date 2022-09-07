@@ -30,6 +30,9 @@
                         @elseif( ! in_array($question->question_type->type, ['text', 'email']))
                             disabled
                         @endif
+                        @if (sizeof($question->children))
+                            has-children
+                        @endif
                         @if ($question->hasOption('container_border') && $question->getOption('container_border') === false)
                             skip-borders
                         @endif
@@ -47,10 +50,8 @@
                     <div class="question-content-container">
                         @include('questionnaire::questions.page_question_' . $question->question_type->type)
 
-                        @if ($question->hasOption('additional_questions'))
-                            @foreach($question->getOption('additional_questions') as $additionalQuestion)
-                                @include('questionnaire::questions.page_question_' . $additionalQuestion['type'])
-                            @endforeach
+                        @if (sizeof($question->children))
+                            @include('questionnaire::questions.additional_questions_container')
                         @endif
                     </div>
                 </li>
@@ -82,6 +83,10 @@
                 >
                     <div class="question-content-container">
                         @include('questionnaire::questions.page_question_' . $question->question_type->type)
+
+                        @if (sizeof($question->children))
+                            @include('questionnaire::questions.additional_questions_container')
+                        @endif
                     </div>
                 </div>
             @endforeach
