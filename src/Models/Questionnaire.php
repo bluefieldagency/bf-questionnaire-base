@@ -100,7 +100,9 @@ class Questionnaire extends Model
         }
 
         if ($this->hasProgressPages()) {
-            $this->progressPages = Page::whereIn('id', explode(',', $this->progress_page_ids))->with('questions')->get();
+            $this->progressPages = Page::whereIn('id', explode(',', $this->progress_page_ids))->with(['questions' => function($query) {
+                $query->whereNull('parent_id');
+            }])->get();
 
             return $this->progressPages;
         }
