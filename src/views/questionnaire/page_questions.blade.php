@@ -23,6 +23,7 @@
                 <li
                     class="
                         form-line
+                        form-line--parent
                         question-container
                         question-type--{{ $question->question_type->type }}
                         @if ($loop->first)
@@ -63,6 +64,7 @@
                 <div
                     class="
                         form-line
+                        form-line--parent
                         question-container
                         question-type--{{ $question->question_type->type }}
                         @if ($loop->first)

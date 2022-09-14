@@ -3,6 +3,7 @@
         <li
             class="
                 form-line
+                form-line--child
                 additional-question-container
                 question-type--{{ $additionalQuestion->question_type->type }}
                 @if ($additionalQuestion->hasOption('container_border') && $additionalQuestion->getOption('container_border') === false)

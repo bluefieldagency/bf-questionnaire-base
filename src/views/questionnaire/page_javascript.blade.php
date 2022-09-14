@@ -2,33 +2,29 @@
     var checkIntermediateStoreLoading = false;
 
     document.addEventListener('click', function (event) {
-        // close info overlays which might be open
-        let previousTrigger = document.querySelector('.extra-info--trigger.open');
-        let previousElement = null;
-        if (previousTrigger) {
-            previousTrigger.classList.remove('open');
-
-            previousElement = previousTrigger.querySelector('.extra-info--container');
-            if (previousElement) {
-                previousElement.classList.add('hidden');
-            }
-        }
-
         if (event.target.matches('.extra-info--trigger')) {
-            if (previousTrigger && previousTrigger.dataset.target !== event.target.dataset.target) {
-                previousTrigger.classList.remove('open');
-
-                if (previousElement) {
-                    previousElement.classList.add('hidden');
-                }
-            }
-
             let element = document.getElementById(event.target.dataset.target);
             if (element) {
                 element.classList.toggle('hidden');
                 event.target.classList.toggle('open');
             }
-        } else if (event.target.matches('input[type="radio"]')) {
+        } else {
+            if ( ! event.target.matches('.extra-info, .extra-info--background')) {
+                // close info overlays which might be open
+                let previousTrigger = document.querySelector('.extra-info--trigger.open');
+                let previousElement = null;
+                if (previousTrigger) {
+                    previousTrigger.classList.remove('open');
+
+                    previousElement = previousTrigger.querySelector('.extra-info--container');
+                    if (previousElement) {
+                        previousElement.classList.add('hidden');
+                    }
+                }
+            }
+        }
+
+        if (event.target.matches('input[type="radio"]')) {
             let parent = event.target.closest('.form-line');
             if (parent) {
                 parent.classList.add('answered');
@@ -44,6 +40,10 @@
                     if (additionalChildren) {
                         additionalChildren.forEach(function (element, index) {
                             element.classList.remove('visible');
+
+                            element.querySelectorAll('input, textarea').forEach(function(input, index) {
+                                input.required = false;
+                            });
                         });
                     }
 
@@ -53,6 +53,10 @@
 
                         additionalChildren.forEach(function (element, index) {
                             element.classList.add('visible');
+
+                            element.querySelectorAll('input, textarea').forEach(function(input, index) {
+                                input.required = true;
+                            });
                         });
                     }
                 }
@@ -60,13 +64,14 @@
 
             if (event.target.matches('.skip-trigger')) {
                 let skipToRequest = event.target.dataset.skip;
-                let questionParent = event.target.closest('.question-container');
+                let questionParent = event.target.closest('.form-line--parent');
                 let questionsParent = event.target.closest('.questions');
                 if (questionsParent) {
-                    let questions = questionsParent.querySelectorAll('.question-container');
+                    let questions = questionsParent.querySelectorAll('.form-line--parent');
                     if (questions) {
                         let skipTriggerIndex, skipToIndex = false;
                         questions.forEach(function(element, index) {
+                            console.log(element, index);
                             if (element.dataset.question_id === questionParent.dataset.question_id) {
                                 skipTriggerIndex = index;
                             }
@@ -177,7 +182,7 @@
             fixedIndex = false;
         }
 
-        let elements = document.querySelectorAll('.form-line');
+        let elements = document.querySelectorAll('.form-line--parent');
 
         if (parent.classList.contains('current')) {
             let nextIndex = 0;
@@ -211,7 +216,7 @@
             }
         } else {
             if (parent.dataset.question_type === 'checkbox' && checkMethod === 'disable_rest') {
-                let element = document.querySelector('.form-line.current');
+                let element = document.querySelector('.form-line--parent.current');
 
                 if (element) {
                     General.scrollTo(element);
@@ -227,10 +232,10 @@
         @if ($questionnaire->hasProgressPages() && $questionnaire->showProgressForThisPage($page))
             @if ($questionnaire->getProgressPagesAmount() > 1)
             @else
-                let elements = document.querySelectorAll('.form-line');
+                let elements = document.querySelectorAll('.form-line--parent');
                 let questionCount = elements.length;
 
-                let answeredElements = document.querySelectorAll('.form-line.answered');
+                let answeredElements = document.querySelectorAll('.form-line--parent.answered');
                 let answeredCount = answeredElements.length;
 
                 let width = (answeredCount / questionCount) * 100;
@@ -245,15 +250,19 @@
             doScroll = true;
         }
 
-        let elements = document.querySelectorAll('.form-line');
-        let questionCount = elements.length;
+        let questionCount = 0;
+        document.querySelectorAll('.form-line--parent').forEach(function(element, index) {
+            if (element.querySelector(':required')) {
+                questionCount += 1;
+            }
+        });
 
-        let answeredElements = document.querySelectorAll('.form-line.answered');
+        let answeredElements = document.querySelectorAll('.form-line--parent.answered');
         let answeredCount = answeredElements.length;
 
         let button = document.querySelector('.submit-button');
 
-        if (questionCount === answeredCount) {
+        if (answeredCount >= questionCount) {
             button.classList.remove('disabled');
 
             if (doScroll) {
@@ -274,6 +283,10 @@
 
                     setNextCurrent(parent);
                 }
+            } else if (parent && event.target.value === '') {
+                if ((event.target.matches('input[type="email"]') && validateEmail(event.target.value)) || ! event.target.matches('input[type="email"]')) {
+                    parent.classList.remove('answered');
+                }
             }
         }
     });
@@ -293,7 +306,7 @@
 
     document.addEventListener("DOMContentLoaded", function() {
         setTimeout(() => {
-            let elements = document.querySelectorAll('.form-line');
+            let elements = document.querySelectorAll('.form-line--parent');
             let foundInput = false;
             let parent = null;
             let fixedIndex = 0;
@@ -307,6 +320,27 @@
 
                             parent = element;
                             fixedIndex = index + 1;
+
+                            // questions can have additonal questions (children), which are triggered by specific answer data types
+                            if (element.classList.contains('has-children')) {
+                                if (answered.dataset.data_type !== undefined) {
+                                    let additionalChildrenContainer = element.querySelector('ul.additional-questions-container');
+                                    if (additionalChildrenContainer) {
+                                        let additionalChildren = element.querySelectorAll('li[data-answer_trigger="' + answered.dataset.data_type + '"]');
+                                        if (additionalChildren) {
+                                            additionalChildrenContainer.classList.add('visible');
+
+                                            additionalChildren.forEach(function (element, index) {
+                                                element.classList.add('visible');
+
+                                                element.querySelectorAll('input, textarea').forEach(function(input, index) {
+                                                    input.required = true;
+                                                });
+                                            });
+                                        }
+                                    }
+                                }
+                            }
                         }
                     } else if (element.classList.contains('question-type--text') || element.classList.contains('question-type--email')) {
                         let input = element.querySelector('input');
@@ -316,6 +350,28 @@
                             parent = element;
                             fixedIndex = index + 1;
                         }
+                    } else if (element.classList.contains('question-type--textarea')) {
+                        let input = element.querySelector('textarea');
+                        if (input && input.value !== '') {
+                            element.classList.add('answered');
+
+                            parent = element;
+                            fixedIndex = index + 1;
+                        }
+                    }
+
+                    let element2 = element;
+
+                    // questions can have additonal questions (children), which are triggered by specific answer data types
+                    if (element.classList.contains('has-children') && (element.classList.contains('question-type--radio') || element.classList.contains('question-type--checkbox'))) {
+                        let answered = element.querySelector('input:checked');
+                        if (answered) {
+                            element.classList.add('answered');
+
+                            parent = element;
+                            fixedIndex = index + 1;
+                        }
+
                     }
                 });
 
