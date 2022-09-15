@@ -40,6 +40,9 @@
                         @if ($page->hasOption('container_border') && $page->getOption('container_border') === false)
                             skip-borders
                         @endif
+                        @if ($question->is_required)
+                            is-required
+                        @endif
                     "
                     data-answer_count="{{ sizeof($question->answers) }}"
                     data-question_type="{{ $question->question_type->type }}"
@@ -77,6 +80,9 @@
                         @endif
                         @if ($page->hasOption('container_border') && $page->getOption('container_border') === false)
                             skip-borders
+                        @endif
+                        @if ($question->is_required)
+                            is-required
                         @endif
                     "
                     data-answer_count="{{ sizeof($question->answers) }}"

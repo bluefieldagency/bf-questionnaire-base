@@ -86,6 +86,7 @@
                                     if (notRelevantAnswerElement) {
                                         notRelevantAnswerElement.checked = true;
                                         element.classList.add('answered');
+                                        element.classList.remove('disabled');
                                     }
                                 }
 
@@ -328,19 +329,27 @@
                             if (element.classList.contains('has-children')) {
                                 if (answered.dataset.data_type !== undefined) {
                                     let additionalChildrenContainer = element.querySelector('ul.additional-questions-container');
-                                    if (additionalChildrenContainer) {
-                                        let additionalChildren = element.querySelectorAll('li[data-answer_trigger="' + answered.dataset.data_type + '"]');
-                                        if (additionalChildren) {
-                                            additionalChildrenContainer.classList.add('visible');
+                                    let additionalChildren = element.querySelectorAll('li.form-line--child');
 
-                                            additionalChildren.forEach(function (element, index) {
-                                                element.classList.add('visible');
+                                    if (additionalChildrenContainer && additionalChildren) {
+                                        additionalChildren.forEach(function (child, index) {
+                                            if (child.dataset.answer_trigger === answered.dataset.data_type) {
+                                                additionalChildrenContainer.classList.add('visible');
+                                                child.classList.add('visible');
 
-                                                element.querySelectorAll('input, textarea').forEach(function(input, index) {
-                                                    input.required = true;
+                                                if (child.classList.contains('is-required')) {
+                                                    child.querySelectorAll('input, textarea').forEach(function (input, index) {
+                                                        input.required = true;
+                                                    });
+                                                }
+                                            } else {
+                                                additionalChildren.forEach(function (child, index) {
+                                                    child.querySelectorAll('input, textarea').forEach(function (input, index) {
+                                                        input.required = false;
+                                                    });
                                                 });
-                                            });
-                                        }
+                                            }
+                                        });
                                     }
                                 }
                             }

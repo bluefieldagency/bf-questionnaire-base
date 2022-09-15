@@ -9,7 +9,7 @@
                 @if ($answer->hasOption('skip_to')) skip-trigger @endif
                 @if ($question->is_required) is-required @endif
             "
-            @if ($question->is_required)
+            @if ($question->is_required && ( ! isset($child) || $child === false))
                 required
             @endif
             @if (session()->has('questionnaire.page.' . $page->id . '.question_' . $question->id . '_answer'))
