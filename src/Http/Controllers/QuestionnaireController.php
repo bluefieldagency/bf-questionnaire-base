@@ -63,7 +63,7 @@ class QuestionnaireController extends Controller
         return view('questionnaire.intro', compact('questionnaire', 'url'));
     }
 
-    protected function firstPageUrl(Questionnaire $questionnaire)
+    public function firstPageUrl(Questionnaire $questionnaire)
     {
         $page = $questionnaire->pages()->active()->ordered()->first();
 
