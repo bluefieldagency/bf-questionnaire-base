@@ -23,8 +23,13 @@ class RadioRule implements Rule
      */
     public function passes($attribute, $value)
     {
+        $answers = $this->question->answers->keyBy('id');
 
-        return true;
+        if (isset($answers[request()->input('question_' . $this->question->id . '_answer')])) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -34,6 +39,6 @@ class RadioRule implements Rule
      */
     public function message()
     {
-        return 'The validation error message.';
+        return 'The selected answer does not belong to this question.';
     }
 }

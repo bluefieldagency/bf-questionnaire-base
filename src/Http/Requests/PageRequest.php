@@ -7,6 +7,9 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PageRequest extends FormRequest
 {
+
+    protected $page;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -25,27 +28,61 @@ class PageRequest extends FormRequest
     public function rules()
     {
         // Get bound Booking model from route
-        $page = $this->route('page');
-        $page->loadMissing('questions.question_type');
+        $this->page = $this->route('page');
+        $this->page->loadMissing([
+            'questions' => function($query) {
+                $query->whereNull('parent_id');
+            },
+            'questions.question_type',
+            'questions.answers',
+            'questions.children.question_type'
+        ]);
 
         $validations = [];
 
-        if (isset($page)) {
-            foreach($page->questions as $question) {
-                $type = ucfirst($question->question_type->type);
+        if (isset($this->page)) {
+            foreach($this->page->questions as $question) {
+                $validations['question_' . $question->id . '_answer'] = $this->forQuestion($question);
 
-                $ruleClass = 'Questionnaire\\Rules\\' . $type . 'Rule';
+                if (sizeof($question->children)) {
+                    $answers = $question->answers->keyBy('id');
 
-                $rules = [new $ruleClass($page, $question)];
+                    $answerId = request()->input('question_' . $question->id . '_answer');
+                    if (isset($answers[$answerId])) {
+                        $answer = $answers[$answerId];
 
-                if ($question->is_required) {
-                    $rules[] = 'required';
+                        if ($answer->hasOption('data_type')) {
+                            $dataType = $answer->getOption('data_type');
+
+                            foreach($question->children as $child) {
+                                if ($child->hasOption('answer_trigger') && $child->getOption('answer_trigger') == $dataType) {
+                                    $validations['question_' . $child->id . '_answer'] = $this->forQuestion($child);
+                                } else {
+                                    $this->request->remove('question_' . $child->id . '_answer');
+                                }
+                            }
+                        }
+                    }
                 }
-
-                $validations['question_' . $question->id . '_answer'] = $rules;
             }
         }
 
         return $validations;
     }
+
+    protected function forQuestion($question)
+    {
+        $type = ucfirst($question->question_type->type);
+
+        $ruleClass = 'Questionnaire\\Rules\\' . $type . 'Rule';
+
+        $rules = [new $ruleClass($this->page, $question)];
+
+        if ($question->is_required) {
+            $rules[] = 'required';
+        }
+
+        return $rules;
+    }
+
 }

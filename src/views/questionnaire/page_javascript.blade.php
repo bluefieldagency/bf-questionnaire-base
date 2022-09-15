@@ -71,7 +71,6 @@
                     if (questions) {
                         let skipTriggerIndex, skipToIndex = false;
                         questions.forEach(function(element, index) {
-                            console.log(element, index);
                             if (element.dataset.question_id === questionParent.dataset.question_id) {
                                 skipTriggerIndex = index;
                             }
@@ -83,11 +82,15 @@
                         if (skipTriggerIndex !== false && skipToIndex !== false && skipToIndex > skipTriggerIndex) {
                             questions.forEach(function(element, index) {
                                 if (index > skipTriggerIndex && index < skipToIndex) {
-                                    element.classList.add('skipped');
+                                    let notRelevantAnswerElement = element.querySelector('*[data-data_type="not_relevant"]');
+                                    if (notRelevantAnswerElement) {
+                                        notRelevantAnswerElement.checked = true;
+                                        element.classList.add('answered');
+                                    }
                                 }
 
                                 if (index === (questions.length - 1)) {
-                                    setNextCurrent(questionParent, null, true, 3);
+                                    setNextCurrent(questionParent, null, true, skipToIndex);
                                 }
                             });
                         }
