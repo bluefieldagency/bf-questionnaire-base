@@ -50,12 +50,12 @@ class QuestionnaireEntry extends Model
         parent::__construct($attributes);
     }
 
-    public function questionnaire(): BelongsTo
+    public function questionnaire() : BelongsTo
     {
         return $this->belongsTo(Questionnaire::class);
     }
 
-    public function user(): BelongsTo
+    public function user() : BelongsTo
     {
         return $this->setConnection('mysql')->belongsTo(User::class);
     }
@@ -119,6 +119,11 @@ class QuestionnaireEntry extends Model
     public function isComplete()
     {
         return $this->progress >= 100;
+    }
+
+    public function getFormattedDateAttribute()
+    {
+        return ucfirst($this->updated_at->formatLocalized('%B %d, %Y - %H:%I:%S'));
     }
 
 }
