@@ -8,6 +8,7 @@
                     @if ($questionnaire->hasOption('intermediate_store_allowed') && $questionnaire->getOption('intermediate_store_allowed') === true && isset($page))
                         @if ($questionnaire->hasProgressPages() && $questionnaire->showProgressForThisPage($page))
                             <a class="large-link intermediate-store-link" href="{{ route('questionnaire.intermediate-store', ['questionnaire' => $questionnaire, 'page' => $page]) }}" target="_blank">@lang('bf::translations.intermediate-store')</a>
+                            <span class="large-link large-link-separator">/</span>
                         @endif
                     @endif
 
