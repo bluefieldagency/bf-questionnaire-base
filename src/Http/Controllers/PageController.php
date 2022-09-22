@@ -287,7 +287,7 @@ class PageController extends Controller
         $questionnaire->load(['pages' => function($query) {
             $query->active();
         }, 'pages.questions' => function($query) {
-            $query->active();
+            $query->active()->whereNull('parent_id');
         }]);
 
         foreach($questionnaire->pages as $questionnairePage) {
