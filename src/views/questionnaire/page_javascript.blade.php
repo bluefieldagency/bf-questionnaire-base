@@ -31,6 +31,7 @@
             }
 
             // questions can have additonal questions (children), which are triggered by specific answer data types
+            let firstAdditionalElement = null;
             if (parent.classList.contains('has-children') && event.target.dataset.data_type !== undefined) {
                 let additionalChildrenContainer = parent.querySelector('ul.additional-questions-container');
                 if (additionalChildrenContainer) {
@@ -52,6 +53,9 @@
                         additionalChildrenContainer.classList.add('visible');
 
                         additionalChildren.forEach(function (element, index) {
+                            if ( ! firstAdditionalElement) {
+                                firstAdditionalElement = element;
+                            }
                             element.classList.add('visible');
 
                             element.querySelectorAll('input, textarea').forEach(function(input, index) {
@@ -98,7 +102,11 @@
                     }
                 }
             } else {
-                setNextCurrent(parent);
+                if (firstAdditionalElement) {
+                    General.scrollTo(firstAdditionalElement);
+                } else {
+                    setNextCurrent(parent);
+                }
             }
         } else if (event.target.matches('input[type="checkbox"]')) {
             let parent = event.target.closest('.form-line');
@@ -189,13 +197,18 @@
         let elements = document.querySelectorAll('.form-line--parent');
 
         if (parent.classList.contains('current')) {
+            console.log('test1');
             let nextIndex = 0;
 
             elements.forEach(function(element, index) {
+                console.log('test2');
                 if (element.classList.contains('current') || nextIndex === 0) {
+                    console.log('test3');
                     if (fixedIndex === false) {
+                        console.log('test4');
                         nextIndex = index + 1;
                     } else {
+                        console.log('test5');
                         nextIndex = fixedIndex;
                     }
                     element.classList.remove('current');
@@ -203,26 +216,34 @@
             });
 
             if (nextIndex > 0) {
+                console.log('test6');
                 if (elements[nextIndex]) {
+                    console.log('test7');
                     elements[nextIndex].classList.add('current');
                     elements[nextIndex].classList.remove('disabled');
 
                     @if ($questionnaire->getProgressPagesAmount() == 1)
+                    console.log('test8');
                         if (document.getElementById('current_indicator')) {
+                            console.log('test9');
                             document.getElementById('current_indicator').innerText = nextIndex + 1;
                         }
                     @endif
 
                     if (doScroll) {
+                        console.log('test10');
                         General.scrollTo(elements[nextIndex]);
                     }
                 }
             }
         } else {
+            console.log('test11');
             if (parent.dataset.question_type === 'checkbox' && checkMethod === 'disable_rest') {
+                console.log('test12');
                 let element = document.querySelector('.form-line--parent.current');
 
                 if (element) {
+                    console.log('test13');
                     General.scrollTo(element);
                 }
             }
@@ -277,7 +298,7 @@
         }
     }
 
-    document.addEventListener('keyup', function (event) {
+    document.addEventListener('focusout', function (event) {
         let parent = event.target.closest('.form-line');
 
         if (event.target.matches('input[type="text"]') || event.target.matches('input[type="email"]') || event.target.matches('textarea')) {
@@ -288,9 +309,7 @@
                     setNextCurrent(parent);
                 }
             } else if (parent && event.target.value === '') {
-                if ((event.target.matches('input[type="email"]') && validateEmail(event.target.value)) || ! event.target.matches('input[type="email"]')) {
-                    parent.classList.remove('answered');
-                }
+                parent.classList.remove('answered');
             }
         }
     });
