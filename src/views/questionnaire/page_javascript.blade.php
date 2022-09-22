@@ -197,18 +197,13 @@
         let elements = document.querySelectorAll('.form-line--parent');
 
         if (parent.classList.contains('current')) {
-            console.log('test1');
             let nextIndex = 0;
 
             elements.forEach(function(element, index) {
-                console.log('test2');
                 if (element.classList.contains('current') || nextIndex === 0) {
-                    console.log('test3');
                     if (fixedIndex === false) {
-                        console.log('test4');
                         nextIndex = index + 1;
                     } else {
-                        console.log('test5');
                         nextIndex = fixedIndex;
                     }
                     element.classList.remove('current');
@@ -216,34 +211,26 @@
             });
 
             if (nextIndex > 0) {
-                console.log('test6');
                 if (elements[nextIndex]) {
-                    console.log('test7');
                     elements[nextIndex].classList.add('current');
                     elements[nextIndex].classList.remove('disabled');
 
                     @if ($questionnaire->getProgressPagesAmount() == 1)
-                    console.log('test8');
                         if (document.getElementById('current_indicator')) {
-                            console.log('test9');
                             document.getElementById('current_indicator').innerText = nextIndex + 1;
                         }
                     @endif
 
                     if (doScroll) {
-                        console.log('test10');
                         General.scrollTo(elements[nextIndex]);
                     }
                 }
             }
         } else {
-            console.log('test11');
             if (parent.dataset.question_type === 'checkbox' && checkMethod === 'disable_rest') {
-                console.log('test12');
                 let element = document.querySelector('.form-line--parent.current');
 
                 if (element) {
-                    console.log('test13');
                     General.scrollTo(element);
                 }
             }
