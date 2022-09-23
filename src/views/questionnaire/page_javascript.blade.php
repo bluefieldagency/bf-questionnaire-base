@@ -3,20 +3,19 @@
 
     document.addEventListener('click', function (event) {
         if (event.target.matches('.extra-info--trigger')) {
-            let element = document.getElementById(event.target.dataset.target);
-            if (element) {
-                element.classList.toggle('hidden');
+            let targetElement = document.getElementById(event.target.dataset.target);
+            if (targetElement) {
+                targetElement.classList.toggle('hidden');
                 event.target.classList.toggle('open');
             }
         } else {
             if ( ! event.target.matches('.extra-info, .extra-info--background')) {
-                // close info overlays which might be open
+                // close info overlays which might be open, unless you click on the overlay itself
                 let previousTrigger = document.querySelector('.extra-info--trigger.open');
-                let previousElement = null;
                 if (previousTrigger) {
                     previousTrigger.classList.remove('open');
 
-                    previousElement = previousTrigger.querySelector('.extra-info--container');
+                    let previousElement = previousTrigger.querySelector('.extra-info--container');
                     if (previousElement) {
                         previousElement.classList.add('hidden');
                     }
@@ -31,12 +30,14 @@
             }
 
             // questions can have additonal questions (children), which are triggered by specific answer data types
-            let firstAdditionalElement = null;
+            // todo: multiple additional questions per element are not handled correctly right now (lean working)
+            let nextQuestion = null;
             if (parent.classList.contains('has-children') && event.target.dataset.data_type !== undefined) {
                 let additionalChildrenContainer = parent.querySelector('ul.additional-questions-container');
                 if (additionalChildrenContainer) {
                     additionalChildrenContainer.classList.remove('visible');
 
+                    // reset all the additional questions back to hidden
                     let additionalChildren = parent.querySelectorAll('li.additional-question-container')
                     if (additionalChildren) {
                         additionalChildren.forEach(function (element, index) {
@@ -48,19 +49,22 @@
                         });
                     }
 
+                    // and now make the relevant additional questions visible
                     additionalChildren = parent.querySelectorAll('li[data-answer_trigger="' + event.target.dataset.data_type + '"]');
                     if (additionalChildren) {
                         additionalChildrenContainer.classList.add('visible');
 
                         additionalChildren.forEach(function (element, index) {
-                            if ( ! firstAdditionalElement) {
-                                firstAdditionalElement = element;
+                            if ( ! nextQuestion) {
+                                nextQuestion = element;
                             }
-                            element.classList.add('visible');
 
-                            element.querySelectorAll('input, textarea').forEach(function(input, index) {
-                                input.required = true;
-                            });
+                            element.classList.add('visible');
+                            if (element.classList.contains('is-required')) {
+                                element.querySelectorAll('input, textarea').forEach(function (input, index) {
+                                    input.required = true;
+                                });
+                            }
                         });
                     }
                 }
@@ -69,22 +73,26 @@
             if (event.target.matches('.skip-trigger')) {
                 let skipToRequest = event.target.dataset.skip;
                 let questionParent = event.target.closest('.form-line--parent');
-                let questionsParent = event.target.closest('.questions');
-                if (questionsParent) {
-                    let questions = questionsParent.querySelectorAll('.form-line--parent');
+                let allQuestionsContainer = event.target.closest('.questions');
+                if (allQuestionsContainer) {
+                    let questions = allQuestionsContainer.querySelectorAll('.form-line--parent');
                     if (questions) {
                         let skipTriggerIndex, skipToIndex = false;
+
+                        // find the skipFrom and skipTo indexes
                         questions.forEach(function(element, index) {
                             if (element.dataset.question_id === questionParent.dataset.question_id) {
                                 skipTriggerIndex = index;
                             }
                             if (element.dataset.question_id === skipToRequest) {
+                                nextQuestion = element;
                                 skipToIndex = index;
                             }
                         });
 
                         if (skipTriggerIndex !== false && skipToIndex !== false && skipToIndex > skipTriggerIndex) {
                             questions.forEach(function(element, index) {
+                                // check the 'not relevant' answer and set the question 'answered' for skipped questions
                                 if (index > skipTriggerIndex && index < skipToIndex) {
                                     let notRelevantAnswerElement = element.querySelector('*[data-data_type="not_relevant"]');
                                     if (notRelevantAnswerElement) {
@@ -93,20 +101,16 @@
                                         element.classList.remove('disabled');
                                     }
                                 }
-
-                                if (index === (questions.length - 1)) {
-                                    setNextCurrent(questionParent, null, true, skipToIndex);
-                                }
                             });
                         }
                     }
                 }
+            }
+
+            if (nextQuestion) {
+                setNextCurrent(null, true, nextQuestion);
             } else {
-                if (firstAdditionalElement) {
-                    General.scrollTo(firstAdditionalElement);
-                } else {
-                    setNextCurrent(parent);
-                }
+                setNextCurrent();
             }
         } else if (event.target.matches('input[type="checkbox"]')) {
             let parent = event.target.closest('.form-line');
@@ -129,7 +133,7 @@
                             }
                         });
 
-                        setNextCurrent(parent, event.target.dataset.check_method);
+                        setNextCurrent(event.target.dataset.check_method);
                     } else {
                         // uncheck logic for 'none of the above'
                         let answers = parent.querySelectorAll('input[type="checkbox"]');
@@ -139,10 +143,10 @@
                             }
                         });
 
-                        setNextCurrent(parent, null, false);
+                        setNextCurrent(null, false);
                     }
                 } else {
-                    setNextCurrent(parent);
+                    setNextCurrent();
                 }
             } else {
                 enableSubmitButton(false);
@@ -150,91 +154,98 @@
         } else if (event.target.matches('.intermediate-store-link')) {
             event.preventDefault();
 
-            const xmlhttp = new XMLHttpRequest();
-            const url = '{{ route('questionnaire.intermediate-store', ['questionnaire' => $questionnaire, 'page' => $page]) }}';
-            const form = document.getElementById('questionnaire_page_{{ $page->id }}');
-            const formData = new FormData(form);
-            form.classList.add('sending');
+            if ( ! checkIntermediateStoreLoading) {
+                const xmlhttp = new XMLHttpRequest();
+                const url = '{{ route('questionnaire.intermediate-store', ['questionnaire' => $questionnaire, 'page' => $page]) }}';
+                const form = document.getElementById('questionnaire_page_{{ $page->id }}');
+                const formData = new FormData(form);
+                form.classList.add('sending');
+                checkIntermediateStoreLoading = true;
 
-            xmlhttp.open("POST", url);
-            xmlhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            xmlhttp.send(formData);
+                xmlhttp.open("POST", url);
+                xmlhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xmlhttp.send(formData);
 
-            xmlhttp.onreadystatechange = function() {
-                checkIntermediateStoreLoading = false;
-                form.classList.remove('sending');
+                xmlhttp.onreadystatechange = function() {
+                    checkIntermediateStoreLoading = false;
+                    form.classList.remove('sending');
 
-                if (this.readyState === 4) {
-                    var jsonData = JSON.parse(this.responseText);
+                    if (this.readyState === 4) {
+                        var jsonData = JSON.parse(this.responseText);
 
-                    if (this.status === 200) {
-                        if (jsonData.errors !== undefined) {
-                            General.showErrors(jsonData.errors);
+                        if (this.status === 200) {
+                            if (jsonData.errors !== undefined) {
+                                General.showErrors(jsonData.errors);
+                            } else {
+                                Notifications.success('@lang('bf::translations.stored')');
+                            }
+                        } else if (this.status === 419) {
+                            alert('{{ __('De sessie was verlopen, de pagina wordt opnieuw ingeladen.')  }}');
+
+                            location.reload();
                         } else {
-                            Notifications.success('@lang('bf::translations.stored')');
+                            General.showErrors(jsonData.errors);
                         }
-                    } else if (this.status === 419) {
-                        alert('{{ __('De sessie was verlopen, de pagina wordt opnieuw ingeladen.')  }}');
-
-                        location.reload();
-                    } else {
-                        General.showErrors(jsonData.errors);
                     }
-                }
-            };
+                };
+            }
         }
     });
 
-    function setNextCurrent(parent, checkMethod, doScroll, fixedIndex) {
+    function setNextCurrent(checkMethod, doScroll, fixedElement) {
         if (doScroll === undefined) {
             doScroll = true;
         }
 
-        if (fixedIndex === undefined) {
-            fixedIndex = false;
+        if (fixedElement === undefined) {
+            fixedElement = null;
         }
 
-        let elements = document.querySelectorAll('.form-line--parent');
+        let currentElement = document.querySelector('.current');
+        if (currentElement) {
+            currentElement.classList.remove('current');
+        }
 
-        if (parent.classList.contains('current')) {
-            let nextIndex = 0;
+        let elements = document.querySelectorAll('.form-line.visible');
+        let nextIndex = 0;
+        elements.forEach(function(element, index) {
+            if (element.classList.contains('answered')) {
+                nextIndex = nextIndex + 1;
+            }
+        });
 
-            elements.forEach(function(element, index) {
-                if (element.classList.contains('current') || nextIndex === 0) {
-                    if (fixedIndex === false) {
-                        nextIndex = index + 1;
-                    } else {
-                        nextIndex = fixedIndex;
-                    }
-                    element.classList.remove('current');
+        if (fixedElement) {
+            elements.forEach(function (element, index) {
+                if (element.dataset.question_id === fixedElement.dataset.question_id) {
+                    nextIndex = index;
                 }
             });
+        }
 
-            if (nextIndex > 0) {
-                if (elements[nextIndex]) {
-                    elements[nextIndex].classList.add('current');
-                    elements[nextIndex].classList.remove('disabled');
+        if (nextIndex >= 0 && elements[nextIndex]) {
+            elements[nextIndex].classList.add('current');
+            elements[nextIndex].classList.remove('disabled');
 
-                    @if ($questionnaire->getProgressPagesAmount() == 1)
-                        if (document.getElementById('current_indicator')) {
-                            document.getElementById('current_indicator').innerText = nextIndex + 1;
-                        }
-                    @endif
-
-                    if (doScroll) {
-                        General.scrollTo(elements[nextIndex]);
-                    }
+            @if ($questionnaire->getProgressPagesAmount() == 1)
+                if (document.getElementById('current_indicator')) {
+                    document.getElementById('current_indicator').innerText = nextIndex + 1;
                 }
-            }
-        } else {
-            if (parent.dataset.question_type === 'checkbox' && checkMethod === 'disable_rest') {
-                let element = document.querySelector('.form-line--parent.current');
+            @endif
 
-                if (element) {
-                    General.scrollTo(element);
-                }
+            if (doScroll) {
+                General.scrollTo(elements[nextIndex]);
             }
         }
+
+        /*
+        if (parent.dataset.question_type === 'checkbox' && checkMethod === 'disable_rest') {
+            let element = document.querySelector('.form-line--parent.current');
+
+            if (element) {
+                General.scrollTo(element);
+            }
+        }
+         */
 
         enableSubmitButton(doScroll);
         setProgress();
@@ -243,6 +254,7 @@
     function setProgress() {
         @if ($questionnaire->hasProgressPages() && $questionnaire->showProgressForThisPage($page))
             @if ($questionnaire->getProgressPagesAmount() > 1)
+                // nothing to do here, blade templates will handle this
             @else
                 let elements = document.querySelectorAll('.form-line--parent');
                 let questionCount = elements.length;
@@ -285,21 +297,31 @@
         }
     }
 
+    document.addEventListener('keyup', function (event) {
+        handleTextableInput(event.target);
+    });
+
     document.addEventListener('focusout', function (event) {
-        let parent = event.target.closest('.form-line');
+        handleTextableInput(event.target);
+    });
 
-        if (event.target.matches('input[type="text"]') || event.target.matches('input[type="email"]') || event.target.matches('textarea')) {
-            if (parent && event.target.value !== '') {
-                if ((event.target.matches('input[type="email"]') && validateEmail(event.target.value)) || ! event.target.matches('input[type="email"]')) {
+    function handleTextableInput(element) {
+        let parent = element.closest('.form-line');
+
+        if (element.matches('input[type="text"]') || element.matches('input[type="email"]') || element.matches('textarea')) {
+            if (parent && element.value !== '') {
+                if ((element.matches('input[type="email"]') && validateEmail(element.value)) || ! element.matches('input[type="email"]')) {
                     parent.classList.add('answered');
-
-                    setNextCurrent(parent);
+                } else if ((element.matches('input[type="email"]') && ! validateEmail(element.value))) {
+                    parent.classList.remove('answered');
                 }
-            } else if (parent && event.target.value === '') {
+
+                setNextCurrent(null, false);
+            } else if (parent && element.value === '') {
                 parent.classList.remove('answered');
             }
         }
-    });
+    }
 
     document.addEventListener('change', function (event) {
         if (event.target.matches('input[type="file"]')) {
@@ -309,7 +331,7 @@
                     parent.classList.add('answered');
                 }
 
-                setNextCurrent(parent);
+                setNextCurrent();
             }
         }
     });
@@ -317,9 +339,8 @@
     document.addEventListener("DOMContentLoaded", function() {
         setTimeout(() => {
             let elements = document.querySelectorAll('.form-line--parent');
-            let foundInput = false;
-            let parent = null;
             let fixedIndex = 0;
+            let fixedElement = 0;
 
             if (elements) {
                 elements.forEach(function(element, index) {
@@ -328,7 +349,6 @@
                         if (answered) {
                             element.classList.add('answered');
 
-                            parent = element;
                             fixedIndex = index + 1;
 
                             // questions can have additonal questions (children), which are triggered by specific answer data types
@@ -365,7 +385,6 @@
                         if (input && input.value !== '') {
                             element.classList.add('answered');
 
-                            parent = element;
                             fixedIndex = index + 1;
                         }
                     } else if (element.classList.contains('question-type--textarea')) {
@@ -373,29 +392,12 @@
                         if (input && input.value !== '') {
                             element.classList.add('answered');
 
-                            parent = element;
                             fixedIndex = index + 1;
                         }
-                    }
-
-                    let element2 = element;
-
-                    // questions can have additonal questions (children), which are triggered by specific answer data types
-                    if (element.classList.contains('has-children') && (element.classList.contains('question-type--radio') || element.classList.contains('question-type--checkbox'))) {
-                        let answered = element.querySelector('input:checked');
-                        if (answered) {
-                            element.classList.add('answered');
-
-                            parent = element;
-                            fixedIndex = index + 1;
-                        }
-
                     }
                 });
 
-                if (parent) {
-                    setNextCurrent(parent, null, true, fixedIndex);
-                }
+                setNextCurrent();
             }
         }, 500);
     });

@@ -25,6 +25,7 @@
                         form-line
                         form-line--parent
                         question-container
+                        visible
                         question-type--{{ $question->question_type->type }}
                         @if ($loop->first)
                             current
@@ -69,6 +70,7 @@
                         form-line
                         form-line--parent
                         question-container
+                        visible
                         question-type--{{ $question->question_type->type }}
                         @if ($loop->first)
                             current
