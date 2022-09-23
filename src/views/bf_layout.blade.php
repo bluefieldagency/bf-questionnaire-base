@@ -13,7 +13,7 @@
                     @endif
 
                     @if ( ! $questionnaire->hasOption('contact_form_enabled') || ($questionnaire->hasOption('contact_form_enabled') && $questionnaire->getOption('contact_form_enabled') !== false))
-                        <a class="large-link contact-link" href="https://bluefieldagency.com/connect#form" target="_blank">@lang('bf::translations.contact-us')</a>
+                        <a class="large-link contact-link" href="{{ route('contact') }}" target="_blank">@lang('bf::translations.contact-us')</a>
                     @endif
                 </div>
             </div>
