@@ -309,7 +309,7 @@
         let parent = element.closest('.form-line');
 
         if (element.matches('input[type="text"]') || element.matches('input[type="email"]') || element.matches('textarea')) {
-            if (parent && element.value !== '') {
+            if (parent && element.value.trim() !== '') {
                 if ((element.matches('input[type="email"]') && validateEmail(element.value)) || ! element.matches('input[type="email"]')) {
                     parent.classList.add('answered');
                 } else if ((element.matches('input[type="email"]') && ! validateEmail(element.value))) {
@@ -317,7 +317,7 @@
                 }
 
                 setNextCurrent(null, false);
-            } else if (parent && element.value === '') {
+            } else if (parent && element.value.trim() === '') {
                 parent.classList.remove('answered');
             }
         }
@@ -347,6 +347,7 @@
                     if (element.classList.contains('question-type--radio') || element.classList.contains('question-type--checkbox')) {
                         let answered = element.querySelector('input:checked');
                         if (answered) {
+                            element.classList.remove('disabled');
                             element.classList.add('answered');
 
                             fixedIndex = index + 1;

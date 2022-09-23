@@ -85,4 +85,19 @@ class PageRequest extends FormRequest
         return $rules;
     }
 
+    public function messages()
+    {
+        $messages = [];
+
+        foreach($this->page->questions as $question) {
+            $messages['question_' . $question->id . '_answer.required'] = 'Veld "' . $question->title . '" is verplicht';
+
+            foreach($question->children as $child) {
+                $messages['question_' . $child->id . '_answer.required'] = 'Veld "' . $child->title . '" is verplicht';
+            }
+        }
+
+        return $messages;
+    }
+
 }
