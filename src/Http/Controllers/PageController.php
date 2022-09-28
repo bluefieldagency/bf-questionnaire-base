@@ -338,6 +338,7 @@ class PageController extends Controller
         $this->notifyOwner($questionnaireEntry);
 
         session()->forget([
+            'questionnaire.id',
             'questionnaire.name',
             'questionnaire.email',
             'questionnaire.project_name',

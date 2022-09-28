@@ -389,6 +389,14 @@
                 }
 
                 setNextCurrent();
+            } else if (parent.classList.contains('question-type--text')) {
+                let textElement = parent.querySelector('input[type="text"]');
+                if (textElement && textElement.required && textElement.value.trim() === '' && parent && event.target.value !== '') {
+                    textElement.value = '{{ __('Zie bijlage') }}';
+                    parent.classList.add('answered');
+                }
+
+                setNextCurrent();
             }
         }
     });
