@@ -4,7 +4,10 @@ namespace Questionnaire\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Questionnaire\Jobs\SendNotifyQuestionnaireOwner;
 use Questionnaire\Http\Requests\PageRequest;
 use Questionnaire\Models\Page;
@@ -125,14 +128,19 @@ class PageController extends Controller
 
             if ($handleUploads && request()->hasFile('question_' . $question->id . '_answer_file')) {
                 $counter = 0;
+                if (session()->has('questionnaire.file.' . $page->id . '.' . $question->id)) {
+                    foreach(session('questionnaire.file.' . $page->id . '.' . $question->id) as $key => $file) {
+                        $counter = $key + 1;
+                    }
+                }
 
                 foreach(request()->file('question_' . $question->id . '_answer_file') as $upload) {
                     if ($upload->isValid()) {
-                        $file = $upload->store('temp_attachments');
+                        $upload->store('temp_attachments');
 
-                        session([('questionnaire.page.' . $page->id . '.file.' . $question->id . '.' . $counter) => [
+                        session([('questionnaire.file.' . $page->id . '.' . $question->id . '.' . $counter) => [
                             'original_name' => $upload->getClientOriginalName(),
-                            'stored_as' => $file,
+                            'stored_as' => $upload->hashName(),
                         ]]);
                     }
 
@@ -375,6 +383,19 @@ class PageController extends Controller
     protected function notifyOwner(QuestionnaireEntry $questionnaireEntry)
     {
         dispatch(new SendNotifyQuestionnaireOwner($questionnaireEntry));
+    }
+
+    public function removeFile(Request $request)
+    {
+        // make sure the file to be removed exists in this array (otherwise you could delete other peoples files)
+        foreach(Arr::dot(session('questionnaire')) as $key => $value) {
+            if ($value == $request->input('file')) {
+                Storage::delete('temp_attachments/' . $request->file);
+                session()->forget('questionnaire.' . Str::before($key, '.stored_as'));
+            }
+        }
+
+        return new JsonResponse(['removed' => $request->file]);
     }
 
 }

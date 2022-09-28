@@ -189,6 +189,50 @@
                     }
                 };
             }
+        } else if (event.target.matches('.file-preview-remove *')) {
+            event.preventDefault();
+
+            let element = event.target;
+            if ( ! element.classList.contains('file-preview-remove')) {
+                element = event.target.closest('.file-preview-remove');
+            }
+
+            const xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", '{{ route('questionnaire.remove-file') }}');
+            xmlhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xmlhttp.setRequestHeader('Content-type', 'application/json');
+            var data = {_token: document.querySelector('meta[name="csrf-token"]').content, file: element.dataset.remove};
+            xmlhttp.send(JSON.stringify(data));
+
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState === 4) {
+                    var jsonData = JSON.parse(this.responseText);
+
+                    if (this.status === 200) {
+                        if (jsonData.removed !== undefined) {
+                            let element = document.querySelector('*[data-remove="' + jsonData.removed + '"]');
+                            if (element) {
+                                let parent = element.closest('.file-preview');
+                                let parentsContainer = element.closest('.file-preview-container');
+                                if (parent) {
+                                    parent.parentNode.removeChild(parent);
+                                }
+                                if ( ! parentsContainer.querySelector('.file-preview')) {
+                                    parentsContainer.parentNode.removeChild(parentsContainer);
+                                }
+                            }
+
+                            let parent = element.closest('.file-preview');
+
+                            Notifications.success('@lang('bf::translations.removed')');
+                        }
+                    } else if (this.status === 419) {
+                        alert('{{ __('De sessie was verlopen, de pagina wordt opnieuw ingeladen.')  }}');
+
+                        location.reload();
+                    }
+                }
+            };
         }
     });
 
@@ -283,7 +327,7 @@
 
         let answeredElements = document.querySelectorAll('.form-line--parent.answered');
         let answeredCount = answeredElements.length;
-
+        let warning = document.getElementById('submit_button_warning');
         let button = document.querySelector('.submit-button');
 
         if (answeredCount >= questionCount) {
@@ -292,8 +336,21 @@
             if (doScroll) {
                 General.scrollTo(button);
             }
+            if (warning) {
+                warning.classList.remove('visible');
+            }
         } else {
             button.classList.add('disabled');
+
+            if (warning) {
+                warning.classList.add('visible');
+
+                if (document.querySelector(':invalid')) {
+                    warning.innerText = '{{ __('Nog niet alle verplichte velden zijn ingevuld') }}';
+                } else {
+                    warning.innerText = '{{ __('Nog niet alle verplichte velden zijn correct ingevuld') }}';
+                }
+            }
         }
     }
 

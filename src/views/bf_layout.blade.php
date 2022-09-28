@@ -35,6 +35,9 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="">
 
+    {{-- CSRF Token --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <script src="{{ mix('/js/app.js') }}"></script>
 
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">

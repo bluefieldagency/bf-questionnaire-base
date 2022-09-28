@@ -103,6 +103,10 @@
         </div>
     @endif
 
+    <div id="submit_button_warning">
+
+    </div>
+
     <div
         class="buttons-container
             @if (isset($previousPageUrl) && $previousPageUrl != '') buttons-container--flex @endif

@@ -8,3 +8,5 @@
         @endif
     >
 @endfor
+
+@include('questionnaire::components.added_files')

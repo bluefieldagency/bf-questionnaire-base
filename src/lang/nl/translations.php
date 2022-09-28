@@ -10,4 +10,5 @@ return [
     'previous-step' => 'Vorige stap',
     'intermediate-store' => 'Tussentijds opslaan',
     'stored' => 'Opgeslagen!',
+    'removed' => 'Verwijderd!',
 ];

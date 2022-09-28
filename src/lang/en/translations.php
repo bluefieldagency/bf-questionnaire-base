@@ -10,4 +10,5 @@ return [
     'previous-step' => 'Previous step',
     'intermediate-store' => 'Intermediate store',
     'stored' => 'Stored!',
+    'removed' => 'Removed!',
 ];

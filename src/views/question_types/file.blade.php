@@ -6,3 +6,5 @@
         required
     @endif
 >
+
+@include('questionnaire::components.added_files')
