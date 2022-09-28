@@ -17,6 +17,7 @@ class QuestionnaireEntry extends Model
     use OptionsTrait;
 
     protected $givenAnswers = null;
+    protected $givenFiles = null;
     protected $scoredScores = null;
 
     protected $fillable = [
@@ -79,6 +80,26 @@ class QuestionnaireEntry extends Model
 
         if (isset($this->givenAnswers[$question->page_id]) && isset($this->givenAnswers[$question->page_id]['question_' . $question->id . '_answer'])) {
             return $this->givenAnswers[$question->page_id]['question_' . $question->id . '_answer'];
+        }
+
+        return null;
+    }
+
+    public function getFiles()
+    {
+        if ( ! $this->givenFiles) {
+            $this->givenFiles = json_decode($this->files, true);
+        }
+
+        return $this->givenFiles;
+    }
+
+    public function getFile($question)
+    {
+        $this->getFiles();
+
+        if (isset($this->givenFiles[$question->page_id]) && isset($this->givenFiles[$question->page_id][$question->id])) {
+            return $this->givenFiles[$question->page_id][$question->id];
         }
 
         return null;
