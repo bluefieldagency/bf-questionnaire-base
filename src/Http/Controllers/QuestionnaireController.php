@@ -2,6 +2,7 @@
 
 namespace Questionnaire\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Questionnaire\Models\Page;
 use Questionnaire\Models\Questionnaire;
 
@@ -23,6 +24,13 @@ class QuestionnaireController extends Controller
             })
             ->firstOrFail();
 
+        if (Auth::user()) {
+            session([
+                'questionnaire.name' => Auth::user()->name,
+                'questionnaire.email' => Auth::user()->email,
+            ]);
+        }
+
         if ($questionnaire->has_intro) {
             return redirect(route($questionnaire->getRouteNameFor('intro'), [$questionnaire]));
         }
@@ -37,6 +45,7 @@ class QuestionnaireController extends Controller
             'questionnaire.email',
             'questionnaire.project_name',
             'questionnaire.page',
+            'questionnaire.file',
         ]);
 
         return redirect(route('home'));

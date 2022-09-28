@@ -342,6 +342,7 @@ class PageController extends Controller
             'questionnaire.email',
             'questionnaire.project_name',
             'questionnaire.page',
+            'questionnaire.file',
         ]);
     }
 
@@ -376,6 +377,16 @@ class PageController extends Controller
         $questionnaire->questionnaire_entries()->save($questionnaireEntry);
 
         session(['questionnaire.id' => $questionnaireEntry->id]);
+
+        if (session()->has('questionnaire.file')) {
+            foreach(Arr::dot(session('questionnaire')) as $key => $value) {
+                if (Str::endsWith($key, '.stored_as')) {
+                    Storage::move(('temp_attachments/' . $value), ('questionnaire_entries/' . $questionnaireEntry->id . '/' . $value));
+                }
+            }
+
+            $questionnaireEntry->files = json_encode(session('questionnaire.file'));
+        }
 
         return $questionnaireEntry;
     }

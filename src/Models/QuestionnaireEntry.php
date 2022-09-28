@@ -4,6 +4,7 @@ namespace Questionnaire\Models;
 
 use App\Models\User;
 use GregoryDuckworth\Encryptable\EncryptableTrait;
+use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,6 +23,7 @@ class QuestionnaireEntry extends Model
         'name',
         'email',
         'answers',
+        'files',
         'scores',
         'progress',
         'options',
@@ -29,7 +31,8 @@ class QuestionnaireEntry extends Model
 
     protected $casts = [
 //        'answers' => AsCollection::class, // do not use this, the resulting value will always be null, because of the encryption
-//        'options' => AsCollection::class, // do not use this, the resulting value will always be null, because of the encryption
+//        'files' => AsCollection::class, // do not use this, the resulting value will always be null, because of the encryption
+        'options' => AsCollection::class,
     ];
 
     /**
@@ -41,6 +44,7 @@ class QuestionnaireEntry extends Model
         'name',
         'email',
         'answers',
+        'files',
     ];
 
     public function __construct(array $attributes = [])
