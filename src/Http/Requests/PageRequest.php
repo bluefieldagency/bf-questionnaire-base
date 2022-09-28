@@ -72,14 +72,18 @@ class PageRequest extends FormRequest
 
     protected function forQuestion($question)
     {
-        $type = ucfirst($question->question_type->type);
+        $type = $question->question_type->type;
 
-        $ruleClass = 'Questionnaire\\Rules\\' . $type . 'Rule';
+        $ruleClass = 'Questionnaire\\Rules\\' . ucfirst($type) . 'Rule';
 
         $rules = [new $ruleClass($this->page, $question)];
 
         if ($question->is_required) {
             $rules[] = 'required';
+        }
+
+        if ($type == 'file') {
+            $rules[] = 'mimes:jpg,jpeg,png,tiff,doc,docx,xls,xlsx,rtf,pdf';
         }
 
         return $rules;
