@@ -394,6 +394,9 @@
                 if (textElement && textElement.required && textElement.value.trim() === '' && parent && event.target.value !== '') {
                     textElement.value = '{{ __('Zie bijlage') }}';
                     parent.classList.add('answered');
+                } else if (textElement && textElement.required && textElement.value.trim() === '{{ __('Zie bijlage') }}' && parent && event.target.value === '') {
+                    textElement.value = '';
+                    parent.classList.add('answered');
                 }
 
                 setNextCurrent();
