@@ -1,5 +1,5 @@
 <h4>
-    <label for="question_{{ $question->id }}_answer">{{ $question->title }}</label>
+    <label for="question_{{ $question->id }}_answer">{!! $question->title !!}</label>
     @include('questionnaire::components.question_extra_info')
 </h4>
 

@@ -1,4 +1,4 @@
-<label for="question_{{ $question->id }}_answer">{{ $question->title }}</label>
+<label for="question_{{ $question->id }}_answer">{!! $question->title !!}</label>
 
 @include('questionnaire::question_types.' . $question->question_type->type)
 
