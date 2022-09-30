@@ -314,6 +314,10 @@ class PageController extends Controller
             $progress = (($totalCount / $totalQuestionCount) * 100);
         }
 
+        if ($progress > 100) {
+            $progress = 100;
+        }
+
         session([('questionnaire.progress') => $progress]);
 
         return $progress;
