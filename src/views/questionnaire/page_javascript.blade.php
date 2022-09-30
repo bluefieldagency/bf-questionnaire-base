@@ -284,6 +284,7 @@
         }
 
         /*
+        // todo: data scan has to have this fixed before getting this to master
         if (parent.dataset.question_type === 'checkbox' && checkMethod === 'disable_rest') {
             let element = document.querySelector('.form-line--parent.current');
 
