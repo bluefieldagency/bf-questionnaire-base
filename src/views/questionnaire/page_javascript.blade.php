@@ -177,7 +177,7 @@
                             if (jsonData.errors !== undefined) {
                                 General.showErrors(jsonData.errors);
                             } else {
-                                Notifications.success('@lang('bf::translations.stored')');
+                                Notifications.success('@lang('bf::translations.stored') <a href="{{ route('questionnaire-entries.index') }}">Terug naar het overzicht?</a>');
                             }
                         } else if (this.status === 419) {
                             alert('{{ __('De sessie was verlopen, de pagina wordt opnieuw ingeladen.')  }}');
