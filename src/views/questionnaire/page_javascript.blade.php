@@ -61,7 +61,7 @@
 
                             element.classList.add('visible');
                             if (element.classList.contains('is-required')) {
-                                element.querySelectorAll('input, textarea').forEach(function (input, index) {
+                                element.querySelectorAll('input[type="text"], input[type="email"], textarea').forEach(function (input, index) {
                                     input.required = true;
                                 });
                             }
@@ -435,7 +435,7 @@
                                                 child.classList.add('visible');
 
                                                 if (child.classList.contains('is-required')) {
-                                                    child.querySelectorAll('input, textarea').forEach(function (input, index) {
+                                                    child.querySelectorAll('input[type="text"], input[type="email"], textarea').forEach(function (input, index) {
                                                         input.required = true;
                                                     });
                                                 }

@@ -4,7 +4,9 @@
         id="question_{{ $question->id }}_answer"
         name="question_{{ $question->id }}_answer_file[]"
         tabindex="-1"
-        @if ($question->hasOption('additional_upload_min') && $question->getOption('additional_upload_min') >= $i)
+        @if (isset($min) && $min >= $i)
+            required
+        @elseif ($question->hasOption('additional_upload_min') && $question->getOption('additional_upload_min') >= $i)
             required
         @endif
     >
