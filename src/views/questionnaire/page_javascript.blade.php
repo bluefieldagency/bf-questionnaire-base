@@ -409,8 +409,6 @@
     document.addEventListener("DOMContentLoaded", function() {
         setTimeout(() => {
             let elements = document.querySelectorAll('.form-line--parent');
-            let fixedIndex = 0;
-            let fixedElement = 0;
 
             if (elements) {
                 elements.forEach(function(element, index) {
@@ -419,8 +417,6 @@
                         if (answered) {
                             element.classList.remove('disabled');
                             element.classList.add('answered');
-
-                            fixedIndex = index + 1;
 
                             // questions can have additonal questions (children), which are triggered by specific answer data types
                             if (element.classList.contains('has-children')) {
@@ -460,20 +456,16 @@
                         let input = element.querySelector('input');
                         if (input && input.value !== '') {
                             element.classList.add('answered');
-
-                            fixedIndex = index + 1;
                         }
                     } else if (element.classList.contains('question-type--textarea')) {
                         let input = element.querySelector('textarea');
                         if (input && input.value !== '') {
                             element.classList.add('answered');
-
-                            fixedIndex = index + 1;
                         }
                     }
                 });
 
-                setNextCurrent();
+                setNextCurrent(null, false);
             }
         }, 500);
     });
