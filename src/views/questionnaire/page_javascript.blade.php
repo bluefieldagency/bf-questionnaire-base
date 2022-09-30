@@ -252,9 +252,11 @@
 
         let elements = document.querySelectorAll('.form-line.visible');
         let nextIndex = 0;
+        let notAnsweredFound = false;
         elements.forEach(function(element, index) {
-            if (element.classList.contains('answered')) {
-                nextIndex = nextIndex + 1;
+            if ( ! element.classList.contains('answered') && ! notAnsweredFound) {
+                fixedElement = element;
+                notAnsweredFound = true;
             }
         });
 
@@ -436,6 +438,11 @@
                                                     child.querySelectorAll('input, textarea').forEach(function (input, index) {
                                                         input.required = true;
                                                     });
+                                                }
+
+                                                if (child.value !== '') {
+                                                    child.classList.add('answered');
+                                                    child.classList.remove('disabled');
                                                 }
                                             } else {
                                                 additionalChildren.forEach(function (child, index) {

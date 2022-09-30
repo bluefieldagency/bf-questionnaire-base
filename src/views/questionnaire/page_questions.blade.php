@@ -29,7 +29,7 @@
                         question-type--{{ $question->question_type->type }}
                         @if ($loop->first)
                             current
-                        @elseif( ! in_array($question->question_type->type, ['text', 'email']))
+                        @elseif( ! in_array($question->question_type->type, ['text', 'textarea', 'email']))
                             disabled
                         @endif
                         @if (sizeof($question->children))
@@ -74,7 +74,7 @@
                         question-type--{{ $question->question_type->type }}
                         @if ($loop->first)
                             current
-                        @elseif( ! in_array($question->question_type->type, ['text', 'email']))
+                        @elseif( ! in_array($question->question_type->type, ['text', 'textarea', 'email']))
                             disabled
                         @endif
                         @if ($question->hasOption('container_border') && $question->getOption('container_border') === false)
