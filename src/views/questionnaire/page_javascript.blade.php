@@ -154,85 +154,89 @@
         } else if (event.target.matches('.intermediate-store-link')) {
             event.preventDefault();
 
-            if ( ! checkIntermediateStoreLoading) {
-                const xmlhttp = new XMLHttpRequest();
-                const url = '{{ route('questionnaire.intermediate-store', ['questionnaire' => $questionnaire, 'page' => $page]) }}';
-                const form = document.getElementById('questionnaire_page_{{ $page->id }}');
-                const formData = new FormData(form);
-                form.classList.add('sending');
-                checkIntermediateStoreLoading = true;
+            @if (Route::has('questionnaire.intermediate-store'))
+                if ( ! checkIntermediateStoreLoading) {
+                    const xmlhttp = new XMLHttpRequest();
+                    const url = '{{ route('questionnaire.intermediate-store', ['questionnaire' => $questionnaire, 'page' => $page]) }}';
+                    const form = document.getElementById('questionnaire_page_{{ $page->id }}');
+                    const formData = new FormData(form);
+                    form.classList.add('sending');
+                    checkIntermediateStoreLoading = true;
 
-                xmlhttp.open("POST", url);
+                    xmlhttp.open("POST", url);
+                    xmlhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                    xmlhttp.send(formData);
+
+                    xmlhttp.onreadystatechange = function() {
+                        checkIntermediateStoreLoading = false;
+                        form.classList.remove('sending');
+
+                        if (this.readyState === 4) {
+                            var jsonData = JSON.parse(this.responseText);
+
+                            if (this.status === 200) {
+                                if (jsonData.errors !== undefined) {
+                                    General.showErrors(jsonData.errors);
+                                } else {
+                                    Notifications.success('@lang('bf::translations.stored') <a href="{{ route('questionnaire-entries.index') }}">Terug naar het overzicht?</a>');
+                                }
+                            } else if (this.status === 419) {
+                                alert('{{ __('De sessie was verlopen, de pagina wordt opnieuw ingeladen.')  }}');
+
+                                location.reload();
+                            } else {
+                                General.showErrors(jsonData.errors);
+                            }
+                        }
+                    };
+                }
+            @endif
+        } else if (event.target.matches('.file-preview-remove *')) {
+            event.preventDefault();
+
+            @if (Route::has('questionnaire.remove-file'))
+                let element = event.target;
+                if ( ! element.classList.contains('file-preview-remove')) {
+                    element = event.target.closest('.file-preview-remove');
+                }
+
+                const xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("POST", '{{ route('questionnaire.remove-file') }}');
                 xmlhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-                xmlhttp.send(formData);
+                xmlhttp.setRequestHeader('Content-type', 'application/json');
+                var data = {_token: document.querySelector('meta[name="csrf-token"]').content, file: element.dataset.remove};
+                xmlhttp.send(JSON.stringify(data));
 
                 xmlhttp.onreadystatechange = function() {
-                    checkIntermediateStoreLoading = false;
-                    form.classList.remove('sending');
-
                     if (this.readyState === 4) {
                         var jsonData = JSON.parse(this.responseText);
 
                         if (this.status === 200) {
-                            if (jsonData.errors !== undefined) {
-                                General.showErrors(jsonData.errors);
-                            } else {
-                                Notifications.success('@lang('bf::translations.stored') <a href="{{ route('questionnaire-entries.index') }}">Terug naar het overzicht?</a>');
+                            if (jsonData.removed !== undefined) {
+                                let element = document.querySelector('*[data-remove="' + jsonData.removed + '"]');
+                                if (element) {
+                                    let parent = element.closest('.file-preview');
+                                    let parentsContainer = element.closest('.file-preview-container');
+                                    if (parent) {
+                                        parent.parentNode.removeChild(parent);
+                                    }
+                                    if ( ! parentsContainer.querySelector('.file-preview')) {
+                                        parentsContainer.parentNode.removeChild(parentsContainer);
+                                    }
+                                }
+
+                                let parent = element.closest('.file-preview');
+
+                                Notifications.success('@lang('bf::translations.removed')');
                             }
                         } else if (this.status === 419) {
                             alert('{{ __('De sessie was verlopen, de pagina wordt opnieuw ingeladen.')  }}');
 
                             location.reload();
-                        } else {
-                            General.showErrors(jsonData.errors);
                         }
                     }
                 };
-            }
-        } else if (event.target.matches('.file-preview-remove *')) {
-            event.preventDefault();
-
-            let element = event.target;
-            if ( ! element.classList.contains('file-preview-remove')) {
-                element = event.target.closest('.file-preview-remove');
-            }
-
-            const xmlhttp = new XMLHttpRequest();
-            xmlhttp.open("POST", '{{ route('questionnaire.remove-file') }}');
-            xmlhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            xmlhttp.setRequestHeader('Content-type', 'application/json');
-            var data = {_token: document.querySelector('meta[name="csrf-token"]').content, file: element.dataset.remove};
-            xmlhttp.send(JSON.stringify(data));
-
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState === 4) {
-                    var jsonData = JSON.parse(this.responseText);
-
-                    if (this.status === 200) {
-                        if (jsonData.removed !== undefined) {
-                            let element = document.querySelector('*[data-remove="' + jsonData.removed + '"]');
-                            if (element) {
-                                let parent = element.closest('.file-preview');
-                                let parentsContainer = element.closest('.file-preview-container');
-                                if (parent) {
-                                    parent.parentNode.removeChild(parent);
-                                }
-                                if ( ! parentsContainer.querySelector('.file-preview')) {
-                                    parentsContainer.parentNode.removeChild(parentsContainer);
-                                }
-                            }
-
-                            let parent = element.closest('.file-preview');
-
-                            Notifications.success('@lang('bf::translations.removed')');
-                        }
-                    } else if (this.status === 419) {
-                        alert('{{ __('De sessie was verlopen, de pagina wordt opnieuw ingeladen.')  }}');
-
-                        location.reload();
-                    }
-                }
-            };
+            @endif
         }
     });
 
@@ -333,6 +337,8 @@
         let warning = document.getElementById('submit_button_warning');
         let button = document.querySelector('.submit-button');
 
+        console.log(questionCount, answeredCount);
+
         if (answeredCount >= questionCount) {
             button.classList.remove('disabled');
 
@@ -346,7 +352,9 @@
             button.classList.add('disabled');
 
             if (warning) {
-                warning.classList.add('visible');
+                if (inputChanged) {
+                    warning.classList.add('visible');
+                }
 
                 if (document.querySelector(':invalid')) {
                     warning.innerText = '{{ __('Nog niet alle verplichte velden zijn ingevuld') }}';
@@ -405,8 +413,13 @@
                 setNextCurrent();
             }
         }
+
+        if (event.target.matches('input, textarea')) {
+            inputChanged = true;
+        }
     });
 
+    let inputChanged = false;
     document.addEventListener("DOMContentLoaded", function() {
         setTimeout(() => {
             let elements = document.querySelectorAll('.form-line--parent');
@@ -416,6 +429,7 @@
                     if (element.classList.contains('question-type--radio') || element.classList.contains('question-type--checkbox')) {
                         let answered = element.querySelector('input:checked');
                         if (answered) {
+                            inputChanged = true;
                             element.classList.remove('disabled');
                             element.classList.add('answered');
 
@@ -456,11 +470,13 @@
                     } else if (element.classList.contains('question-type--text') || element.classList.contains('question-type--email')) {
                         let input = element.querySelector('input');
                         if (input && input.value !== '') {
+                            inputChanged = true;
                             element.classList.add('answered');
                         }
                     } else if (element.classList.contains('question-type--textarea')) {
                         let input = element.querySelector('textarea');
                         if (input && input.value !== '') {
+                            inputChanged = true;
                             element.classList.add('answered');
                         }
                     }

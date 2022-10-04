@@ -10,6 +10,9 @@
                 @if ($answer->hasOption('check_method'))
                     data-check_method="{{ $answer->getOption('check_method') }}"
                 @endif
+                @if ($question->is_required && ( ! isset($child) || $child === false))
+                    required
+                @endif
                 @if (session()->has('questionnaire.page.' . $page->id . '.question_' . $question->id . '_answer'))
                     @if (session('questionnaire.page.' . $page->id . '.question_' . $question->id . '_answer') == $answer->id)
                         checked

@@ -55,6 +55,10 @@ trait OptionsTrait
 
     public function addOption($key, $value)
     {
+        if ( ! $this->hasOptions()) {
+            $this->options = collect([]);
+        }
+
         return $this->options->put($key, $value);
     }
 
