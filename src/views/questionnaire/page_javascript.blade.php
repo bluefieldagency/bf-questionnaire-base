@@ -437,6 +437,20 @@
                             element.classList.remove('disabled');
                             element.classList.add('answered');
 
+                            if (element.classList.contains('question-type--checkbox')) {
+                                let answeredCheckbox = element.querySelector('input:checked');
+                                let checkboxes = element.querySelectorAll('input[type="checkbox"]');
+
+                                if (answeredCheckbox) {
+                                    // set the checkboxes required to false, so you can submit this question if at lease on of the checkboxes is checked
+                                    if (checkboxes) {
+                                        checkboxes.forEach(function(checkbox) {
+                                            checkbox.required = false;
+                                        });
+                                    }
+                                }
+                            }
+
                             // questions can have additonal questions (children), which are triggered by specific answer data types
                             if (element.classList.contains('has-children')) {
                                 if (answered.dataset.data_type !== undefined) {
