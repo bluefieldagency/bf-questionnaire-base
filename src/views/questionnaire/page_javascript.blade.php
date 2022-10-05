@@ -115,11 +115,26 @@
         } else if (event.target.matches('input[type="checkbox"]')) {
             let parent = event.target.closest('.form-line');
             let answeredCheckbox = parent.querySelector('input:checked');
+            let elements = parent.querySelectorAll('input[type="checkbox"]');
 
             if (answeredCheckbox && parent) {
                 parent.classList.add('answered');
+
+                // set the checkboxes required to false, so you can submit this question if at lease on of the checkboxes is checked
+                if (elements) {
+                    elements.forEach(function(element) {
+                        element.required = false;
+                    });
+                }
             } else {
                 parent.classList.remove('answered');
+
+                // set the checkboxes required, so the browser helps you filling in the form correctly
+                if (elements && parent.classList.contains('is-required')) {
+                    elements.forEach(function(element) {
+                        element.required = true;
+                    });
+                }
             }
 
             if (event.target.checked) {
@@ -286,17 +301,6 @@
                 General.scrollTo(elements[nextIndex]);
             }
         }
-
-        /*
-        // todo: data scan has to have this fixed before getting this to master
-        if (parent.dataset.question_type === 'checkbox' && checkMethod === 'disable_rest') {
-            let element = document.querySelector('.form-line--parent.current');
-
-            if (element) {
-                General.scrollTo(element);
-            }
-        }
-         */
 
         enableSubmitButton(doScroll);
         setProgress();
