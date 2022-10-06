@@ -19,9 +19,9 @@ class QuestionnaireController extends Controller
         $this->checkForQuestionnaireCode();
         
         $questionnaire = Questionnaire::where('slug', $this->getQuestionnaireCode())
-            ->with('pages', function($query) {
+            ->with(['pages' => function($query) {
                 $query->active();
-            })
+            }])
             ->firstOrFail();
 
         if (Auth::user()) {

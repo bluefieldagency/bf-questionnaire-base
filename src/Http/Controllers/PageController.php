@@ -32,6 +32,24 @@ class PageController extends Controller
             abort(404);
         }
 
+        // if this questionnaire uses fixed pages, we have to load them (in the correct order)
+        if (session()->has('fixed_page_ids')) {
+            $pages = Page::where('questionnaire_id', $questionnaire->id)->get()->keyBy('id');
+
+            foreach(session('fixed_page_ids') as $key => $pageId) {
+                if (isset($pages[$pageId])) {
+                    if ( ! $questionnaire->relationLoaded('pages')) {
+                        $pagesArray = [$pages[$pageId]];
+                        $questionnaire->setRelation('pages', collect($pagesArray));
+                    } else {
+                        $questionnaire->pages->push($pages[$pageId]);
+                    }
+                } else {
+                    session()->forget('fixed_page_ids.' . $key);
+                }
+            }
+        }
+
         // see if previous pages are filled
         for($i = 0; $i < $questionnaire->pages->count(); $i++) {
             $questionnairePage = $questionnaire->pages[$i];

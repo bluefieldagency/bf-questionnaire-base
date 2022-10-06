@@ -73,6 +73,11 @@ class Questionnaire extends Model
         return $this->hasMany(QuestionnaireEntry::class);
     }
 
+    public function questionnaire_invites(): HasMany
+    {
+        return $this->hasMany(QuestionnaireInvite::class);
+    }
+
     public function hasProgressPages(): bool
     {
         if ($this->progress_page_ids) {
