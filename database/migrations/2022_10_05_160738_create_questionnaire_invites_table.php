@@ -20,8 +20,10 @@ return new class extends Migration
         Schema::connection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'))->create('questionnaire_invites', function (Blueprint $table) {
             $table->id();
             $table->foreignId('questionnaire_id')->constrained();
+            $table->bigInteger('questionnaire_entry_id')->nullable();
             $table->text('name');
             $table->text('email');
+            $table->text('project_name');
             $table->text('hash');
             $table->boolean('is_answered')->default(0);
             $table->json('options')->nullable();

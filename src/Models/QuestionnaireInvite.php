@@ -18,6 +18,7 @@ class QuestionnaireInvite extends Model
     protected $fillable = [
         'name',
         'email',
+        'project_name',
         'hash',
         'is_answered',
         'options',
@@ -36,6 +37,7 @@ class QuestionnaireInvite extends Model
     protected $encryptable = [
         'name',
         'email',
+        'project_name',
     ];
 
     public function __construct(array $attributes = [])
@@ -48,6 +50,11 @@ class QuestionnaireInvite extends Model
     public function questionnaire() : BelongsTo
     {
         return $this->belongsTo(Questionnaire::class);
+    }
+
+    public function questionnaire_entry() : BelongsTo
+    {
+        return $this->belongsTo(QuestionnaireEntry::class);
     }
 
 }

@@ -13,6 +13,7 @@ use Questionnaire\Http\Requests\PageRequest;
 use Questionnaire\Models\Page;
 use Questionnaire\Models\Questionnaire;
 use Questionnaire\Models\QuestionnaireEntry;
+use Questionnaire\Models\QuestionnaireInvite;
 
 class PageController extends Controller
 {
@@ -32,34 +33,22 @@ class PageController extends Controller
             abort(404);
         }
 
-        // if this questionnaire uses fixed pages, we have to load them (in the correct order)
-        if (session()->has('fixed_page_ids')) {
-            $pages = Page::where('questionnaire_id', $questionnaire->id)->get()->keyBy('id');
+        if ($questionnaire->hasOption('requires_invite') && $questionnaire->getOption('requires_invite') && ! session()->has('questionnaire.invite_id')) {
+            return redirect(route('requires-invite'));
+        }
 
-            foreach(session('fixed_page_ids') as $key => $pageId) {
-                if (isset($pages[$pageId])) {
-                    if ( ! $questionnaire->relationLoaded('pages')) {
-                        $pagesArray = [$pages[$pageId]];
-                        $questionnaire->setRelation('pages', collect($pagesArray));
-                    } else {
-                        $questionnaire->pages->push($pages[$pageId]);
-                    }
-                } else {
-                    session()->forget('fixed_page_ids.' . $key);
-                }
-            }
+        if (session()->has('questionnaire.loaded_pages')) {
+            $questionnaire->setRelation('pages', session('questionnaire.loaded_pages'));
         }
 
         // see if previous pages are filled
-        for($i = 0; $i < $questionnaire->pages->count(); $i++) {
-            $questionnairePage = $questionnaire->pages[$i];
-            if ($questionnairePage->is_active && $questionnairePage->id == $page->id) {
-                $i = $questionnaire->pages->count();
+        foreach($questionnaire->pages as $questionnairePage) {
+            if ($questionnairePage->id == $page->id) {
+                break;
             }
-            if ($questionnairePage->is_active && $questionnairePage->id != $page->id) {
-                if ( ! session()->has('questionnaire.page.' . $questionnairePage->id)) {
-                    return redirect(route($questionnaire->getRouteNameFor('page'), [$questionnaire->slug, $questionnairePage->slug]));
-                }
+
+            if ( ! session()->has('questionnaire.page.' . $questionnairePage->id)) {
+                return redirect(route($questionnaire->getRouteNameFor('page'), [$questionnaire->slug, $questionnairePage->slug]));
             }
         }
 
@@ -184,7 +173,12 @@ class PageController extends Controller
 
     protected function getAdjecentPage(Questionnaire $questionnaire, Page $page, $direction)
     {
-        $questionnairePages = $questionnaire->pages()->ordered()->get();
+        if (session()->has('questionnaire.loaded_pages')) {
+            $questionnaire->setRelation('pages', session('questionnaire.loaded_pages'));
+            $questionnairePages = $questionnaire->pages;
+        } else {
+            $questionnairePages = $questionnaire->pages()->ordered()->get();
+        }
 
         $foundKey = null;
         foreach ($questionnairePages as $key => $questionnairePage) {
@@ -208,7 +202,11 @@ class PageController extends Controller
 
     public function calculateScores(Questionnaire $questionnaire, QuestionnaireEntry $questionnaireEntry)
     {
-        $questionnaire->load([
+        if (session()->has('questionnaire.loaded_pages')) {
+            $questionnaire->setRelation('pages', session('questionnaire.loaded_pages'));
+        }
+
+        $questionnaire->loadMissing([
             'pages',
             'pages.questions',
             'pages.questions.answers',
@@ -351,6 +349,14 @@ class PageController extends Controller
         $questionnaireEntry->progress = 100;
         $questionnaireEntry->save();
 
+        if (session()->has('questionnaire.invite_id')) {
+            $questionnaireInvite = QuestionnaireInvite::find(session('questionnaire.invite_id'));
+            if ($questionnaireInvite) {
+                $questionnaireInvite->questionnaire_entry()->associate($questionnaireEntry);
+                $questionnaireInvite->save();
+            }
+        }
+
         if ( ! empty($questionnaire->handler_class)) {
             $this->handler = app($questionnaire->handler_class);
 
@@ -366,6 +372,8 @@ class PageController extends Controller
             'questionnaire.project_name',
             'questionnaire.page',
             'questionnaire.file',
+            'questionnaire.loaded_pages',
+            'questionnaire.invite_id',
         ]);
     }
 

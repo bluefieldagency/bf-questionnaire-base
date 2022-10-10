@@ -3,17 +3,19 @@
         <div class="header-vertical dark-mode">
             <div class="content-center">
                 <div class="header-horizontal">
-                    <a href="{{ route('start-again') }}" class="company-logo--container"><img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}"></a>
+                    @if (isset($questionnaire))
+                        <a href="{{ route('start-again') }}" class="company-logo--container"><img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}"></a>
 
-                    @if ($questionnaire->hasOption('intermediate_store_allowed') && $questionnaire->getOption('intermediate_store_allowed') === true && isset($page))
-                        @if ($questionnaire->hasProgressPages() && $questionnaire->showProgressForThisPage($page))
-                            <a class="large-link intermediate-store-link" href="{{ route('questionnaire.intermediate-store', ['questionnaire' => $questionnaire, 'page' => $page]) }}" target="_blank">@lang('bf::translations.intermediate-store')</a>
-                            <span class="large-link large-link-separator">/</span>
+                        @if ($questionnaire->hasOption('intermediate_store_allowed') && $questionnaire->getOption('intermediate_store_allowed') === true && isset($page))
+                            @if ($questionnaire->hasProgressPages() && $questionnaire->showProgressForThisPage($page))
+                                <a class="large-link intermediate-store-link" href="{{ route('questionnaire.intermediate-store', ['questionnaire' => $questionnaire, 'page' => $page]) }}" target="_blank">@lang('bf::translations.intermediate-store')</a>
+                                <span class="large-link large-link-separator">/</span>
+                            @endif
                         @endif
-                    @endif
 
-                    @if ( ! $questionnaire->hasOption('contact_form_enabled') || ($questionnaire->hasOption('contact_form_enabled') && $questionnaire->getOption('contact_form_enabled') !== false))
-                        <a class="large-link contact-link" href="{{ route('contact') }}" target="_blank">@lang('bf::translations.contact-us')</a>
+                        @if ( ! $questionnaire->hasOption('contact_form_enabled') || ($questionnaire->hasOption('contact_form_enabled') && $questionnaire->getOption('contact_form_enabled') !== false))
+                            <a class="large-link contact-link" href="{{ route('contact') }}" target="_blank">@lang('bf::translations.contact-us')</a>
+                        @endif
                     @endif
                 </div>
             </div>
