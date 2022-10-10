@@ -105,9 +105,22 @@ class Questionnaire extends Model
         }
 
         if ($this->hasProgressPages()) {
-            $this->progressPages = Page::whereIn('id', explode(',', $this->progress_page_ids))->with(['questions' => function($query) {
-                $query->whereNull('parent_id');
-            }])->get();
+            $progressPageIds = explode(',', $this->progress_page_ids);
+
+            if (session()->has('questionnaire.loaded_pages')) {
+                $progressPages = [];
+                foreach(session('questionnaire.loaded_pages') as $loadedPage) {
+                    if (in_array($loadedPage->id, $progressPageIds)) {
+                        $progressPages[] = $loadedPage;
+                    }
+                }
+
+                $this->progressPages = collect($progressPages);
+            } else {
+                $this->progressPages = Page::whereIn('id', $progressPageIds)->with(['questions' => function($query) {
+                    $query->whereNull('parent_id');
+                }])->get();
+            }
 
             return $this->progressPages;
         }
