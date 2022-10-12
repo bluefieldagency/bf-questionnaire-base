@@ -2,7 +2,7 @@
 
 namespace Questionnaire\Models;
 
-use GregoryDuckworth\Encryptable\EncryptableTrait;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,8 +12,8 @@ use Questionnaire\Traits\OptionsTrait;
 class QuestionnaireInvite extends Model
 {
     use HasFactory;
-    use EncryptableTrait;
     use OptionsTrait;
+    use CrudTrait;
 
     protected $fillable = [
         'name',
@@ -22,24 +22,17 @@ class QuestionnaireInvite extends Model
         'owner_email',
         'owner_name',
         'hash',
-        'is_answered',
         'options',
     ];
 
-    protected $casts = [
-        'is_answered' => 'boolean',
-        'options' => AsCollection::class,
-    ];
+    protected $guarded = ['id'];
+    protected $table = 'questionnaire_invites';
 
-    /**
-     * Encryptable Rules
-     *
-     * @var array
-     */
-    protected $encryptable = [
-        'name',
-        'email',
-        'project_name',
+    protected $casts = [
+        'options' => AsCollection::class,
+        'name' => 'encrypted',
+        'email' => 'encrypted',
+        'project_name' => 'encrypted',
     ];
 
     public function __construct(array $attributes = [])
@@ -47,6 +40,21 @@ class QuestionnaireInvite extends Model
         $this->setConnection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'));
 
         parent::__construct($attributes);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($model) {
+            $questionnaire = Questionnaire::where('slug', config('questionnaire.questionnaire_code'))->firstOrFail();
+
+            $model->questionnaire()->associate($questionnaire);
+
+            if ( ! $model->hash) {
+                $model->hash = md5(implode(',', [$model->name, $model->email, $model->project_name, time()]));
+            }
+        });
     }
 
     public function questionnaire() : BelongsTo

@@ -27,7 +27,6 @@ return new class extends Migration
             $table->string('owner_name')->nullable();
             $table->string('owner_email')->nullable();
             $table->text('hash');
-            $table->boolean('is_answered')->default(0);
             $table->json('options')->nullable();
             $table->timestamps();
         });
