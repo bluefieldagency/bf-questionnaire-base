@@ -105,13 +105,7 @@ class PageController extends Controller
 
     protected function storeSpecificValues($request, Page $page)
     {
-        $specificValues = [
-            'name',
-            'email',
-            'project_name',
-        ];
-
-        foreach ($specificValues as $specificValue) {
+        foreach (QuestionnaireEntry::$fixedDataTypes as $specificValue) {
             foreach ($page->questions as $question) {
                 if (isset($question->options['data_type']) && $question->options['data_type'] == $specificValue) {
                     session([('questionnaire.' . $specificValue) => $request->input('question_' . $question->id . '_answer')]);
@@ -365,16 +359,7 @@ class PageController extends Controller
 
         $this->notifyOwner($questionnaireEntry);
 
-        session()->forget([
-            'questionnaire.id',
-            'questionnaire.name',
-            'questionnaire.email',
-            'questionnaire.project_name',
-            'questionnaire.page',
-            'questionnaire.file',
-            'questionnaire.loaded_pages',
-            'questionnaire.invite_id',
-        ]);
+        Questionnaire::resetSession();
     }
 
     protected function storeEntry(Questionnaire $questionnaire)
@@ -387,16 +372,10 @@ class PageController extends Controller
             $questionnaireEntry = new QuestionnaireEntry();
         }
 
-        if (session()->has('questionnaire.name')) {
-            $questionnaireEntry->name = session('questionnaire.name');
-        }
-
-        if (session()->has('questionnaire.email')) {
-            $questionnaireEntry->email = session('questionnaire.email');
-        }
-
-        if (session()->has('questionnaire.project_name')) {
-            $questionnaireEntry->project_name = session('questionnaire.project_name');
+        foreach (QuestionnaireEntry::$fixedDataTypes as $fixedDataType) {
+            if (session()->has('questionnaire.' . $fixedDataType)) {
+                $questionnaireEntry->setAttribute($fixedDataType, session('questionnaire.' . $fixedDataType));
+            }
         }
 
         $questionnaireEntry->answers = json_encode(session('questionnaire.page'));

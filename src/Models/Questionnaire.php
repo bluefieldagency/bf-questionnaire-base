@@ -175,4 +175,21 @@ class Questionnaire extends Model
         return $prefix . $suffix;
     }
 
+    static public function resetSession()
+    {
+        session()->forget([
+            'questionnaire.page',
+            'questionnaire.file',
+            'questionnaire.id',
+            'questionnaire.loaded_pages',
+            'questionnaire.invite_id',
+        ]);
+
+        foreach(QuestionnaireEntry::$fixedDataTypes as $dataType) {
+            session()->forget([
+                ('questionnaire.' . $dataType),
+            ]);
+        }
+    }
+
 }

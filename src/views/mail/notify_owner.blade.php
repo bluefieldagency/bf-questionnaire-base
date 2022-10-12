@@ -27,21 +27,33 @@
                                             Zie de ingevulde gegevens van de {{ $questionnaire->title }}:
                                         </p>
 
-                                        <table role="presentation" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" align="center" width="100%">
-                                            @foreach($result as $pageIterator => $page)
-                                                @foreach($page as $line)
+                                        @if ($questionnaire->hasOption('show_fixed_data_types') && $questionnaire->getOption('show_fixed_data_types') === true)
+                                            <table role="presentation" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" align="center" width="100%">
+                                                @foreach(\Questionnaire\Models\QuestionnaireEntry::$fixedDataTypes as $fixedDataType)
+                                                    <tr>
+                                                        <td valign="top" style="padding-right: 30px;">{{ $fixedDataType }}:</td>
+                                                        <td valign="top">{{ $questionnaire_entry->getAttribute($fixedDataType) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+
+                                            <p>&nbsp;</p>
+                                        @endif
+
+                                        @foreach($result as $pageIterator => $resultData)
+                                            <p>{{ $pages[$pageIterator]->title }}</p>
+
+                                            <table role="presentation" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" align="center" width="100%">
+                                                @foreach($resultData as $line)
                                                     <tr>
                                                         <td valign="top" style="padding-right: 30px;">{{ $line['question']->title }}:</td>
                                                         <td valign="top">{{ $line['answer'] }}</td>
                                                     </tr>
                                                 @endforeach
+                                            </table>
 
-                                                <tr>
-                                                    <td>&nbsp;</td>
-                                                    <td>&nbsp;</td>
-                                                </tr>
-                                            @endforeach
-                                        </table>
+                                            <p>&nbsp;</p>
+                                        @endforeach
                                     </td>
                                     <td width="25">&nbsp;</td>
                                 </tr>

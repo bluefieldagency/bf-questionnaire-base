@@ -31,6 +31,7 @@ class NotifyQuestionnaireOwner extends Mailable
             'questionnaire.pages.questions.answers',
         ]);
 
+        $pages = $this->questionnaireEntry->questionnaire->pages->keyBy('id');
         $questions = [];
         $answers = [];
         foreach($this->questionnaireEntry->questionnaire->pages as $page) {
@@ -46,6 +47,7 @@ class NotifyQuestionnaireOwner extends Mailable
         $result = [];
         foreach($this->questionnaireEntry->getAnswers() as $pageIterator => $entries) {
             $result[$pageIterator] = [];
+
             foreach($entries as $askedQuestion => $givenAnswer) {
                 $data = [];
                 $askedQuestionId = str_replace(['question_', '_answer'], '', $askedQuestion);
@@ -75,15 +77,28 @@ class NotifyQuestionnaireOwner extends Mailable
                 }
                 $result[$pageIterator][] = $data;
             }
-            $givenAnswer = [];
             $data[$pageIterator] = [];
+        }
+
+        $toEmail = $this->questionnaireEntry->questionnaire->questionnaire_owner_email;
+        $toName = null;
+        if (isset($this->questionnaireEntry->questionnaire_invite)) {
+            if ($this->questionnaireEntry->questionnaire_invite->owner_email) {
+                $toEmail = $this->questionnaireEntry->questionnaire_invite->owner_email;
+
+                if ($this->questionnaireEntry->questionnaire_invite->owner_name) {
+                    $toName = $this->questionnaireEntry->questionnaire_invite->owner_name;
+                }
+            }
         }
 
         return $this->view('questionnaire::mail.notify_owner', ['questionnaireEntry' => $this->questionnaireEntry])
             ->subject($this->questionnaireEntry->questionnaire->title . ' ingevuld door ' . $this->questionnaireEntry->name)
+            ->to($toEmail, $toName)
             ->with([
                 'questionnaire' => $this->questionnaireEntry->questionnaire,
                 'questionnaire_entry' => $this->questionnaireEntry,
+                'pages' => $pages,
                 'questions' => $questions,
                 'answers' => $answers,
                 'result' => $result,

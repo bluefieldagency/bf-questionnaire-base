@@ -29,8 +29,7 @@ class SendNotifyQuestionnaireOwner implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to($this->questionnaireEntry->questionnaire->questionnaire_owner_email)
-            ->send(new NotifyQuestionnaireOwner($this->questionnaireEntry));
+        Mail::send(new NotifyQuestionnaireOwner($this->questionnaireEntry));
     }
 
 }

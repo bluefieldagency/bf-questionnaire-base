@@ -24,6 +24,8 @@ return new class extends Migration
             $table->text('name');
             $table->text('email');
             $table->text('project_name');
+            $table->string('owner_name')->nullable();
+            $table->string('owner_email')->nullable();
             $table->text('hash');
             $table->boolean('is_answered')->default(0);
             $table->json('options')->nullable();

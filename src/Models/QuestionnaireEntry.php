@@ -7,6 +7,7 @@ use GregoryDuckworth\Encryptable\EncryptableTrait;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Questionnaire\Traits\OptionsTrait;
 
@@ -34,6 +35,12 @@ class QuestionnaireEntry extends Model
 //        'answers' => AsCollection::class, // do not use this, the resulting value will always be null, because of the encryption
 //        'files' => AsCollection::class, // do not use this, the resulting value will always be null, because of the encryption
         'options' => AsCollection::class,
+    ];
+
+    static public array $fixedDataTypes = [
+        'name',
+        'email',
+        'project_name'
     ];
 
     /**
@@ -149,6 +156,11 @@ class QuestionnaireEntry extends Model
     public function getFormattedDateAttribute()
     {
         return ucfirst($this->updated_at->formatLocalized('%B %d, %Y - %H:%I:%S'));
+    }
+
+    public function questionnaire_invite() : HasOne
+    {
+        return $this->hasOne(QuestionnaireInvite::class);
     }
 
 }

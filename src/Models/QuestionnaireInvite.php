@@ -19,6 +19,8 @@ class QuestionnaireInvite extends Model
         'name',
         'email',
         'project_name',
+        'owner_email',
+        'owner_name',
         'hash',
         'is_answered',
         'options',

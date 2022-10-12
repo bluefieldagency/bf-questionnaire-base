@@ -40,13 +40,7 @@ class QuestionnaireController extends Controller
 
     public function startAgain()
     {
-        session()->forget([
-            'questionnaire.name',
-            'questionnaire.email',
-            'questionnaire.project_name',
-            'questionnaire.page',
-            'questionnaire.file',
-        ]);
+        Questionnaire::resetSession();
 
         return redirect(route('home'));
     }
