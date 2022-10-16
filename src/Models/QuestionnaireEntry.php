@@ -3,7 +3,6 @@
 namespace Questionnaire\Models;
 
 use App\Models\User;
-use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,7 +15,6 @@ class QuestionnaireEntry extends Model
 
     use SoftDeletes;
     use OptionsTrait;
-    use CrudTrait;
 
     protected $givenAnswers = null;
     protected $givenFiles = null;
