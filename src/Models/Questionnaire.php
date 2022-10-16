@@ -17,7 +17,6 @@ class Questionnaire extends Model
     use HasFactory;
     use SoftDeletes;
     use OptionsTrait;
-    use CrudTrait;
 
     protected $progressPages;
 

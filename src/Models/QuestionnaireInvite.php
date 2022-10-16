@@ -12,7 +12,6 @@ class QuestionnaireInvite extends Model
 {
     use HasFactory;
     use OptionsTrait;
-    use CrudTrait;
 
     protected $fillable = [
         'name',

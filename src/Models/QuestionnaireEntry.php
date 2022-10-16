@@ -15,7 +15,6 @@ class QuestionnaireEntry extends Model
 
     use SoftDeletes;
     use OptionsTrait;
-    use CrudTrait;
 
     protected $givenAnswers = null;
     protected $givenFiles = null;
