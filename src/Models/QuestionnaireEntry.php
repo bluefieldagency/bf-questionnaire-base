@@ -3,7 +3,6 @@
 namespace Questionnaire\Models;
 
 use App\Models\User;
-use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,8 +33,8 @@ class QuestionnaireEntry extends Model
     ];
 
     protected $casts = [
-//        'answers' => AsCollection::class, // do not use this, the resulting value will always be null, because of the encryption
-//        'files' => AsCollection::class, // do not use this, the resulting value will always be null, because of the encryption
+        'answers' => AsCollection::class,
+        'files' => AsCollection::class,
         'options' => AsCollection::class,
         'name' => 'encrypted',
         'email' => 'encrypted',
