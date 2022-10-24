@@ -37,6 +37,7 @@ class QuestionnaireEntry extends Model
         'options' => AsCollection::class,
         'name' => 'encrypted',
         'email' => 'encrypted',
+        'answers' => 'encrypted',
         'project_name' => 'encrypted',
         'files' => 'encrypted:collection',
     ];

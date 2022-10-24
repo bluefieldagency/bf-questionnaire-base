@@ -3,6 +3,7 @@
 namespace Questionnaire\Models;
 
 use Illuminate\Database\Eloquent\Casts\AsCollection;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -106,6 +107,15 @@ class Question extends Model implements Sortable
     public function scopeActive($query)
     {
         return $query->where('is_active', '1');
+    }
+
+    public function getTitleAttribute($value)
+    {
+        foreach(QuestionnaireEntry::$fixedDataTypes as $fixedDataType) {
+            $value = str_replace(('[' . $fixedDataType . ']'), session('questionnaire.' . $fixedDataType), $value);
+        }
+
+        return $value;
     }
 
 }

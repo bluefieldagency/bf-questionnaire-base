@@ -7,5 +7,5 @@
         required
     @endif
 >@if (session()->has('questionnaire.page.' . $page->id . '.question_' . $question->id . '_answer'))
-    {{ session('questionnaire.page.' . $page->id . '.question_' . $question->id . '_answer') }}
+{{ session('questionnaire.page.' . $page->id . '.question_' . $question->id . '_answer') }}
 @endif</textarea>

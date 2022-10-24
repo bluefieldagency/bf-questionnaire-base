@@ -74,4 +74,13 @@ class Page extends Model implements Sortable
         return $query->where('is_active', '1');
     }
 
+    public function getTitleAttribute($value)
+    {
+        foreach(QuestionnaireEntry::$fixedDataTypes as $fixedDataType) {
+            $value = str_replace(('[' . $fixedDataType . ']'), session('questionnaire.' . $fixedDataType), $value);
+        }
+
+        return $value;
+    }
+
 }

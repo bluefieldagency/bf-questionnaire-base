@@ -32,6 +32,10 @@ class QuestionnaireController extends Controller
         }
 
         if ($questionnaire->has_intro) {
+            if ($questionnaire->hasOption('requires_invite') && $questionnaire->getOption('requires_invite') && ! session()->has('questionnaire.invite_id')) {
+                return redirect(route('requires-invite'));
+            }
+
             return redirect(route($questionnaire->getRouteNameFor('intro'), [$questionnaire]));
         }
 

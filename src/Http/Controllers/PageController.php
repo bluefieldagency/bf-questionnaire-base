@@ -78,6 +78,16 @@ class PageController extends Controller
             }
         }
 
+        if ( ! empty($questionnaire->handler_class)) {
+            $handler = app($questionnaire->handler_class);
+
+            if ($handler) {
+                app()->instance('handler', $handler);
+
+                \View::share('handler', $handler);
+            }
+        }
+
         return view($viewTemplate, compact('questionnaire', 'page', 'previousPageUrl', 'skipIterators'));
     }
 
@@ -200,6 +210,10 @@ class PageController extends Controller
             $questionnaire->setRelation('pages', session('questionnaire.loaded_pages'));
         }
 
+        if ( ! empty($questionnaire->handler_class)) {
+            $handler = app($questionnaire->handler_class);
+        }
+
         $questionnaire->loadMissing([
             'pages',
             'pages.questions',
@@ -217,6 +231,10 @@ class PageController extends Controller
 
         foreach($questionnaire->pages as $page) {
             foreach($page->questions as $question) {
+                if ( ! $handler || ($handler && ! $handler->showQuestion($question))) {
+                    continue;
+                }
+
                 if ($question->hasOptions()) {
                     $score = 0;
 
@@ -225,28 +243,30 @@ class PageController extends Controller
 
                         $answer = $questionnaireEntry->getAnswer($question);
 
-                        if ($question->question_type->type == 'radio') {
-                            $anwserModel = $question->getAnswer($answer);
+                        if ($answer) {
+                            if ($question->question_type->type == 'radio') {
+                                $anwserModel = $question->getAnswer($answer);
 
-                            $score = $anwserModel->getOption('score');
-                        } else if ($question->question_type->type == 'checkbox') {
-                            foreach($answer as $key => $value) {
-                                $anwserModel = $question->getAnswer($key);
+                                $score = $anwserModel->getOption('score');
+                            } else if ($question->question_type->type == 'checkbox') {
+                                foreach($answer as $key => $value) {
+                                    $anwserModel = $question->getAnswer($key);
 
-                                $score += $anwserModel->getOption('score');
-                            }
+                                    $score += $anwserModel->getOption('score');
+                                }
 
-                            if ($question->hasOption('score_max')) {
-                                $scoreMax = $question->getOption('score_max');
+                                if ($question->hasOption('score_max')) {
+                                    $scoreMax = $question->getOption('score_max');
 
-                                if ($scoreMax > 0 & $score > $scoreMax) {
-                                    $score = $scoreMax;
+                                    if ($scoreMax > 0 & $score > $scoreMax) {
+                                        $score = $scoreMax;
+                                    }
                                 }
                             }
-                        }
 
-                        if ( ! isset($scorePerQuestion[$question->id])) {
-                            $scorePerQuestion[$question->id] = $score;
+                            if ( ! isset($scorePerQuestion[$question->id])) {
+                                $scorePerQuestion[$question->id] = $score;
+                            }
                         }
                     }
 

@@ -38,10 +38,18 @@ class PageRequest extends FormRequest
             'questions.children.question_type'
         ]);
 
+        if ( ! empty($this->page->questionnaire->handler_class)) {
+            $handler = app($this->page->questionnaire->handler_class);
+        }
+
         $validations = [];
 
         if (isset($this->page)) {
             foreach($this->page->questions as $question) {
+                if ( ! $handler || ($handler && ! $handler->showQuestion($question))) {
+                    continue;
+                }
+
                 $validations['question_' . $question->id . '_answer'] = $this->forQuestion($question);
 
                 if (sizeof($question->children)) {
@@ -55,6 +63,10 @@ class PageRequest extends FormRequest
                             $dataType = $answer->getOption('data_type');
 
                             foreach($question->children as $child) {
+                                if ( ! $handler || ($handler && ! $handler->showQuestion($child))) {
+                                    continue;
+                                }
+
                                 if ($child->hasOption('answer_trigger') && $child->getOption('answer_trigger') == $dataType) {
                                     $validations['question_' . $child->id . '_answer'] = $this->forQuestion($child);
                                 } else {
