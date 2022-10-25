@@ -13,7 +13,7 @@ class InviteController extends QuestionnaireController
     {
         foreach(QuestionnaireEntry::$fixedDataTypes as $fixedDataType) {
             session([
-                ('questionnaire.' . $fixedDataType) => unserialize($questionnaireInvite->getAttribute($fixedDataType)),
+                ('questionnaire.' . $fixedDataType) => $questionnaireInvite->getAttribute($fixedDataType),
             ]);
         }
 

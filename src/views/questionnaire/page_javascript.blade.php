@@ -38,7 +38,7 @@
                     additionalChildrenContainer.classList.remove('visible');
 
                     // reset all the additional questions back to hidden
-                    let additionalChildren = parent.querySelectorAll('li.additional-question-container')
+                    let additionalChildren = parent.querySelectorAll('li.additional-question-container');
                     if (additionalChildren) {
                         additionalChildren.forEach(function (element, index) {
                             element.classList.remove('visible');

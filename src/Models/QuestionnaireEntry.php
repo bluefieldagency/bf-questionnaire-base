@@ -32,13 +32,11 @@ class QuestionnaireEntry extends Model
     ];
 
     protected $casts = [
-//        'answers' => AsCollection::class, // do not use this, the resulting value will always be null, because of the encryption
-//        'files' => AsCollection::class, // do not use this, the resulting value will always be null, because of the encryption
         'options' => AsCollection::class,
         'name' => 'encrypted',
         'email' => 'encrypted',
-        'answers' => 'encrypted',
         'project_name' => 'encrypted',
+        'answers' => 'encrypted',
         'files' => 'encrypted:collection',
     ];
 
@@ -63,6 +61,11 @@ class QuestionnaireEntry extends Model
     public function user() : BelongsTo
     {
         return $this->setConnection('mysql')->belongsTo(User::class);
+    }
+
+    public function questionnaire_invite() : HasOne
+    {
+        return $this->hasOne(QuestionnaireInvite::class);
     }
 
     public function getAnswers()
@@ -149,11 +152,6 @@ class QuestionnaireEntry extends Model
     public function getFormattedDateAttribute()
     {
         return ucfirst($this->updated_at->formatLocalized('%B %d, %Y - %H:%I:%S'));
-    }
-
-    public function questionnaire_invite() : HasOne
-    {
-        return $this->hasOne(QuestionnaireInvite::class);
     }
 
 }
