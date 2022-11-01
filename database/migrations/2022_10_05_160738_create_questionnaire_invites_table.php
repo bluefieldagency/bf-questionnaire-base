@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('owner_email')->nullable();
             $table->text('hash');
             $table->json('options')->nullable();
+            $table->timestamp('expires_at')->nullable();
             $table->timestamps();
         });
     }

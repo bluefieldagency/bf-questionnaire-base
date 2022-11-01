@@ -21,6 +21,7 @@ class QuestionnaireInvite extends Model
         'owner_name',
         'hash',
         'options',
+        'expires_at',
     ];
 
     protected $guarded = ['id'];
@@ -31,6 +32,7 @@ class QuestionnaireInvite extends Model
         'name' => 'encrypted',
         'email' => 'encrypted',
         'project_name' => 'encrypted',
+        'expires_at' => 'datetime',
     ];
 
     public function __construct(array $attributes = [])
