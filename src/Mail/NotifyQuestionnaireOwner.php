@@ -81,7 +81,14 @@ class NotifyQuestionnaireOwner extends Mailable
         }
 
         $toEmail = $this->questionnaireEntry->questionnaire->questionnaire_owner_email;
-        $toName = null;
+        $toName = 'Admin';
+
+        $recipients = [];
+        $recipients[] = [
+            'email' => $toEmail,
+            'name' => $toName,
+        ];
+
         if (isset($this->questionnaireEntry->questionnaire_invite)) {
             if ($this->questionnaireEntry->questionnaire_invite->owner_email) {
                 $toEmail = $this->questionnaireEntry->questionnaire_invite->owner_email;
@@ -89,12 +96,17 @@ class NotifyQuestionnaireOwner extends Mailable
                 if ($this->questionnaireEntry->questionnaire_invite->owner_name) {
                     $toName = $this->questionnaireEntry->questionnaire_invite->owner_name;
                 }
+
+                $recipients[] = [
+                    'email' => $toEmail,
+                    'name' => $toName,
+                ];
             }
         }
 
         return $this->view('questionnaire::mail.notify_owner', ['questionnaireEntry' => $this->questionnaireEntry])
             ->subject($this->questionnaireEntry->questionnaire->title . ' ingevuld door ' . $this->questionnaireEntry->name)
-            ->to($toEmail, $toName)
+            ->to($recipients)
             ->with([
                 'questionnaire' => $this->questionnaireEntry->questionnaire,
                 'questionnaire_entry' => $this->questionnaireEntry,

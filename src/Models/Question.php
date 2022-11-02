@@ -115,6 +115,14 @@ class Question extends Model implements Sortable
             $value = str_replace(('[' . $fixedDataType . ']'), session('questionnaire.' . $fixedDataType), $value);
         }
 
+        if (session()->has('handler_class')) {
+            $handler = app(session('handler_class'));
+
+            if (method_exists($handler, 'enrichTitle')) {
+                $value = $handler->enrichTitle($value);
+            }
+        }
+
         return $value;
     }
 

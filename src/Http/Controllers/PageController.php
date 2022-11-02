@@ -82,6 +82,8 @@ class PageController extends Controller
             $handler = app($questionnaire->handler_class);
 
             if ($handler) {
+                session(['handler_class' => $questionnaire->handler_class]);
+
                 app()->instance('handler', $handler);
 
                 \View::share('handler', $handler);
