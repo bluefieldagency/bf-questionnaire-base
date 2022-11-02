@@ -112,6 +112,13 @@
             } else {
                 setNextCurrent();
             }
+        } else if (event.target.matches('input[type="range"]')) {
+            let parent = event.target.closest('.form-line');
+            if (parent) {
+                parent.classList.add('answered');
+
+                setNextCurrent();
+            }
         } else if (event.target.matches('input[type="checkbox"]')) {
             let parent = event.target.closest('.form-line');
             let answeredCheckbox = parent.querySelector('input:checked');
@@ -290,11 +297,53 @@
         if (nextIndex >= 0 && elements[nextIndex]) {
             elements[nextIndex].classList.add('current');
             elements[nextIndex].classList.remove('disabled');
+            if ( ! elements[nextIndex].classList.contains('is_required')) {
+                let neighbour = elements[nextIndex + 1 ];
+                if (neighbour) {
+                    neighbour.classList.remove('disabled');
+                }
+            }
 
             @if ($questionnaire->getProgressPagesAmount() == 1)
                 if (document.getElementById('current_indicator')) {
                     document.getElementById('current_indicator').innerText = nextIndex + 1;
                 }
+            @endif
+
+            if (doScroll) {
+                General.scrollTo(elements[nextIndex]);
+            }
+        }
+
+        enableSubmitButton(doScroll);
+        setProgress();
+    }
+
+    function setNextEnabled() {
+        let elements = document.querySelectorAll('.form-line.visible');
+        elements.forEach(function(element, index) {
+            if ( ! element.classList.contains('answered') && ! notAnsweredFound) {
+                fixedElement = element;
+                notAnsweredFound = true;
+            }
+        });
+
+        if (fixedElement) {
+            elements.forEach(function (element, index) {
+                if (element.dataset.question_id === fixedElement.dataset.question_id) {
+                    nextIndex = index;
+                }
+            });
+        }
+
+        if (nextIndex >= 0 && elements[nextIndex]) {
+            elements[nextIndex].classList.add('current');
+            elements[nextIndex].classList.remove('disabled');
+
+            @if ($questionnaire->getProgressPagesAmount() == 1)
+            if (document.getElementById('current_indicator')) {
+                document.getElementById('current_indicator').innerText = nextIndex + 1;
+            }
             @endif
 
             if (doScroll) {
