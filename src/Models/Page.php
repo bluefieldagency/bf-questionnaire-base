@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Questionnaire\Traits\OptionsTrait;
+use Questionnaire\Traits\ReplacementsTrait;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
 
@@ -19,6 +20,7 @@ class Page extends Model implements Sortable
     use SortableTrait;
     use SoftDeletes;
     use OptionsTrait;
+    use ReplacementsTrait;
 
     protected $fillable = [
         'title',
@@ -76,19 +78,7 @@ class Page extends Model implements Sortable
 
     public function getTitleAttribute($value)
     {
-        foreach(QuestionnaireEntry::$fixedDataTypes as $fixedDataType) {
-            $value = str_replace(('[' . $fixedDataType . ']'), session('questionnaire.' . $fixedDataType), $value);
-        }
-
-        if (session()->has('handler_class')) {
-            $handler = app(session('handler_class'));
-
-            if (method_exists($handler, 'enrichTitle')) {
-                $value = $handler->enrichTitle($value);
-            }
-        }
-
-        return $value;
+        return $this->doReplacements($value);
     }
 
 }

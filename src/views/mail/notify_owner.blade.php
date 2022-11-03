@@ -24,7 +24,11 @@
                                     <td>
                                         <h2 class="aeonik30 title">Beste admin,</h2>
                                         <p class="aeonik22">
-                                            Zie de ingevulde gegevens van de {{ $questionnaire->title }}:
+                                            @if ($questionnaire->hasOption('admin_mail_intro') && ! empty($questionnaire->getOption('admin_mail_intro')))
+                                                {!! $questionnaire->doReplacements($questionnaire->getOption('admin_mail_intro')) !!}
+                                            @else
+                                                Zie de ingevulde gegevens van de {{ $questionnaire->title }}:
+                                            @endif
                                         </p>
 
                                         @if ($questionnaire->hasOption('show_fixed_data_types') && $questionnaire->getOption('show_fixed_data_types') === true)

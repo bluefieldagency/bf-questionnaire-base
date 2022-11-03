@@ -105,7 +105,7 @@ class NotifyQuestionnaireOwner extends Mailable
         }
 
         return $this->view('questionnaire::mail.notify_owner', ['questionnaireEntry' => $this->questionnaireEntry])
-            ->subject($this->questionnaireEntry->questionnaire->title . ' ingevuld door ' . $this->questionnaireEntry->name)
+            ->subject('BFA KTO: Er is feedback gegeven door ' . $this->questionnaireEntry->name)
             ->to($recipients)
             ->with([
                 'questionnaire' => $this->questionnaireEntry->questionnaire,

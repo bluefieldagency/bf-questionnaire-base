@@ -11,12 +11,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Questionnaire\Traits\OptionsTrait;
+use Questionnaire\Traits\ReplacementsTrait;
 
 class Questionnaire extends Model
 {
     use HasFactory;
     use SoftDeletes;
     use OptionsTrait;
+    use ReplacementsTrait;
 
     protected $progressPages;
 
