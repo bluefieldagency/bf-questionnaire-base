@@ -546,6 +546,8 @@
                             inputChanged = true;
                             element.classList.add('answered');
                         }
+                    } else if (element.classList.contains('question-type--range')) {
+                        element.classList.add('answered');
                     }
                 });
 
