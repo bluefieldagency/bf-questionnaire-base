@@ -479,7 +479,7 @@
 
             if (elements) {
                 elements.forEach(function(element, index) {
-                    if (element.classList.contains('question-type--radio') || element.classList.contains('question-type--checkbox')) {
+                    if (element.classList.contains('question-type--radio') || element.classList.contains('question-type--stars') || element.classList.contains('question-type--checkbox')) {
                         let answered = element.querySelector('input:checked');
                         if (answered) {
                             inputChanged = true;
