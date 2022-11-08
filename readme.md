@@ -34,13 +34,13 @@ extra_info_triggered | boolean, defines if the extra info should be hidden behin
 
 allow_additional_uploads | boolean, can you upload extra information for this question, like a PDF?
 
-child_triggered | boolean, should the additional question be triggered by a specific answer, or always shown?
-
-answer_trigger | string, if this question is a child of another question, this defines what answer data_type triggers this additional (child) question to be shown
-
 additional_upload_max | int, how many additional upload fields should there be? For text (like) and textarea types
 
 additional_upload_min | int, how many of those additional upload field should be required?
+
+child_triggered | boolean, should the additional question be triggered by a specific answer, or always shown?
+
+answer_trigger | string, if this question is a child of another question, this defines what answer data_type triggers this additional (child) question to be shown
 
 score_max | int, how many points could you possibly score for this question? Used in multi checkbox questions
 
@@ -49,8 +49,6 @@ placeholder | string, what placeholder should this input show?
 columns | int, the number of columns multiple checkboxes should be displayed in
 
 hide_disclaimer | boolean, should the email disclaimer be outputted? That will show how BF will use their data
-
-requires_contact | boolean @ kto
 
 question_code | string @ kto, defines a question to be of type 'nps score'
 
