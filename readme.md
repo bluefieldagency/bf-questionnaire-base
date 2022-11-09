@@ -16,8 +16,6 @@ max | int, the highest possible value of a range slider
 
 step | int, the steps a range slider iterates by
 
-container_border | boolean, determines if the question should have a border at the bottom
-
 ### Page
 
 container_border | boolean, determines if the questions on this page should have a border at the bottom
