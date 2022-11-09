@@ -128,6 +128,17 @@ class QuestionnaireEntry extends Model
         return 0;
     }
 
+    public function hasScore($category)
+    {
+        $this->getScores();
+
+        if (isset($this->scoredScores[$category])) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function setScores($scores)
     {
         $this->scores = json_encode($scores);
