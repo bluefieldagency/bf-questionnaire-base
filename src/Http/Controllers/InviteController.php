@@ -18,6 +18,7 @@ class InviteController extends QuestionnaireController
         }
 
         session(['questionnaire.invite_id' => $questionnaireInvite->id]);
+        session()->save();
     }
 
     public function requiresInvite()
