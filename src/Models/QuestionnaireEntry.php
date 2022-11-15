@@ -165,4 +165,57 @@ class QuestionnaireEntry extends Model
         return ucfirst($this->updated_at->formatLocalized('%B %d, %Y - %H:%I:%S'));
     }
 
+    public function getAnswersContent()
+    {
+        $questionnaire = $this->questionnaire;
+        $questionnaire->loadMissing('pages.questions.answers');
+        $givenAnswers = json_decode($this->answers, true);
+        $pagesAnswered = [];
+
+        $questions = [];
+        foreach($questionnaire->pages as $page) {
+            foreach($page->questions as $question) {
+                foreach($givenAnswers as $key => $givenAnswer) {
+                    if (isset($givenAnswer['question_' . $question->id . '_answer'])) {
+                        $foundAnswer = null;
+
+                        foreach($question->answers as $answer) {
+                            if ($answer->id == $givenAnswer['question_' . $question->id . '_answer']) {
+                                $foundAnswer = $answer->title;
+                            }
+                        }
+
+                        if ( ! $foundAnswer) {
+                            $foundAnswer = $givenAnswer['question_' . $question->id . '_answer'];
+                        }
+
+                        $questions[$question->id] = $foundAnswer;
+
+                        $pagesAnswered[$page->id] = true;
+                    }
+                }
+
+            }
+        }
+
+        $content = '';
+        foreach($questionnaire->pages as $page) {
+            if ($pagesAnswered[$page->id]) {
+                $content .= $page->title . PHP_EOL;
+                $content .= '---' . PHP_EOL;
+
+                foreach($page->questions as $question) {
+                    if (isset($questions[$question->id])) {
+                        $content .= $question->title . ': ' . $questions[$question->id] . PHP_EOL;
+                    }
+                }
+
+                $content .= '---------' . PHP_EOL;
+                $content .= PHP_EOL;
+            }
+        }
+
+        return $content;
+    }
+
 }

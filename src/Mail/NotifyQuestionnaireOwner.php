@@ -58,10 +58,14 @@ class NotifyQuestionnaireOwner extends Mailable
                         'question' => $questions[$askedQuestionId],
                     ];
 
-                    if (in_array($thisQuestion->question_type->type, ['text', 'email'])) {
+                    if (in_array($thisQuestion->question_type->type, ['text', 'email', 'stars'])) {
                         $data['answer'] = $givenAnswer;
                     } else if ($thisQuestion->question_type->type == 'radio') {
                         $data['answer'] = $answers[$givenAnswer]->title;
+                    } else if ($thisQuestion->question_type->type == 'stars') {
+                        $data['answer'] = $answers[$givenAnswer]->getOption('score');
+                    } else if ($thisQuestion->question_type->type == 'range') {
+                        $data['answer'] = $answers[$givenAnswer]->getOption('score');
                     } else if ($thisQuestion->question_type->type == 'checkbox') {
                         $answerArray = [];
                         if (is_array($givenAnswer)) {
