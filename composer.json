@@ -1,5 +1,5 @@
 {
-    "name": "immensenl/bf_questionnaire_base",
+    "name": "bluefieldagency/bf-questionnaire-base",
     "description": "The base repo to build questionnaires upon",
     "license" : "BSD-3-Clause-Attribution",
     "authors" : [
