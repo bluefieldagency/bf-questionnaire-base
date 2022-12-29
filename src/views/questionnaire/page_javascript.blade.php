@@ -73,7 +73,8 @@
             if (event.target.matches('.skip-trigger')) {
                 let skipToRequest = event.target.dataset.skip;
                 let questionParent = event.target.closest('.form-line--parent');
-                let allQuestionsContainer = event.target.closest('.questions');
+                let allQuestionsContainer = event.target.closest('.questions-container');
+                console.log(skipToRequest, questionParent, allQuestionsContainer);
                 if (allQuestionsContainer) {
                     let questions = allQuestionsContainer.querySelectorAll('.form-line--parent');
                     if (questions) {
@@ -172,6 +173,12 @@
                 }
             } else {
                 enableSubmitButton(false);
+            }
+        } else if (event.target.matches('.additional-uploads-trigger-container')) {
+            let parent = event.target.closest('.form-line');
+            let additionalUploadsContainer = parent.querySelector('.additional-uploads-container');
+            if (additionalUploadsContainer) {
+                additionalUploadsContainer.classList.remove('hidden');
             }
         } else if (event.target.matches('.intermediate-store-link')) {
             event.preventDefault();
@@ -390,8 +397,6 @@
         let warning = document.getElementById('submit_button_warning');
         let button = document.querySelector('.submit-button');
 
-        console.log(questionCount, answeredCount);
-
         if (answeredCount >= questionCount) {
             button.classList.remove('disabled');
 
@@ -456,9 +461,9 @@
             } else if (parent.classList.contains('question-type--text')) {
                 let textElement = parent.querySelector('input[type="text"]');
                 if (textElement && textElement.required && textElement.value.trim() === '' && parent && event.target.value !== '') {
-                    textElement.value = '{{ __('Zie bijlage') }}';
+                    textElement.value = '@lang('bf::translations.see-attachment')';
                     parent.classList.add('answered');
-                } else if (textElement && textElement.required && textElement.value.trim() === '{{ __('Zie bijlage') }}' && parent && event.target.value === '') {
+                } else if (textElement && textElement.required && textElement.value.trim() === '@lang('bf::translations.see-attachment')' && parent && event.target.value === '') {
                     textElement.value = '';
                     parent.classList.add('answered');
                 }
@@ -535,7 +540,7 @@
                             }
                         }
                     } else if (element.classList.contains('question-type--text') || element.classList.contains('question-type--email')) {
-                        let input = element.querySelector('input');
+                        let input = element.querySelector('.question-input input');
                         if (input && input.value !== '') {
                             inputChanged = true;
                             element.classList.add('answered');

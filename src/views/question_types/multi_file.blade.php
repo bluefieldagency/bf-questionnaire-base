@@ -9,6 +9,7 @@
         @elseif ($question->hasOption('additional_upload_min') && $question->getOption('additional_upload_min') >= $i)
             required
         @endif
+        accept="image/*, .pdf, .xls, .xlsx, .ods, .doc, .docx, .odt, .rtf, .txt"
     >
 @endfor
 

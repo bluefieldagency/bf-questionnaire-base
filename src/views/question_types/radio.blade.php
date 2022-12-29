@@ -24,6 +24,6 @@
                 data-data_type="{{ $answer->getOption('data_type') }}"
             @endif
         >
-        <label for="question_{{ $question->id }}_answer_{{ $answer->id }}">{{ $answer->title }}</label>
+        <label for="question_{{ $question->id }}_answer_{{ $answer->id }}" class="option-label">{{ $answer->title }}</label>
     </div>
 @endforeach

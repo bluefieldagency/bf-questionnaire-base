@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Questionnaire\Traits\OptionsTrait;
 use Questionnaire\Traits\ReplacementsTrait;
+use Questionnaire\Factories\QuestionnaireFactory;
 
 class Questionnaire extends Model
 {
@@ -29,7 +30,6 @@ class Questionnaire extends Model
         'company_logo',
         'title',
         'slug',
-        'intro',
         'intro',
         'start_button_label',
         'time_indicator',
@@ -53,6 +53,16 @@ class Questionnaire extends Model
         $this->setConnection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'));
 
         parent::__construct($attributes);
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    protected static function newFactory()
+    {
+        return QuestionnaireFactory::new();
     }
 
     public function legal_page(): BelongsTo

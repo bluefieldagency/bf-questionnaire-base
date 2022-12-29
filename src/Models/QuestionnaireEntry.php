@@ -4,15 +4,18 @@ namespace Questionnaire\Models;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Questionnaire\Traits\OptionsTrait;
+use Questionnaire\Factories\QuestionnaireEntryFactory;
 
 class QuestionnaireEntry extends Model
 {
 
+    use HasFactory;
     use SoftDeletes;
     use OptionsTrait;
 
@@ -51,6 +54,16 @@ class QuestionnaireEntry extends Model
         $this->setConnection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'));
 
         parent::__construct($attributes);
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    protected static function newFactory()
+    {
+        return QuestionnaireEntryFactory::new();
     }
 
     public function questionnaire() : BelongsTo

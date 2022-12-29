@@ -1,11 +1,4 @@
-<input
-    type="file"
-    id="question_{{ $question->id }}_answer"
-    name="question_{{ $question->id }}_answer"
-    tabindex="-1"
-    @if ($question->is_required && ( ! isset($child) || $child === false))
-        required
-    @endif
->
-
-@include('questionnaire::components.added_files')
+@include('questionnaire::question_types.multi_file', [
+    'min' => (($question->is_required && ( ! isset($child) || $child === false)) ? 1 : 0),
+    'max' => 1
+])

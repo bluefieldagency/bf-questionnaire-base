@@ -17,99 +17,57 @@
 <form id="questionnaire_page_{{ $page->id }}"  method="POST" enctype="multipart/form-data">
     @csrf
 
-    @if ($page->show_questions_numbered)
-        <ol class="questions">
-            @foreach($page->questions as $question)
-                @if ( ! $handler || ($handler && $handler->showQuestion($question)))
-                    <li
-                        class="
-                            form-line
-                            form-line--parent
-                            question-container
-                            visible
-                            question-type--{{ $question->question_type->type }}
-                            @if ($loop->first)
-                                current
-                            @elseif( ! in_array($question->question_type->type, ['text', 'textarea', 'email']))
-                                disabled
-                            @endif
-                            @if (sizeof($question->children))
-                                has-children
-                            @endif
-                            @if ($question->hasOption('container_border') && $question->getOption('container_border') === false)
-                                skip-borders
-                            @endif
-                            @if ($page->hasOption('container_border') && $page->getOption('container_border') === false)
-                                skip-borders
-                            @endif
-                            @if ($question->is_required)
-                                is-required
-                            @endif
-                        "
-                        data-answer_count="{{ sizeof($question->answers) }}"
-                        data-question_type="{{ $question->question_type->type }}"
-                        data-question_id="{{ $question->id }}"
-                        @if($skipIterators > 1 && $loop->first)
-                            value="{{ $skipIterators }}"
+    <ol class="questions-container @if ($page->show_questions_numbered) questions-numbered @endif">
+        @foreach($page->questions as $question)
+            @if ( ! $handler || ($handler && $handler->showQuestion($question)))
+                <li
+                    class="
+                        form-line
+                        form-line--parent
+                        question-container
+                        visible
+                        question-type--{{ $question->question_type->type }}
+                        @if ($loop->first)
+                            current
+                        @elseif( ! in_array($question->question_type->type, ['text', 'textarea', 'email']))
+                            disabled
                         @endif
-                    >
-                        <div class="question-content-container">
-                            @include('questionnaire::questions.page_question_' . $question->question_type->type)
+                        @if (sizeof($question->children))
+                            has-children
+                        @endif
+                        @if ($question->hasOption('container_border') && $question->getOption('container_border') === false)
+                            skip-borders
+                        @endif
+                        @if ($page->hasOption('container_border') && $page->getOption('container_border') === false)
+                            skip-borders
+                        @endif
+                        @if ($question->hasOption('container_border') && $question->getOption('container_border') === false)
+                            bottom-margin
+                        @endif
+                        @if ($question->is_required)
+                            is-required
+                        @endif
+                    "
+                    data-answer_count="{{ sizeof($question->answers) }}"
+                    data-question_type="{{ $question->question_type->type }}"
+                    data-question_id="{{ $question->id }}"
+                    @if($skipIterators > 1 && $loop->first)
+                        value="{{ $skipIterators }}"
+                    @endif
+                >
+                    <div class="question-content-container">
+                        @include('questionnaire::questions.page_question_' . $question->question_type->type)
 
-                            @if (sizeof($question->children))
-                                @include('questionnaire::questions.additional_questions_container')
-                            @endif
-                        </div>
-                    </li>
-                @endif
-            @endforeach
-        </ol>
-    @else
-        <div class="questions">
-            @foreach($page->questions as $question)
-                @if ( ! $handler || ($handler && $handler->showQuestion($question)))
-                    <div
-                        class="
-                            form-line
-                            form-line--parent
-                            question-container
-                            visible
-                            question-type--{{ $question->question_type->type }}
-                            @if ($loop->first)
-                                current
-                            @elseif( ! in_array($question->question_type->type, ['text', 'textarea', 'email']))
-                                disabled
-                            @endif
-                            @if ($question->hasOption('container_border') && $question->getOption('container_border') === false)
-                                skip-borders
-                            @endif
-                            @if ($page->hasOption('container_border') && $page->getOption('container_border') === false)
-                                skip-borders
-                            @endif
-                            @if ($question->is_required)
-                                is-required
-                            @endif
-                        "
-                        data-answer_count="{{ sizeof($question->answers) }}"
-                        data-question_type="{{ $question->question_type->type }}"
-                        data-question_id="{{ $question->id }}"
-                    >
-                        <div class="question-content-container">
-                            @include('questionnaire::questions.page_question_' . $question->question_type->type)
-
-                            @if (sizeof($question->children))
-                                @include('questionnaire::questions.additional_questions_container')
-                            @endif
-                        </div>
+                        @if (sizeof($question->children))
+                            @include('questionnaire::questions.additional_questions_container')
+                        @endif
                     </div>
-                @endif
-            @endforeach
-        </div>
-    @endif
+                </li>
+            @endif
+        @endforeach
+    </ol>
 
-    <div id="submit_button_warning">
-
-    </div>
+    <div id="submit_button_warning"></div>
 
     <div
         class="buttons-container

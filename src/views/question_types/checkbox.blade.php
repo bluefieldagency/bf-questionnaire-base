@@ -29,7 +29,7 @@
                 @endif
             >
 
-            <label for="question_{{ $question->id }}_answer_{{ $answer->id }}">{{ $answer->title }}</label>
+            <label for="question_{{ $question->id }}_answer_{{ $answer->id }}" class="option-label">{{ $answer->title }}</label>
 
             @if ($answer->hasOption('extra_info'))
                 <span class="extra-info--trigger" data-target="extra_info_{{ $question->id }}_{{ $answer->id }}" data-answer_id="{{ $answer->id }}">
