@@ -3,7 +3,7 @@
 if ( ! function_exists('repo_path')) {
     function repo_path($addPath = '')
     {
-        return base_path('vendor/immensenl/bf_questionnaire_base/src/' . ltrim($addPath, '/'));
+        return base_path('vendor/bluefieldagency/bf-questionnaire-base/src/' . ltrim($addPath, '/'));
     }
 }
 
