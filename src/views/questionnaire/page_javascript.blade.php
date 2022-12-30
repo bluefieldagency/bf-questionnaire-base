@@ -39,7 +39,7 @@
 
                     // reset all the additional questions back to hidden
                     let additionalChildren = parent.querySelectorAll('li.additional-question-container');
-                    if (additionalChildren) {
+                    if (additionalChildren.length > 0) {
                         additionalChildren.forEach(function (element, index) {
                             element.classList.remove('visible');
 
@@ -51,7 +51,7 @@
 
                     // and now make the relevant additional questions visible
                     additionalChildren = parent.querySelectorAll('li[data-answer_trigger="' + event.target.dataset.data_type + '"]');
-                    if (additionalChildren) {
+                    if (additionalChildren.length > 0) {
                         additionalChildrenContainer.classList.add('visible');
 
                         additionalChildren.forEach(function (element, index) {
@@ -77,7 +77,7 @@
                 console.log(skipToRequest, questionParent, allQuestionsContainer);
                 if (allQuestionsContainer) {
                     let questions = allQuestionsContainer.querySelectorAll('.form-line--parent');
-                    if (questions) {
+                    if (questions.length > 0) {
                         let skipTriggerIndex, skipToIndex = false;
 
                         // find the skipFrom and skipTo indexes
@@ -129,7 +129,7 @@
                 parent.classList.add('answered');
 
                 // set the checkboxes required to false, so you can submit this question if at lease on of the checkboxes is checked
-                if (elements) {
+                if (elements.length > 0) {
                     elements.forEach(function(element) {
                         element.required = false;
                     });
@@ -138,7 +138,7 @@
                 parent.classList.remove('answered');
 
                 // set the checkboxes required, so the browser helps you filling in the form correctly
-                if (elements && parent.classList.contains('is-required')) {
+                if (elements.length > 0 && parent.classList.contains('is-required')) {
                     elements.forEach(function(element) {
                         element.required = true;
                     });
@@ -174,7 +174,7 @@
             } else {
                 enableSubmitButton(false);
             }
-        } else if (event.target.matches('.additional-uploads-trigger-container')) {
+        } else if (event.target.matches('.additional-uploads-trigger-container, .additional-uploads-trigger-container *')) {
             let parent = event.target.closest('.form-line');
             let additionalUploadsContainer = parent.querySelector('.additional-uploads-container');
             if (additionalUploadsContainer) {
@@ -482,7 +482,7 @@
         setTimeout(() => {
             let elements = document.querySelectorAll('.form-line--parent');
 
-            if (elements) {
+            if (elements.length > 0) {
                 elements.forEach(function(element, index) {
                     if (element.classList.contains('question-type--radio') || element.classList.contains('question-type--stars') || element.classList.contains('question-type--checkbox')) {
                         let answered = element.querySelector('input:checked');
@@ -497,7 +497,7 @@
 
                                 if (answeredCheckbox) {
                                     // set the checkboxes required to false, so you can submit this question if at lease on of the checkboxes is checked
-                                    if (checkboxes) {
+                                    if (checkboxes.length > 0) {
                                         checkboxes.forEach(function(checkbox) {
                                             checkbox.required = false;
                                         });
@@ -511,7 +511,7 @@
                                     let additionalChildrenContainer = element.querySelector('ul.additional-questions-container');
                                     let additionalChildren = element.querySelectorAll('li.form-line--child');
 
-                                    if (additionalChildrenContainer && additionalChildren) {
+                                    if (additionalChildrenContainer && additionalChildren.length > 0) {
                                         additionalChildren.forEach(function (child, index) {
                                             if (child.dataset.answer_trigger === answered.dataset.data_type) {
                                                 additionalChildrenContainer.classList.add('visible');

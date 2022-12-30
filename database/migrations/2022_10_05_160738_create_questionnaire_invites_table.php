@@ -26,7 +26,7 @@ return new class extends Migration
             $table->text('project_name');
             $table->string('owner_name')->nullable();
             $table->string('owner_email')->nullable();
-            $table->text('hash');
+            $table->string('hash');
             $table->json('options')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();

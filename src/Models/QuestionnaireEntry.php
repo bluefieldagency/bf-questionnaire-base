@@ -24,6 +24,7 @@ class QuestionnaireEntry extends Model
     protected $scoredScores = null;
 
     protected $fillable = [
+        'hash',
         'name',
         'email',
         'project_name',
@@ -54,6 +55,22 @@ class QuestionnaireEntry extends Model
         $this->setConnection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'));
 
         parent::__construct($attributes);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($model) {
+            if ( ! $model->hash) {
+                $model->hash = md5(implode('', [
+                    $model->name,
+                    $model->email,
+                    $model->project_name,
+                    env('HASH_SALT'),
+                ]));
+            }
+        });
     }
 
     /**
