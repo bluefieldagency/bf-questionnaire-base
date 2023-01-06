@@ -74,7 +74,7 @@
                 let skipToRequest = event.target.dataset.skip;
                 let questionParent = event.target.closest('.form-line--parent');
                 let allQuestionsContainer = event.target.closest('.questions-container');
-                console.log(skipToRequest, questionParent, allQuestionsContainer);
+
                 if (allQuestionsContainer) {
                     let questions = allQuestionsContainer.querySelectorAll('.form-line--parent');
                     if (questions.length > 0) {
@@ -283,7 +283,7 @@
             currentElement.classList.remove('current');
         }
 
-        let elements = document.querySelectorAll('.form-line.visible');
+        let elements = document.querySelectorAll('.form-line--parent, .form-line--child.required');
         let nextIndex = 0;
         let notAnsweredFound = false;
         elements.forEach(function(element, index) {

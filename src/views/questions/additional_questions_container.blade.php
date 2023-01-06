@@ -14,7 +14,7 @@
                     @if ($page->hasOption('container_border') && $page->getOption('container_border') === false)
                         skip-borders
                     @endif
-                    @if ($question->is_required)
+                    @if ($additionalQuestion->is_required)
                         is-required
                     @endif
                 "

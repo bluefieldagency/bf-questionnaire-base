@@ -1,4 +1,4 @@
-<label for="question_{{ $question->id }}_answer">{!! $question->title !!}</label>
+<label for="question_{{ $question->id }}_answer" class="question-title">{!! $question->title !!}</label>
 
 @if (($question->hasOption('additional_uploads_triggered') && $question->getOption('additional_uploads_triggered') === true))
     <div class="additional-uploads-trigger-container">@lang('bf::translations.additional-uploads-trigger') <span class="click-here">@lang('bf::translations.click-here')</span></div>
