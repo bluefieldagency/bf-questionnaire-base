@@ -17,7 +17,7 @@ class QuestionnaireController extends Controller
     public function redirect()
     {
         $this->checkForQuestionnaireCode();
-        
+
         $questionnaire = Questionnaire::where('slug', $this->getQuestionnaireCode())
             ->with(['pages' => function($query) {
                 $query->active();

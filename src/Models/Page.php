@@ -50,6 +50,17 @@ class Page extends Model implements Sortable
         parent::__construct($attributes);
     }
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($model) {
+            $questionnaire = Questionnaire::where('slug', config('questionnaire.questionnaire_code'))->firstOrFail();
+
+            $model->questionnaire()->associate($questionnaire);
+        });
+    }
+
     public function questionnaire(): BelongsTo
     {
         return $this->belongsTo(Questionnaire::class);

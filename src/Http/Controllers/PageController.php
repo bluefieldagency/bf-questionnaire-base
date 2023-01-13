@@ -246,7 +246,7 @@ class PageController extends Controller
                         $answer = $questionnaireEntry->getAnswer($question);
 
                         if ($answer) {
-                            if ($question->question_type->type == 'radio') {
+                            if ($question->question_type->type == 'radio' || $question->question_type->type == 'stars') {
                                 $anwserModel = $question->getAnswer($answer);
 
                                 $score = $anwserModel->getOption('score');
@@ -265,10 +265,12 @@ class PageController extends Controller
                                     }
                                 }
                             }
+                        } else if ($question->question_type->type == 'range') {
+                            $score = $answer;
+                        }
 
-                            if ( ! isset($scorePerQuestion[$question->id])) {
-                                $scorePerQuestion[$question->id] = $score;
-                            }
+                        if ( ! isset($scorePerQuestion[$question->id])) {
+                            $scorePerQuestion[$question->id] = $score;
                         }
                     }
 
