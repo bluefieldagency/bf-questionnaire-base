@@ -264,9 +264,9 @@ class PageController extends Controller
                                         $score = $scoreMax;
                                     }
                                 }
+                            } else if ($question->question_type->type == 'range') {
+                                $score = $answer;
                             }
-                        } else if ($question->question_type->type == 'range') {
-                            $score = $answer;
                         }
 
                         if ( ! isset($scorePerQuestion[$question->id])) {
