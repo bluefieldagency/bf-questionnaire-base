@@ -31,6 +31,9 @@ class InviteController extends QuestionnaireController
         // if this questionnaire uses fixed pages, we have to load them (in the correct order)
         if ($questionnaireInvite->hasOption('page_ids')) {
             $questionnaire = $questionnaireInvite->questionnaire;
+
+            $handler = app($questionnaire->handler_class);
+
             $pageIds = explode(',', $questionnaireInvite->getOption('page_ids'));
 
             if (sizeof($pageIds)) {

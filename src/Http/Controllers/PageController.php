@@ -187,9 +187,14 @@ class PageController extends Controller
         }
 
         $foundKey = null;
-        foreach ($questionnairePages as $key => $questionnairePage) {
-            if ($page->id == $questionnairePage->id) {
-                $foundKey = $key;
+        $pages = [];
+        foreach($questionnairePages as $questionnairePage) {
+            $pages[] = $questionnairePage;
+        }
+
+        for($i = 0; $i < sizeof($pages); $i++) {
+            if ($page->id == $pages[$i]->id) {
+                $foundKey = $i;
             }
         }
 
@@ -199,8 +204,8 @@ class PageController extends Controller
             $foundKey++;
         }
 
-        if (isset($questionnairePages[$foundKey])) {
-            return $questionnairePages[$foundKey];
+        if (isset($pages[$foundKey])) {
+            return $pages[$foundKey];
         }
 
         return null;

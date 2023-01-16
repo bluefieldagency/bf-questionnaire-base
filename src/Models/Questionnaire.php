@@ -195,6 +195,8 @@ class Questionnaire extends Model
             'questionnaire.id',
             'questionnaire.loaded_pages',
             'questionnaire.invite_id',
+            'questionnaire.for_departments',
+            'questionnaire.project_name',
         ]);
 
         foreach(QuestionnaireEntry::$fixedDataTypes as $dataType) {
