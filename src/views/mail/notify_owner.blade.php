@@ -24,8 +24,8 @@
                                     <td>
                                         <h2 class="aeonik30 title">Beste admin,</h2>
                                         <p class="aeonik22">
-                                            @if ($questionnaire->hasOption('admin_mail_intro_template') && ! empty($questionnaire->getOption('admin_mail_intro_template')))
-                                                @include($questionnaire->getOption('admin_mail_intro_template'), ['questionnaire_entry' => $questionnaire_entry])
+                                            @if (method_exists($handler, 'adminIntro'))
+                                                {!! $handler->adminIntro() !!}
                                             @else
                                                 Zie de ingevulde gegevens van de {{ $questionnaire->title }}:
                                             @endif

@@ -106,12 +106,17 @@ class NotifyQuestionnaireOwner extends Mailable
             }
         }
 
+        $handler = app($questionnaire->handler_class);
+        $handler->setQuestionnaire($this->questionnaireEntry->questionnaire);
+        $handler->setQuestionnaireEntry($this->questionnaireEntry);
+
         return $this->view('questionnaire::mail.notify_owner', ['questionnaireEntry' => $this->questionnaireEntry])
             ->subject('BFA KTO: Er is feedback gegeven door ' . $this->questionnaireEntry->name)
             ->to($recipients)
             ->with([
                 'questionnaire' => $this->questionnaireEntry->questionnaire,
                 'questionnaire_entry' => $this->questionnaireEntry,
+                'handler' => $handler,
                 'pages' => $pages,
                 'questions' => $questions,
                 'answers' => $answers,
