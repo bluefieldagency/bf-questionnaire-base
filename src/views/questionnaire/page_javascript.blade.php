@@ -470,6 +470,61 @@
 
                 setNextCurrent();
             }
+        } else if (event.target.matches('select')) {
+            let selectedOption = event.target.options[event.target.selectedIndex];
+            let parent = event.target.closest('.form-line');
+            if (parent) {
+                parent.classList.add('answered');
+            }
+
+            let additionalChildrenContainer = parent.querySelector('ul.additional-questions-container');
+            if (additionalChildrenContainer) {
+                additionalChildrenContainer.classList.remove('visible');
+            }
+
+            // questions can have additonal questions (children), which are triggered by specific answer data types
+            // todo: multiple additional questions per element are not handled correctly right now (lean working)
+            let nextQuestion = null;
+            if (parent.classList.contains('has-children') && selectedOption.dataset.data_type !== undefined) {
+                if (additionalChildrenContainer) {
+                    // reset all the additional questions back to hidden
+                    let additionalChildren = parent.querySelectorAll('li.additional-question-container');
+                    if (additionalChildren.length > 0) {
+                        additionalChildren.forEach(function (element, index) {
+                            element.classList.remove('visible');
+
+                            element.querySelectorAll('input, textarea').forEach(function(input, index) {
+                                input.required = false;
+                            });
+                        });
+                    }
+
+                    // and now make the relevant additional questions visible
+                    additionalChildren = parent.querySelectorAll('li[data-answer_trigger="' + selectedOption.dataset.data_type + '"]');
+                    if (additionalChildren.length > 0) {
+                        additionalChildrenContainer.classList.add('visible');
+
+                        additionalChildren.forEach(function (element, index) {
+                            if ( ! nextQuestion) {
+                                nextQuestion = element;
+                            }
+
+                            element.classList.add('visible');
+                            if (element.classList.contains('is-required')) {
+                                element.querySelectorAll('input[type="text"], input[type="email"], textarea').forEach(function (input, index) {
+                                    input.required = true;
+                                });
+                            }
+                        });
+                    }
+                }
+            }
+
+            if (nextQuestion) {
+                setNextCurrent(null, true, nextQuestion);
+            } else {
+                setNextCurrent();
+            }
         }
 
         if (event.target.matches('input, textarea')) {
