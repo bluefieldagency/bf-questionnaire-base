@@ -18,6 +18,15 @@ use Questionnaire\Models\QuestionnaireInvite;
 class PageController extends Controller
 {
 
+    public static array $scoreable = [
+        'scoreableQuestions',
+        'scoreTotal',
+        'scorePerCaterogryTotal',
+        'scoreableQuestionsPerCaterogry',
+        'averageScorePerCaterogry',
+        'scorePerQuestion',
+    ];
+
     protected function getQuestionnaireCode()
     {
         return config('questionnaire.questionnaire_code');
@@ -304,6 +313,7 @@ class PageController extends Controller
             }
         }
 
+        // make sure to update the $scoreable array, this impacts exports
         return [
             'scoreableQuestions' => $scoreableQuestions,
             'scoreTotal' => $scoreTotal,
