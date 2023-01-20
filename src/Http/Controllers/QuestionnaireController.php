@@ -24,6 +24,8 @@ class QuestionnaireController extends Controller
             }])
             ->firstOrFail();
 
+        Questionnaire::resetSession();
+
         if (Auth::user()) {
             session([
                 'questionnaire.name' => Auth::user()->name,
