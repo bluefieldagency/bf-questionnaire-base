@@ -197,6 +197,7 @@ class Questionnaire extends Model
             'questionnaire.invite_id',
             'questionnaire.for_departments',
             'questionnaire.project_name',
+            'questionnaire.progress',
         ]);
 
         foreach(QuestionnaireEntry::$fixedDataTypes as $dataType) {
