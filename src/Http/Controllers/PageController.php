@@ -374,6 +374,10 @@ class PageController extends Controller
 
     protected function completeQuestionnaire(Questionnaire $questionnaire)
     {
+        if ($questionnaire->hasOption('requires_invite') && $questionnaire->getOption('requires_invite') && ! session()->has('questionnaire.invite_id')) {
+            return;
+        }
+
         $questionnaireEntry = $this->storeEntry($questionnaire);
 
         session([('questionnaire.filled.' . $questionnaireEntry->id) => $questionnaireEntry->id]);
