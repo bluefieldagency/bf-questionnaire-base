@@ -11,6 +11,11 @@
     if ($question->hasOption('step')) {
         $step = $question->getOption('step');
     }
+
+    $steps = [];
+    for($i = $min; $i <= $max; $i += $step) {
+        $steps[] = $i;
+    }
 @endphp
 
 <div class="range-slider range-slider-container">
@@ -36,8 +41,12 @@
     >
 
     <datalist id="tickmarks_{{ $question->id }}">
-        @for($i = $min; $i <= $max; $i += $step)
-            <option value="{{ $i }}" label="{{ $i }}"></option>
+        @for($i = 0; $i < sizeof($steps); $i++)
+            <option
+                value="{{ $steps[$i] }}"
+                label="{{ $steps[$i] }}"
+                style="left: {{ ($i * (100 / (sizeof($steps) - 1))) }}%"
+            ></option>
         @endfor
     </datalist>
 </div>
