@@ -405,6 +405,11 @@ class PageController extends Controller
     {
         if (session()->has('questionnaire.id')) {
             $questionnaireEntry = QuestionnaireEntry::find(session('questionnaire.id'));
+
+            if (Auth::user()) {
+                // do not use associate, as that does not work with multiple databases
+                $questionnaireEntry->user_id = Auth::user()->id;
+            }
         }
 
         if ( ! $questionnaireEntry) {
@@ -417,13 +422,15 @@ class PageController extends Controller
             }
         }
 
-        $questionnaireEntry->answers = json_encode(session('questionnaire.page'));
-
-        if (Auth::user()) {
-            // do not use associate, as that does not work with multiple databases
-            $questionnaireEntry->user_id = Auth::user()->id;
+        if (session()->has('questionnaire.page')) {
+            $questionnaireEntry->answers = json_encode(session('questionnaire.page'));
         }
-        $questionnaire->questionnaire_entries()->save($questionnaireEntry);
+
+        if ($questionnaireEntry->exists) {
+            $questionnaireEntry->save();
+        } else {
+            $questionnaire->questionnaire_entries()->save($questionnaireEntry);
+        }
 
         session(['questionnaire.id' => $questionnaireEntry->id]);
 
