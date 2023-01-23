@@ -11,7 +11,7 @@
                             <table role="presentation" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" align="center" width="100%">
                                 <tr>
                                     <td width="25">&nbsp;</td>
-                                    <td><img src="{{ $message->embed(public_path() . '/images/bf-logo.png') }}" alt="Blue Field Agency" width="171" height="67"></td>
+                                    <td valign="middle"><img src="{{ $message->embed(public_path() . '/images/bf-logo.png') }}" alt="Blue Field Agency" width="171"></td>
                                 </tr>
                             </table>
                         </td>
@@ -69,7 +69,7 @@
                             <table role="presentation" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" align="center" width="100%">
                                 <tr>
                                     <td width="25">&nbsp;</td>
-                                    <td><img src="{{ $message->embed(public_path() . '/images/bf-logo.png') }}" alt="Blue Field Agency" width="171" height="67"></td>
+                                    <td valign="middle"><img src="{{ $message->embed(public_path() . '/images/bf-logo.png') }}" alt="Blue Field Agency" width="171"></td>
                                     <td class="aeonik9 copyright">&copy; Copyright {{ date('Y') }} Blue Field Agency. All rights reserved.</td>
                                     <td width="25">&nbsp;</td>
                                 </tr>
