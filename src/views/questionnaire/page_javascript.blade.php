@@ -407,7 +407,7 @@
                 warning.classList.remove('visible');
             }
         } else {
-            button.classList.add('disabled');
+            // button.classList.add('disabled');
 
             if (warning) {
                 if (inputChanged) {
