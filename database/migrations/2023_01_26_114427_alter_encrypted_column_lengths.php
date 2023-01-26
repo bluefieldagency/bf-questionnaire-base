@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::connection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'))->table('questions', function (Blueprint $table) {
-            $table->string('title', 500)->change();
+        Schema::connection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'))->table('questionnaire_entries', function (Blueprint $table) {
+            $table->text('project_name')->change();
         });
     }
 
