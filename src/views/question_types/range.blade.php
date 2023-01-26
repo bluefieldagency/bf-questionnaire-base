@@ -27,8 +27,8 @@
 {{--        list="tickmarks_{{ $question->id }}"--}}
         @if (session()->has('questionnaire.page.' . $page->id . '.question_' . $question->id . '_answer'))
             value="{{ session('questionnaire.page.' . $page->id . '.question_' . $question->id . '_answer') }}"
-        @elseif ($question->hasOption('data_type') && session()->has('questionnaire.' . $question->getOption('data_type')))
-            value="{{ session('questionnaire.' . $question->getOption('data_type')) }}"
+        @elseif ($question->hasOption('default_value'))
+            value="{{ $question->getOption('default_value') }}"
         @endif
 
         min="{{ $min }}"
