@@ -477,9 +477,12 @@
                 parent.classList.add('answered');
             }
 
-            if (selectedOption.dataset.extra_info !== undefined) {
-                let extraInfoContainer = parent.querySelector('.extra-info--option');
-                extraInfoContainer.innerText = selectedOption.dataset.extra_info;
+            let extraInfoContainer = parent.querySelector('.extra-info--option');
+            if (extraInfoContainer) {
+                extraInfoContainer.innerText = '';
+                if (selectedOption.dataset.extra_info !== undefined) {
+                    extraInfoContainer.innerText = selectedOption.dataset.extra_info;
+                }
             }
 
             let additionalChildrenContainer = parent.querySelector('ul.additional-questions-container');
