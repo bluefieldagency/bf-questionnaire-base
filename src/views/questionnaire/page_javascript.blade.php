@@ -477,6 +477,11 @@
                 parent.classList.add('answered');
             }
 
+            if (selectedOption.dataset.extra_info !== undefined) {
+                let extraInfoContainer = parent.querySelector('.extra-info--option');
+                extraInfoContainer.innerText = selectedOption.dataset.extra_info;
+            }
+
             let additionalChildrenContainer = parent.querySelector('ul.additional-questions-container');
             if (additionalChildrenContainer) {
                 additionalChildrenContainer.classList.remove('visible');
