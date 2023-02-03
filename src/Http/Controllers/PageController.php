@@ -409,15 +409,15 @@ class PageController extends Controller
     {
         if (session()->has('questionnaire.id')) {
             $questionnaireEntry = QuestionnaireEntry::find(session('questionnaire.id'));
-
-            if (Auth::user()) {
-                // do not use associate, as that does not work with multiple databases
-                $questionnaireEntry->user_id = Auth::user()->id;
-            }
         }
 
         if ( ! $questionnaireEntry) {
             $questionnaireEntry = new QuestionnaireEntry();
+        }
+
+        if (Auth::user()) {
+            // do not use associate, as that does not work with multiple databases
+            $questionnaireEntry->user_id = Auth::user()->id;
         }
 
         foreach (QuestionnaireEntry::$fixedDataTypes as $fixedDataType) {
