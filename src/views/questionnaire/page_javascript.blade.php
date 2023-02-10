@@ -477,6 +477,14 @@
                 parent.classList.add('answered');
             }
 
+            let extraInfoContainer = parent.querySelector('.extra-info--option');
+            if (extraInfoContainer) {
+                extraInfoContainer.innerText = '';
+                if (selectedOption.dataset.extra_info !== undefined) {
+                    extraInfoContainer.innerText = selectedOption.dataset.extra_info;
+                }
+            }
+
             let additionalChildrenContainer = parent.querySelector('ul.additional-questions-container');
             if (additionalChildrenContainer) {
                 additionalChildrenContainer.classList.remove('visible');
@@ -605,6 +613,27 @@
                         if (input && input.value !== '') {
                             inputChanged = true;
                             element.classList.add('answered');
+                        }
+                    } else if (element.classList.contains('question-type--select')) {
+                        let select = element.querySelector('select');
+                        let selectedOption = select.options[select.selectedIndex];
+                        let parent = select.closest('.form-line');
+                        console.log(select, selectedOption, parent);
+                        if (parent) {
+                            parent.classList.add('answered');
+                        }
+
+                        if (selectedOption && selectedOption.value !== '') {
+                            inputChanged = true;
+                            element.classList.add('answered');
+                        }
+
+                        let extraInfoContainer = parent.querySelector('.extra-info--option');
+                        if (extraInfoContainer) {
+                            extraInfoContainer.innerText = '';
+                            if (selectedOption.dataset.extra_info !== undefined) {
+                                extraInfoContainer.innerText = selectedOption.dataset.extra_info;
+                            }
                         }
                     } else if (element.classList.contains('question-type--range')) {
                         element.classList.add('answered');

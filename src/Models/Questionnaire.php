@@ -179,7 +179,10 @@ class Questionnaire extends Model
 
     public function getRouteNameFor($suffix): string
     {
-        $prefix = rtrim($this->getRoutePrefix(), '.') . '.';
+        $prefix = $this->getRoutePrefix();
+        if ( ! Str::endsWith($prefix, '.')) {
+            $prefix .= '.';
+        }
 
         return $prefix . $suffix;
     }
@@ -188,7 +191,6 @@ class Questionnaire extends Model
     {
         session()->forget([
             'questionnaire.page',
-            'questionnaire.hidden_inputs',
             'questionnaire.file',
             'questionnaire.id',
             'questionnaire.loaded_pages',
