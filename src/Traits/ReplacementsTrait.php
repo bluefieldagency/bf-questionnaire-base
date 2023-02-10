@@ -17,7 +17,7 @@ trait ReplacementsTrait
             $handler = app(session('handler_class'));
 
             if (method_exists($handler, 'enrichTitle')) {
-                $value = $handler->enrichTitle($value);
+                $value = $handler->enrichTitle($this, $value);
             }
         }
 

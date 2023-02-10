@@ -2,6 +2,7 @@
 
 namespace Questionnaire\Http\Controllers;
 
+use App\Models\QuestionnaireInvite;
 use Illuminate\Support\Facades\Auth;
 use Questionnaire\Models\Page;
 use Questionnaire\Models\Questionnaire;
@@ -67,9 +68,15 @@ class QuestionnaireController extends Controller
 
     public function index(Questionnaire $questionnaire)
     {
+        $questionnaireInvite = null;
+        if (session()->has('questionnaire.invite_id')) {
+            $questionnaireInvite = QuestionnaireInvite::where('questionnaire_id', $questionnaire->id)
+                ->find(session('questionnaire.invite_id'));
+        }
+
         $url = $this->firstPageUrl($questionnaire);
 
-        return view('questionnaire.intro', compact('questionnaire', 'url'));
+        return view('questionnaire.intro', compact('questionnaire', 'questionnaireInvite', 'url'));
     }
 
     public function firstPageUrl(Questionnaire $questionnaire)

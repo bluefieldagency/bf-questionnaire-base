@@ -2,6 +2,7 @@
 
 namespace Questionnaire\Http\Controllers;
 
+use App\Models\Department;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -46,12 +47,26 @@ class PageController extends Controller
             return redirect(route('requires-invite'));
         }
 
+        $questionnaireInvite = null;
+
         if (session()->has('questionnaire.loaded_pages')) {
             $questionnaire->setRelation('pages', session('questionnaire.loaded_pages'));
+        } else {
+            $questionnaire->loadMissing('pages');
         }
+
+        $questionnaire->loadMissing([
+            'pages.questions' => function ($query) {
+                $query->whereNull('parent_id');
+            },
+            'pages.questions.children',
+            'pages.questions.question_type',
+            'pages.questions.children.question_type'
+        ]);
 
         // see if previous pages are filled
         foreach($questionnaire->pages as $questionnairePage) {
+            // stop checking when the current page is found, remaining pages aren't previous pages
             if ($questionnairePage->id == $page->id) {
                 break;
             }
@@ -61,14 +76,10 @@ class PageController extends Controller
             }
         }
 
-        $page->load(['questions' => function($query) {
-            $query->whereNull('parent_id');
-        }, 'questions.children']);
-
+        $previousPageUrl = null;
         if ($questionnaire->getProgressStepThisPage($page) > 1) {
             // Determine the previous page, to have a previous step link
             $previousPage = $this->getPreviousPage($questionnaire, $page);
-            $previousPageUrl = null;
             if ($previousPage) {
                 $previousPageUrl = route($questionnaire->getRouteNameFor('page'), [$questionnaire->slug, $previousPage->slug]);
             }
@@ -90,12 +101,34 @@ class PageController extends Controller
         if ( ! empty($questionnaire->handler_class)) {
             $handler = app($questionnaire->handler_class);
 
+            if (session()->has('questionnaire.invite_id')) {
+                $questionnaireInvite = \App\Models\QuestionnaireInvite::where('questionnaire_id', $questionnaire->id)
+                    ->find(session('questionnaire.invite_id'));
+            }
+
+            $handler->setQuestionnaire($questionnaire);
+            $handler->setQuestionnaireInvite($questionnaireInvite);
+
             if ($handler) {
                 session(['handler_class' => $questionnaire->handler_class]);
 
                 app()->instance('handler', $handler);
 
                 \View::share('handler', $handler);
+            }
+        }
+
+        foreach($page->questions as $question) {
+            if ($question->question_type->type == 'hidden') {
+                if ($question->hasOption('value')) {
+                    session([('questionnaire.hidden_inputs.' . $question->id) => $question->getOption('value')]);
+                } else if ($question->hasOption('value_from')) {
+                    $models = explode('.', $question->getOption('value_from'));
+                    dd($models);
+                    session([('questionnaire.hidden_inputs.' . $question->id) => $question->getOption('value')]);
+
+//                    $questionnaireInvite = resolve('questionnaireInviteModel');
+                }
             }
         }
 
