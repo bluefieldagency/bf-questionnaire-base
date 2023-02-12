@@ -17,8 +17,19 @@ class InviteController extends QuestionnaireController
             ]);
         }
 
+        $this->prefillQuestions($questionnaireInvite);
+
         session(['questionnaire.invite_id' => $questionnaireInvite->id]);
         session()->save();
+    }
+
+    protected function prefillQuestions(QuestionnaireInvite $questionnaireInvite)
+    {
+        if ($questionnaireInvite->hasOption('questions')) {
+            foreach ($questionnaireInvite->getOption('questions') as $questionId => $value) {
+                session([('questionnaire.hidden_inputs.' . $questionId) => $value]);
+            }
+        }
     }
 
     public function requiresInvite()

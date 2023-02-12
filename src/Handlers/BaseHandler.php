@@ -31,9 +31,7 @@ class BaseHandler
     public function showQuestion(Question $question)
     {
         if ($question->question_type->type == 'hidden') {
-            if (($question->hasOption('hidden') && $question->getOption('hidden') === true)) {
-                return false;
-            }
+            return false;
         }
 
         return true;

@@ -55,15 +55,6 @@ class PageController extends Controller
             $questionnaire->loadMissing('pages');
         }
 
-        $questionnaire->loadMissing([
-            'pages.questions' => function ($query) {
-                $query->whereNull('parent_id');
-            },
-            'pages.questions.children',
-            'pages.questions.question_type',
-            'pages.questions.children.question_type'
-        ]);
-
         // see if previous pages are filled
         foreach($questionnaire->pages as $questionnairePage) {
             // stop checking when the current page is found, remaining pages aren't previous pages
@@ -75,6 +66,15 @@ class PageController extends Controller
                 return redirect(route($questionnaire->getRouteNameFor('page'), [$questionnaire->slug, $questionnairePage->slug]));
             }
         }
+
+        $page->loadMissing([
+            'questions' => function($query) {
+                $query->whereNull('parent_id');
+            },
+            'questions.question_type',
+            'questions.children',
+            'questions.children.question_type',
+        ]);
 
         $previousPageUrl = null;
         if ($questionnaire->getProgressStepThisPage($page) > 1) {
@@ -122,12 +122,6 @@ class PageController extends Controller
             if ($question->question_type->type == 'hidden') {
                 if ($question->hasOption('value')) {
                     session([('questionnaire.hidden_inputs.' . $question->id) => $question->getOption('value')]);
-                } else if ($question->hasOption('value_from')) {
-                    $models = explode('.', $question->getOption('value_from'));
-                    dd($models);
-                    session([('questionnaire.hidden_inputs.' . $question->id) => $question->getOption('value')]);
-
-//                    $questionnaireInvite = resolve('questionnaireInviteModel');
                 }
             }
         }
