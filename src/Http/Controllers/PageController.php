@@ -217,6 +217,7 @@ class PageController extends Controller
     {
         if (session()->has('questionnaire.loaded_pages')) {
             $questionnaire->setRelation('pages', session('questionnaire.loaded_pages'));
+
             $questionnairePages = $questionnaire->pages;
         } else {
             $questionnairePages = $questionnaire->pages()->ordered()->get();
