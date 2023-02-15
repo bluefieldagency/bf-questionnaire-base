@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('jobs', function (Blueprint $table) {
+        Schema::connection(((env('PROJECT_DATABASE') !== null && env('PROJECT_DATABASE') !== '') ? env('PROJECT_DATABASE') : 'mysql'))->create('jobs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('queue')->index();
             $table->longText('payload');
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jobs');
+        Schema::connection(((env('PROJECT_DATABASE') !== null && env('PROJECT_DATABASE') !== '') ? env('PROJECT_DATABASE') : 'mysql'))->dropIfExists('jobs');
     }
 };
