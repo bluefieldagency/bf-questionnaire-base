@@ -101,15 +101,18 @@ class PageController extends Controller
         if ( ! empty($questionnaire->handler_class)) {
             $handler = app($questionnaire->handler_class);
 
-            if (session()->has('questionnaire.invite_id')) {
-                $questionnaireInvite = \App\Models\QuestionnaireInvite::where('questionnaire_id', $questionnaire->id)
-                    ->find(session('questionnaire.invite_id'));
-            }
-
-            $handler->setQuestionnaire($questionnaire);
-            $handler->setQuestionnaireInvite($questionnaireInvite);
-
             if ($handler) {
+                $handler->setQuestionnaire($questionnaire);
+
+                if (session()->has('questionnaire.invite_id')) {
+                    $questionnaireInvite = \App\Models\QuestionnaireInvite::where('questionnaire_id', $questionnaire->id)
+                        ->find(session('questionnaire.invite_id'));
+
+                    if ($questionnaireInvite) {
+                        $handler->setQuestionnaireInvite($questionnaireInvite);
+                    }
+                }
+
                 session(['handler_class' => $questionnaire->handler_class]);
 
                 app()->instance('handler', $handler);
