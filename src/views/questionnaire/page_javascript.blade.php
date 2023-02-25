@@ -269,6 +269,11 @@
         }
     });
 
+    var form = document.querySelector('.questionnaire-form');
+    form.addEventListener('submit', function() {
+        this.querySelector('input[type="submit"]').setAttribute('disabled', 'disabled');
+    }, false);
+
     function setNextCurrent(checkMethod, doScroll, fixedElement) {
         if (doScroll === undefined) {
             doScroll = true;
