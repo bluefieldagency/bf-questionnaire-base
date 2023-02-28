@@ -16,6 +16,9 @@
                 @if ($question->is_required && ( ! isset($child) || $child === false))
                     required
                 @endif
+                @if ($answer->hasOption('data_type'))
+                    data-data_type="{{ $answer->getOption('data_type') }}"
+                @endif
                 @if (session()->has('questionnaire.page.' . $page->id . '.question_' . $question->id . '_answer'))
                     @if (is_array(session('questionnaire.page.' . $page->id . '.question_' . $question->id . '_answer')))
                         @foreach (session('questionnaire.page.' . $page->id . '.question_' . $question->id . '_answer') as $answerId => $boolean)

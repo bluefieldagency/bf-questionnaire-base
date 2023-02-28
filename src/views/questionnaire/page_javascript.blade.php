@@ -61,7 +61,7 @@
 
                             element.classList.add('visible');
                             if (element.classList.contains('is-required')) {
-                                element.querySelectorAll('input[type="text"], input[type="email"], textarea').forEach(function (input, index) {
+                                element.querySelectorAll('input[type="text"], input[type="email"], input[type="number"], textarea').forEach(function (input, index) {
                                     input.required = true;
                                 });
                             }
@@ -156,7 +156,11 @@
                             }
                         });
 
-                        setNextCurrent(event.target.dataset.check_method);
+                        if (parent.classList.contains('has-children')) {
+                            setNextCurrent(event.target.dataset.check_method, false);
+                        } else {
+                            setNextCurrent(event.target.dataset.check_method);
+                        }
                     } else {
                         // uncheck logic for 'none of the above'
                         let answers = parent.querySelectorAll('input[type="checkbox"]');
@@ -165,14 +169,57 @@
                                 element.checked = false;
                             }
                         });
-
-                        setNextCurrent(null, false);
                     }
-                } else {
-                    setNextCurrent();
                 }
+            }
+
+            // questions can have additonal questions (children), which are triggered by specific answer data types
+            // todo: multiple additional questions per element are not handled correctly right now (lean working)
+            let nextQuestion = null;
+            if (parent.classList.contains('has-children') && event.target.dataset.data_type !== undefined) {
+                let additionalChildrenContainer = parent.querySelector('ul.additional-questions-container');
+                if (additionalChildrenContainer) {
+                    additionalChildrenContainer.classList.remove('visible');
+
+                    // reset all the additional questions back to hidden
+                    let additionalChildren = parent.querySelectorAll('li.additional-question-container');
+                    if (additionalChildren.length > 0) {
+                        additionalChildren.forEach(function (element, index) {
+                            element.classList.remove('visible');
+
+                            element.querySelectorAll('input, textarea').forEach(function(input, index) {
+                                input.required = false;
+                            });
+                        });
+                    }
+
+                    if (event.target.checked) {
+                        // and now make the relevant additional questions visible
+                        additionalChildren = parent.querySelectorAll('li[data-answer_trigger="' + event.target.dataset.data_type + '"]');
+                        if (additionalChildren.length > 0) {
+                            additionalChildrenContainer.classList.add('visible');
+
+                            additionalChildren.forEach(function (element, index) {
+                                if (!nextQuestion) {
+                                    nextQuestion = element;
+                                }
+
+                                element.classList.add('visible');
+                                if (element.classList.contains('is-required')) {
+                                    element.querySelectorAll('input[type="text"], input[type="email"], input[type="number"], textarea').forEach(function (input, index) {
+                                        input.required = true;
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            if (nextQuestion) {
+                setNextCurrent(null, false, nextQuestion);
             } else {
-                enableSubmitButton(false);
+                setNextCurrent(null, false);
             }
         } else if (event.target.matches('.additional-uploads-trigger-container, .additional-uploads-trigger-container *')) {
             let parent = event.target.closest('.form-line');
@@ -439,7 +486,7 @@
     function handleTextableInput(element) {
         let parent = element.closest('.form-line');
 
-        if (element.matches('input[type="text"]') || element.matches('input[type="email"]') || element.matches('textarea')) {
+        if (element.matches('input[type="text"]') || element.matches('input[type="email"]') || element.matches('input[type="number"]') || element.matches('textarea')) {
             if (parent && element.value.trim() !== '') {
                 if ((element.matches('input[type="email"]') && validateEmail(element.value)) || ! element.matches('input[type="email"]')) {
                     parent.classList.add('answered');
@@ -524,7 +571,7 @@
 
                             element.classList.add('visible');
                             if (element.classList.contains('is-required')) {
-                                element.querySelectorAll('input[type="text"], input[type="email"], textarea').forEach(function (input, index) {
+                                element.querySelectorAll('input[type="text"], input[type="email"], input[type="number"], textarea').forEach(function (input, index) {
                                     input.required = true;
                                 });
                             }
@@ -586,7 +633,7 @@
                                                 child.classList.add('visible');
 
                                                 if (child.classList.contains('is-required')) {
-                                                    child.querySelectorAll('input[type="text"], input[type="email"], textarea').forEach(function (input, index) {
+                                                    child.querySelectorAll('input[type="text"], input[type="email"], input[type="number"], textarea').forEach(function (input, index) {
                                                         input.required = true;
                                                     });
                                                 }
@@ -623,7 +670,7 @@
                         let select = element.querySelector('select');
                         let selectedOption = select.options[select.selectedIndex];
                         let parent = select.closest('.form-line');
-                        console.log(select, selectedOption, parent);
+
                         if (parent) {
                             parent.classList.add('answered');
                         }

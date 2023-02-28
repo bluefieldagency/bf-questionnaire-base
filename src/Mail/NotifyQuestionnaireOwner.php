@@ -58,9 +58,7 @@ class NotifyQuestionnaireOwner extends Mailable
                         'question' => $questions[$askedQuestionId],
                     ];
 
-                    if (in_array($thisQuestion->question_type->type, ['text', 'email', 'range'])) {
-                        $data['answer'] = $givenAnswer;
-                    } else if ($thisQuestion->question_type->type == 'radio') {
+                    if ($thisQuestion->question_type->type == 'radio') {
                         $data['answer'] = $answers[$givenAnswer]->title;
                     } else if ($thisQuestion->question_type->type == 'stars') {
                         $data['answer'] = $answers[$givenAnswer]->getOption('score');
@@ -75,6 +73,8 @@ class NotifyQuestionnaireOwner extends Mailable
                         }
 
                         $data['answer'] = implode(', ', $answerArray);
+                    } else {
+                        $data['answer'] = $givenAnswer;
                     }
                 }
                 $result[$pageIterator][] = $data;

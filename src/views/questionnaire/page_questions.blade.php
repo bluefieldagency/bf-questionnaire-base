@@ -29,7 +29,7 @@
                         question-type--{{ $question->question_type->type }}
                         @if ($loop->first)
                             current
-                        @elseif( ! in_array($question->question_type->type, ['text', 'textarea', 'email']))
+                        @elseif( ! in_array($question->question_type->type, ['text', 'textarea', 'email', 'number']))
                             disabled
                         @endif
                         @if (sizeof($question->children))

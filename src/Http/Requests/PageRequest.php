@@ -56,7 +56,11 @@ class PageRequest extends FormRequest
                     $answers = $question->answers->keyBy('id');
 
                     $answerId = request()->input('question_' . $question->id . '_answer');
-                    if (isset($answers[$answerId])) {
+                    if ($question->question_type->type == 'checkbox') {
+                        $answerId = key($answerId);
+                    }
+
+                    if ($answerId && isset($answers[$answerId])) {
                         $answer = $answers[$answerId];
 
                         if ($answer->hasOption('data_type')) {
