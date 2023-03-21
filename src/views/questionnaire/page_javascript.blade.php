@@ -654,12 +654,6 @@
                                 }
                             }
                         }
-                    } else if (element.classList.contains('question-type--text') || element.classList.contains('question-type--email')) {
-                        let input = element.querySelector('.question-input input');
-                        if (input && input.value !== '') {
-                            inputChanged = true;
-                            element.classList.add('answered');
-                        }
                     } else if (element.classList.contains('question-type--textarea')) {
                         let input = element.querySelector('textarea');
                         if (input && input.value !== '') {
@@ -689,6 +683,12 @@
                         }
                     } else if (element.classList.contains('question-type--range')) {
                         element.classList.add('answered');
+                    } else {
+                        let input = element.querySelector('.question-input input');
+                        if (input && input.value !== '') {
+                            inputChanged = true;
+                            element.classList.add('answered');
+                        }
                     }
                 });
 

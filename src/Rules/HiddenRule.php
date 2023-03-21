@@ -6,7 +6,7 @@ use Questionnaire\Models\Page;
 use Questionnaire\Models\Question;
 use Illuminate\Contracts\Validation\Rule;
 
-class CheckboxRule implements Rule
+class HiddenRule implements Rule
 {
 
     public function __construct(
