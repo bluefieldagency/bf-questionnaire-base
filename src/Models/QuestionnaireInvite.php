@@ -20,6 +20,7 @@ class QuestionnaireInvite extends Model
         'owner_email',
         'owner_name',
         'hash',
+        'reminder_count',
         'options',
         'expires_at',
     ];
@@ -28,10 +29,11 @@ class QuestionnaireInvite extends Model
     protected $table = 'questionnaire_invites';
 
     protected $casts = [
-        'options' => AsCollection::class,
         'name' => 'encrypted',
         'email' => 'encrypted',
         'project_name' => 'encrypted',
+        'reminder_count' => 'integer',
+        'options' => AsCollection::class,
         'expires_at' => 'datetime',
     ];
 
@@ -51,10 +53,15 @@ class QuestionnaireInvite extends Model
 
             $model->questionnaire()->associate($questionnaire);
 
-            if ( ! $model->hash) {
-                $model->hash = md5(implode(',', [$model->name, $model->email, $model->project_name, time()]));
-            }
+            self::generateHash($model);
         });
+    }
+
+    protected static function generateHash($model)
+    {
+        if ( ! $model->hash) {
+            $model->hash = md5(implode(',', [$model->name, $model->email, $model->project_name, time()]));
+        }
     }
 
     public function questionnaire() : BelongsTo
