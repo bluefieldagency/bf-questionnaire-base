@@ -15,3 +15,14 @@ if ( ! function_exists('domain_route')) {
         return $domain . '/' . ltrim(route($name, $parameters, false), '/');
     }
 }
+
+if ( ! function_exists('save_resolve')) {
+    function save_resolve($name, array $parameters = [], $default = null)
+    {
+        try {
+            return app()->make($name);
+        } catch (\Illuminate\Contracts\Container\BindingResolutionException $e) {
+            return $default;
+        }
+    }
+}

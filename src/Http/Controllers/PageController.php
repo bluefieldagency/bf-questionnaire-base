@@ -30,7 +30,12 @@ class PageController extends Controller
 
     protected function getQuestionnaireCode()
     {
-        return config('questionnaire.questionnaire_code');
+        if (session()->has('questionnaire.id')) {
+            $questionnaire = Questionnaire::find(session('questionnaire.id'));
+            return $questionnaire->slug;
+        } else {
+            return config('questionnaire.questionnaire_code');
+        }
     }
 
     public function index(Questionnaire $questionnaire, Page $page)

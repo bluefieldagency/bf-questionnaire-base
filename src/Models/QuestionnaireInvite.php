@@ -34,7 +34,10 @@ class QuestionnaireInvite extends Model
         'project_name' => 'encrypted',
         'reminder_count' => 'integer',
         'options' => AsCollection::class,
-        'expires_at' => 'datetime',
+    ];
+
+    protected $dates = [
+        'expires_at',
     ];
 
     public function __construct(array $attributes = [])

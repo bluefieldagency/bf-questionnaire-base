@@ -54,7 +54,7 @@ class Page extends Model implements Sortable
     {
         parent::boot();
 
-        static::saving(function ($model) {
+        static::creating(function ($model) {
             if ( ! $model->questionnaire()->exists()) {
                 $questionnaire = Questionnaire::where('slug', config('questionnaire.questionnaire_code'))->firstOrFail();
 

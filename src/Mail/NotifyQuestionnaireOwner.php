@@ -107,7 +107,7 @@ class NotifyQuestionnaireOwner extends Mailable
         }
 
         return $this->view('questionnaire::mail.notify_owner', ['questionnaireEntry' => $this->questionnaireEntry])
-            ->subject('BFA ' . config('questionnaire.questionnaire_code') . ': Er is feedback gegeven door ' . $this->questionnaireEntry->name)
+            ->subject(ucfirst($this->questionnaireEntry->questionnaire->title) . ' - er is feedback gegeven door ' . $this->questionnaireEntry->name)
             ->to($recipients)
             ->with([
                 'questionnaire' => $this->questionnaireEntry->questionnaire,
