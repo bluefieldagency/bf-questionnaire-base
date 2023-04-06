@@ -76,12 +76,12 @@ class QuestionnaireController extends Controller
 
         $url = $this->firstPageUrl($questionnaire);
 
-        $logo = null;
+        $questionnaireLogo = null;
         if ($tenant = save_resolve('tenant')) {
-            $logo = $tenant->getSettingValue('company_logo');
+            $questionnaireLogo = $tenant->getSettingValue('company_logo');
         }
 
-        return view('questionnaire.intro', compact('questionnaire', 'questionnaireInvite', 'url', 'logo'));
+        return view('questionnaire.intro', compact('questionnaire', 'questionnaireInvite', 'url', 'questionnaireLogo'));
     }
 
     public function firstPageUrl(Questionnaire $questionnaire)

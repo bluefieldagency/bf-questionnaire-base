@@ -134,7 +134,12 @@ class PageController extends Controller
             }
         }
 
-        return view($viewTemplate, compact('questionnaire', 'page', 'previousPageUrl', 'skipIterators'));
+        $questionnaireLogo = null;
+        if ($tenant = save_resolve('tenant')) {
+            $questionnaireLogo = $tenant->getSettingValue('company_logo');
+        }
+
+        return view($viewTemplate, compact('questionnaire', 'page', 'previousPageUrl', 'skipIterators', 'questionnaireLogo'));
     }
 
     public function store(PageRequest $request, Questionnaire $questionnaire, Page $page)

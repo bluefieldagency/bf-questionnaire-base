@@ -16,6 +16,12 @@
                         @if ( ! $questionnaire->hasOption('contact_form_enabled') || ($questionnaire->hasOption('contact_form_enabled') && $questionnaire->getOption('contact_form_enabled') !== false))
                             <a class="large-link contact-link" href="{{ route('contact') }}" target="_blank">@lang('bf::translations.contact-us')</a>
                         @endif
+
+                        @if ($questionnaireLogo)
+                            <div class="mb-6 lg:mb-9">
+                                <img src="{{ asset('storage/' . $questionnaireLogo) }}" alt="Logo" class="tenant-questionnaire-logo header-tenant-logo">
+                            </div>
+                        @endif
                     @endif
                 </div>
             </div>
