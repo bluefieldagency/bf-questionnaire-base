@@ -187,6 +187,8 @@ class Questionnaire extends Model
     static public function resetSession()
     {
         session()->forget([
+            'tenant.id',
+            'questionnaire.id',
             'questionnaire.page',
             'questionnaire.hidden_inputs',
             'questionnaire.file',
