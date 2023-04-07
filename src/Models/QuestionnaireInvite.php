@@ -51,10 +51,12 @@ class QuestionnaireInvite extends Model
     {
         parent::boot();
 
-        static::saving(function ($model) {
-            $questionnaire = Questionnaire::where('slug', config('questionnaire.questionnaire_code'))->firstOrFail();
+        static::creating(function ($model) {
+            if ( ! $model->questionnaire()->exists()) {
+                $questionnaire = Questionnaire::where('slug', config('questionnaire.questionnaire_code'))->firstOrFail();
 
-            $model->questionnaire()->associate($questionnaire);
+                $model->questionnaire()->associate($questionnaire);
+            }
 
             self::generateHash($model);
         });
