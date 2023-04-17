@@ -64,6 +64,8 @@ admin_mail_intro_template | string, an template to put as intro text for the adm
 
 show_fixed_data_types | boolean, should the fixed data types (found in the QuestionnaireEntry class) be put in the admin notification mail?
 
+notify_owner | boolean, sometimes you do not want the default admin mail to happen, and handle it yourself in the ProjectHandler 
+
 ### QuestionnaireInvite
 
 for_departments | comma separated values @ kto

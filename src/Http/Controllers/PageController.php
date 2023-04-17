@@ -441,7 +441,9 @@ class PageController extends Controller
             $this->handler->complete($questionnaire, $questionnaireEntry, $questionnaireEntry->getScores());
         }
 
-        $this->notifyOwner($questionnaireEntry);
+        if ( ! $questionnaire->hasOption('notify_owner') || $questionnaire->getOption('notify_owner') === true) {
+            $this->notifyOwner($questionnaireEntry);
+        }
 
         Questionnaire::resetSession();
     }
