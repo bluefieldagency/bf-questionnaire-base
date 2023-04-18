@@ -50,6 +50,8 @@
 
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
 
+    @includeIf('partials.favicons')
+
     <meta name="theme-color" content="#fafafa">
 </head>
 
