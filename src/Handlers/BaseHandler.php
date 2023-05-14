@@ -30,9 +30,9 @@ class BaseHandler
 
     public function showQuestion(Question $question)
     {
-        if ($question->question_type->type == 'hidden') {
-            return false;
-        }
+//        if ($question->question_type->type == 'hidden') {
+//            return false;
+//        }
 
         return true;
     }
@@ -57,6 +57,7 @@ class BaseHandler
             }
         }
 
+        return $value;
         return preg_replace('/\[[^\]]*\]/', '', $value);
     }
 

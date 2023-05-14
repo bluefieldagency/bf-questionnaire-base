@@ -224,7 +224,6 @@ class QuestionnaireEntry extends Model
                         $pagesAnswered[$page->id] = true;
                     }
                 }
-
             }
         }
 
