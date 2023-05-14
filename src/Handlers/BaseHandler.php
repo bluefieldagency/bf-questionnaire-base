@@ -57,7 +57,6 @@ class BaseHandler
             }
         }
 
-        return $value;
         return preg_replace('/\[[^\]]*\]/', '', $value);
     }
 
