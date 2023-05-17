@@ -45,7 +45,7 @@ class PageController extends Controller
         }
 
         if ($questionnaire->slug != $this->getQuestionnaireCode()) {
-            abort(404);
+            return redirect(route('home'));
         }
 
         if ($questionnaire->hasOption('requires_invite') && $questionnaire->getOption('requires_invite') && ! session()->has('questionnaire.invite_id')) {
