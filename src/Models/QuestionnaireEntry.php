@@ -192,7 +192,7 @@ class QuestionnaireEntry extends Model
 
     public function getFormattedDateAttribute()
     {
-        return ucfirst($this->updated_at->formatLocalized('%B %d, %Y - %H:%I:%S'));
+        return ucfirst($this->updated_at->translatedFormat('d F Y - h:i:s'));
     }
 
     public function getAnswersContent()
