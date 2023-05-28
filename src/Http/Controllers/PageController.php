@@ -450,8 +450,8 @@ class PageController extends Controller
 
     protected function storeEntry(Questionnaire $questionnaire)
     {
-        if (session()->has('questionnaire.id')) {
-            $questionnaireEntry = QuestionnaireEntry::find(session('questionnaire.id'));
+        if (session()->has('questionnaire.entry_id')) {
+            $questionnaireEntry = QuestionnaireEntry::find(session('questionnaire.entry_id'));
         }
 
         if ( ! $questionnaireEntry) {
@@ -479,7 +479,7 @@ class PageController extends Controller
             $questionnaire->questionnaire_entries()->save($questionnaireEntry);
         }
 
-        session(['questionnaire.id' => $questionnaireEntry->id]);
+        session(['questionnaire.entry_id' => $questionnaireEntry->id]);
 
         if (session()->has('questionnaire.file')) {
             foreach(Arr::dot(session('questionnaire')) as $key => $value) {

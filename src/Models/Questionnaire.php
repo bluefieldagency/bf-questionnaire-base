@@ -189,10 +189,10 @@ class Questionnaire extends Model
         session()->forget([
             'tenant.id',
             'questionnaire.id',
+            'questionnaire.entry_id',
             'questionnaire.page',
             'questionnaire.hidden_inputs',
             'questionnaire.file',
-            'questionnaire.id',
             'questionnaire.loaded_pages',
             'questionnaire.invite_id',
             'questionnaire.for_departments',
