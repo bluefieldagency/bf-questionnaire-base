@@ -81,7 +81,15 @@ class QuestionnaireController extends Controller
             $questionnaireLogo = $tenant->getSettingValue('company_logo');
         }
 
-        return view('questionnaire.intro', compact('questionnaire', 'questionnaireInvite', 'url', 'questionnaireLogo'));
+        if ($questionnaire->has_intro) {
+            if ($questionnaire->hasOption('requires_invite') && $questionnaire->getOption('requires_invite') && ! session()->has('questionnaire.invite_id')) {
+                return redirect(route('requires-invite'));
+            }
+
+            return view('questionnaire.intro', compact('questionnaire', 'questionnaireInvite', 'url', 'questionnaireLogo'));
+        }
+
+        return redirect($this->firstPageUrl($questionnaire));
     }
 
     public function firstPageUrl(Questionnaire $questionnaire)

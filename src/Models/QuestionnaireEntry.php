@@ -155,7 +155,7 @@ class QuestionnaireEntry extends Model
             return $this->scoredScores[$category];
         }
 
-        return 0;
+        return false;
     }
 
     public function hasScore($category)
@@ -176,11 +176,15 @@ class QuestionnaireEntry extends Model
         $this->scoredScores = $scores;
     }
 
-    public function setScore($key, $value)
+    public function setScore($key, $value, $makeFloat = true)
     {
         $this->getScores();
 
-        $this->scoredScores[$key] = $value;
+        if ($makeFloat) {
+            $this->scoredScores[$key] = floatval($value);
+        } else {
+            $this->scoredScores[$key] = $value;
+        }
 
         $this->scores = json_encode($this->scoredScores);
     }
