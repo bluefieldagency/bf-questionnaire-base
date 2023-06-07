@@ -34,11 +34,11 @@
 
 <head>
     <meta charset="utf-8">
-    <title>{{ $questionnaire->name }}</title>
-    <meta name="description" content="{{ $questionnaire->name }}">
+    <title>{{ $questionnaire->company_name }}</title>
+    <meta name="description" content="{{ $questionnaire->company_name }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta property="og:title" content="{{ $questionnaire->name }}">
+    <meta property="og:title" content="{{ $questionnaire->company_name }}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="">
