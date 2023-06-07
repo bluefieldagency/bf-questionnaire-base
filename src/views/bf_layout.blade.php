@@ -34,11 +34,11 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Blue Field Questionnaire</title>
-    <meta name="description" content="Blue Field Questionnaire">
+    <title>{{ $questionnaire->name }}</title>
+    <meta name="description" content="{{ $questionnaire->name }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta property="og:title" content="Blue Field Questionnaire">
+    <meta property="og:title" content="{{ $questionnaire->name }}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="">
