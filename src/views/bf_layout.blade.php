@@ -34,11 +34,11 @@
 
 <head>
     <meta charset="utf-8">
-    <title>{{ $questionnaire->company_name }}</title>
-    <meta name="description" content="{{ $questionnaire->company_name }}">
+    <title>{{ config('app.name') }}</title>
+    <meta name="description" content="{{ config('app.name') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta property="og:title" content="{{ $questionnaire->company_name }}">
+    <meta property="og:title" content="{{ config('app.name') }}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="">
@@ -70,8 +70,8 @@
             <div class="footer-vertical dark-mode">
                 <div class="content-center">
                     <div class="footer-horizontal">
-                        <img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}">
-                        <span class="copyright aeonik14">&copy; {{ date('Y') }} {{ $questionnaire->company_name }}</span>
+                        <img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ config('app.name') }}">
+                        <span class="copyright aeonik14">&copy; {{ date('Y') }} {{ config('app.name') }}</span>
                     </div>
                 </div>
             </div>
