@@ -4,7 +4,7 @@
             <div class="content-center">
                 <div class="header-horizontal">
                     @if (isset($questionnaire))
-                        <a href="{{ route('start-again') }}" class="company-logo--container"><img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ $questionnaire->company_name }}"></a>
+                        <a href="{{ route('start-again') }}" class="company-logo--container"><img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ config('app.name') }}"></a>
 
                         @if ($questionnaire->hasOption('intermediate_store_allowed') && $questionnaire->getOption('intermediate_store_allowed') === true && isset($page))
                             @if ($questionnaire->hasProgressPages() && $questionnaire->showProgressForThisPage($page))
@@ -22,6 +22,8 @@
                                 <img src="{{ asset('storage/' . $questionnaireLogo) }}" alt="Logo" class="tenant-questionnaire-logo header-tenant-logo">
                             </div>
                         @endif
+                    @elseif ( ! empty(config('project.default_logo_inverted')))
+                        <a href="{{ route('home') }}" class="company-logo--container"><img class="company-logo company-logo--page" src="{{ config('project.default_logo_inverted') }}" alt="{{ config('app.name') }}"></a>
                     @endif
                 </div>
             </div>
@@ -70,7 +72,12 @@
             <div class="footer-vertical dark-mode">
                 <div class="content-center">
                     <div class="footer-horizontal">
-                        <img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ config('app.name') }}">
+                        @if ($questionnaire)
+                            <img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ config('app.name') }}">
+                        @elseif ( ! empty(config('project.default_logo_inverted')))
+                            <img class="company-logo company-logo--page" src="{{ config('project.default_logo_inverted') }}" alt="{{ config('app.name') }}">
+                        @endif
+
                         <span class="copyright aeonik14">&copy; {{ date('Y') }} {{ config('app.name') }}</span>
                     </div>
                 </div>
