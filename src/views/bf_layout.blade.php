@@ -23,7 +23,7 @@
                             </div>
                         @endif
                     @elseif ( ! empty(config('project.default_logo_inverted')))
-                        <a href="{{ route('home') }}" class="company-logo--container"><img class="company-logo company-logo--page" src="{{ config('project.default_logo_inverted') }}" alt="{{ config('app.name') }}"></a>
+                        <a href="{{ route('home') }}" class="company-logo--container"><img class="company-logo company-logo--page" src="{{ asset(config('project.default_logo_inverted')) }}" alt="{{ config('app.name') }}"></a>
                     @endif
                 </div>
             </div>
@@ -75,7 +75,7 @@
                         @if ($questionnaire)
                             <img class="company-logo company-logo--page" src="{{ asset($questionnaire->company_logo) }}" alt="{{ config('app.name') }}">
                         @elseif ( ! empty(config('project.default_logo_inverted')))
-                            <img class="company-logo company-logo--page" src="{{ config('project.default_logo_inverted') }}" alt="{{ config('app.name') }}">
+                            <img class="company-logo company-logo--page" src="{{ asset(config('project.default_logo_inverted')) }}" alt="{{ config('app.name') }}">
                         @endif
 
                         <span class="copyright aeonik14">&copy; {{ date('Y') }} {{ config('app.name') }}</span>
