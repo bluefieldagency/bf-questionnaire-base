@@ -31,13 +31,10 @@ class QuestionnaireInvite extends Model
     protected $casts = [
         'name' => 'encrypted',
         'email' => 'encrypted',
+        'expires_at' => 'datetime',
         'project_name' => 'encrypted',
         'reminder_count' => 'integer',
         'options' => AsCollection::class,
-    ];
-
-    protected $dates = [
-        'expires_at',
     ];
 
     public function __construct(array $attributes = [])
