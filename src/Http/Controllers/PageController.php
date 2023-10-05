@@ -53,7 +53,19 @@ class PageController extends Controller
         }
 
         if (session()->has('questionnaire.loaded_pages')) {
-            $questionnaire->setRelation('pages', session('questionnaire.loaded_pages'));
+            $pages = [];
+
+            foreach(session('questionnaire.loaded_pages') as $pageId => $page) {
+                if ($page->questionnaire_id == $questionnaire->id) {
+                    $pages[$pageId] = $page;
+                }
+            }
+
+            if (sizeof($pages)) {
+                $questionnaire->setRelation('pages', session('questionnaire.loaded_pages'));
+            } else {
+                $questionnaire->loadMissing('pages');
+            }
         } else {
             $questionnaire->loadMissing('pages');
         }
