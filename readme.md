@@ -60,7 +60,9 @@ intermediate_store_allowed | boolean, should the page show the "save progress" l
 
 contact_form_enabled | boolean, should the page show the "contact us" link at the top?
 
-admin_mail_intro_template | string, an template to put as intro text for the admin notification email
+admin_mail_intro_template | string, a template to put as intro text for the admin notification email
+
+completed_view | string, a view to show when you have completed the questionnaire
 
 show_fixed_data_types | boolean, should the fixed data types (found in the QuestionnaireEntry class) be put in the admin notification mail?
 
