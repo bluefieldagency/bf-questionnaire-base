@@ -33,6 +33,7 @@ class QuestionnaireController extends Controller
                 'questionnaire.email' => Auth::user()->email,
             ]);
         }
+        session(['questionnaire.id' => $questionnaire->id]);
 
         if ($questionnaire->has_intro) {
             if ($questionnaire->hasOption('requires_invite') && $questionnaire->getOption('requires_invite') && ! session()->has('questionnaire.invite_id')) {
@@ -79,6 +80,14 @@ class QuestionnaireController extends Controller
         $questionnaireLogo = null;
         if ($tenant = save_resolve('tenant')) {
             $questionnaireLogo = $tenant->getSettingValue('company_logo');
+        }
+
+        session(['questionnaire.id' => $questionnaire->id]);
+
+        if ( ! empty($questionnaire->handler_class)) {
+            $handler = app($questionnaire->handler_class);
+
+            $handler->init($questionnaire);
         }
 
         if ($questionnaire->has_intro) {

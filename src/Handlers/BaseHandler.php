@@ -16,6 +16,10 @@ class BaseHandler
 
     protected $questionnaire;
 
+    public function init(Questionnaire $questionnaire) {}
+
+    public function intermediateCheck(Questionnaire $questionnaire) {}
+
     public function complete(Questionnaire $questionnaire, QuestionnaireEntry $questionnaireEntry, $scores) {}
 
     public function setQuestionnaire(Questionnaire $questionnaire)

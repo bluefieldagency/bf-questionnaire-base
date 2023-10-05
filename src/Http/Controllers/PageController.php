@@ -52,12 +52,35 @@ class PageController extends Controller
             return redirect(route('requires-invite'));
         }
 
-        $questionnaireInvite = null;
-
         if (session()->has('questionnaire.loaded_pages')) {
             $questionnaire->setRelation('pages', session('questionnaire.loaded_pages'));
         } else {
             $questionnaire->loadMissing('pages');
+        }
+
+        if ( ! empty($questionnaire->handler_class)) {
+            $handler = app($questionnaire->handler_class);
+
+            if ($handler) {
+                $handler->setQuestionnaire($questionnaire);
+
+                if (session()->has('questionnaire.invite_id')) {
+                    $questionnaireInvite = \App\Models\QuestionnaireInvite::where('questionnaire_id', $questionnaire->id)
+                        ->find(session('questionnaire.invite_id'));
+
+                    if ($questionnaireInvite) {
+                        $handler->setQuestionnaireInvite($questionnaireInvite);
+                    }
+                }
+
+                session(['handler_class' => $questionnaire->handler_class]);
+
+                app()->instance('handler', $handler);
+
+                \View::share('handler', $handler);
+
+                $handler->intermediateCheck($questionnaire);
+            }
         }
 
         // see if previous pages are filled
@@ -100,29 +123,6 @@ class PageController extends Controller
             $progressPages = $questionnaire->getProgressPages();
             for($i = 0; $i < ($questionnaire->getProgressStepThisPage($page) - 1); $i++) {
                 $skipIterators += $progressPages[$i]->questions->count();
-            }
-        }
-
-        if ( ! empty($questionnaire->handler_class)) {
-            $handler = app($questionnaire->handler_class);
-
-            if ($handler) {
-                $handler->setQuestionnaire($questionnaire);
-
-                if (session()->has('questionnaire.invite_id')) {
-                    $questionnaireInvite = \App\Models\QuestionnaireInvite::where('questionnaire_id', $questionnaire->id)
-                        ->find(session('questionnaire.invite_id'));
-
-                    if ($questionnaireInvite) {
-                        $handler->setQuestionnaireInvite($questionnaireInvite);
-                    }
-                }
-
-                session(['handler_class' => $questionnaire->handler_class]);
-
-                app()->instance('handler', $handler);
-
-                \View::share('handler', $handler);
             }
         }
 
