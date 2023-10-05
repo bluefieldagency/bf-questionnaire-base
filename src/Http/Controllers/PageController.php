@@ -107,7 +107,6 @@ class PageController extends Controller
             }
         }
 
-        dd($page);
         $page->loadMissing([
             'questions' => function($query) {
                 $query->whereNull('parent_id');
