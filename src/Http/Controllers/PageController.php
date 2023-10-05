@@ -62,7 +62,7 @@ class PageController extends Controller
             }
 
             if (sizeof($pages)) {
-                $questionnaire->setRelation('pages', session('questionnaire.loaded_pages'));
+                $questionnaire->setRelation('pages', $pages);
             } else {
                 $questionnaire->loadMissing('pages');
             }
