@@ -40,13 +40,17 @@
         @endif
     >
 
-    <datalist id="tickmarks_{{ $question->id }}">
+    <span
+        id="tickmarks_{{ $question->id }}"
+        class="datalist"
+    >
         @for($i = 0; $i < sizeof($steps); $i++)
-            <option
-                value="{{ $steps[$i] }}"
-                label="{{ $steps[$i] }}"
+            <span
+                class="option"
                 style="left: {{ ($i * (100 / (sizeof($steps) - 1))) }}%"
-            ></option>
+            >
+            {{ $steps[$i] }}
+            </span>
         @endfor
-    </datalist>
+    </span>
 </div>
