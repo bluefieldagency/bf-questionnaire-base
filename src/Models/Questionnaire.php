@@ -119,9 +119,9 @@ class Questionnaire extends Model
         if ($this->hasProgressPages()) {
             $progressPageIds = explode(',', $this->progress_page_ids);
 
-            if (session()->has('questionnaire.loaded_pages')) {
+            if (session()->has('questionnaire.' . $this->id . '.loaded_pages')) {
                 $progressPages = [];
-                foreach(session('questionnaire.loaded_pages') as $loadedPage) {
+                foreach(session('questionnaire.' . $this->id . '.loaded_pages') as $loadedPage) {
                     if (in_array($loadedPage->id, $progressPageIds)) {
                         $progressPages[] = $loadedPage;
                     }
@@ -193,7 +193,6 @@ class Questionnaire extends Model
             'questionnaire.page',
             'questionnaire.hidden_inputs',
             'questionnaire.file',
-            'questionnaire.loaded_pages',
             'questionnaire.invite_id',
             'questionnaire.for_departments',
             'questionnaire.project_name',

@@ -64,7 +64,7 @@ class InviteController extends QuestionnaireController
                 }
 
                 if (sizeof($pageIds)) {
-                    session(['questionnaire.loaded_pages' => $questionnaire->pages]);
+                    session(['questionnaire.' . $questionnaire->id . '.loaded_pages' => $questionnaire->pages]);
 
                     return route($questionnaireInvite->questionnaire->getRouteNameFor('page'), [$questionnaireInvite->questionnaire->slug, $questionnaire->pages->first()->slug]);
                 }

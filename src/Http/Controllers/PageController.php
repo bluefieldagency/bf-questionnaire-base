@@ -52,20 +52,8 @@ class PageController extends Controller
             return redirect(route('requires-invite'));
         }
 
-        if (session()->has('questionnaire.loaded_pages')) {
-            $pages = [];
-
-            foreach(session('questionnaire.loaded_pages') as $pageId => $sessionPage) {
-                if ($sessionPage->questionnaire_id == $questionnaire->id) {
-                    $pages[$pageId] = $sessionPage;
-                }
-            }
-
-            if (sizeof($pages)) {
-                $questionnaire->setRelation('pages', $pages);
-            } else {
-                $questionnaire->loadMissing('pages');
-            }
+        if (session()->has('questionnaire.' . $questionnaire->id . '.loaded_pages')) {
+            $questionnaire->setRelation('pages', session('questionnaire.' . $questionnaire->id . '.loaded_pages'));
         } else {
             $questionnaire->loadMissing('pages');
         }
@@ -240,8 +228,8 @@ class PageController extends Controller
 
     protected function getAdjecentPage(Questionnaire $questionnaire, Page $page, $direction)
     {
-        if (session()->has('questionnaire.loaded_pages')) {
-            $questionnaire->setRelation('pages', session('questionnaire.loaded_pages'));
+        if (session()->has('questionnaire.' . $questionnaire->id . '.loaded_pages')) {
+            $questionnaire->setRelation('pages', session('questionnaire.' . $questionnaire->id . '.loaded_pages'));
 
             $questionnairePages = $questionnaire->pages;
         } else {
@@ -275,8 +263,8 @@ class PageController extends Controller
 
     public function calculateScores(Questionnaire $questionnaire, QuestionnaireEntry $questionnaireEntry)
     {
-        if (session()->has('questionnaire.loaded_pages')) {
-            $questionnaire->setRelation('pages', session('questionnaire.loaded_pages'));
+        if (session()->has('questionnaire.' . $questionnaire->id . '.loaded_pages')) {
+            $questionnaire->setRelation('pages', session('questionnaire.' . $questionnaire->id . '.loaded_pages'));
         }
 
         if ( ! empty($questionnaire->handler_class)) {
