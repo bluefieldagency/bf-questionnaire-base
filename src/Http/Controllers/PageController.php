@@ -55,9 +55,9 @@ class PageController extends Controller
         if (session()->has('questionnaire.loaded_pages')) {
             $pages = [];
 
-            foreach(session('questionnaire.loaded_pages') as $pageId => $page) {
-                if ($page->questionnaire_id == $questionnaire->id) {
-                    $pages[$pageId] = $page;
+            foreach(session('questionnaire.loaded_pages') as $pageId => $sessionPage) {
+                if ($sessionPage->questionnaire_id == $questionnaire->id) {
+                    $pages[$pageId] = $sessionPage;
                 }
             }
 
@@ -107,6 +107,7 @@ class PageController extends Controller
             }
         }
 
+        dd($page);
         $page->loadMissing([
             'questions' => function($query) {
                 $query->whereNull('parent_id');
