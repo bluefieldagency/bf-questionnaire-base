@@ -254,10 +254,14 @@
                                 if (jsonData.errors !== undefined) {
                                     General.showErrors(jsonData.errors);
                                 } else {
-                                    @if (Route::has('questionnaire-entries.index'))
-                                        Notifications.success('@lang('bf::translations.stored') <a href="{{ route('questionnaire-entries.index') }}">Terug naar het overzicht?</a>');
+                                    @if ($questionnaire->hasOption('intermediate_store_redirect_url'))
+                                        document.location.href = '{{ $questionnaire->getOption('intermediate_store_redirect_url') }}';
                                     @else
-                                        Notifications.success('@lang('bf::translations.stored')');
+                                        @if (Route::has('questionnaire-entries.index'))
+                                            Notifications.success('@lang('bf::translations.stored') <a href="{{ route('questionnaire-entries.index') }}">Terug naar het overzicht?</a>');
+                                        @else
+                                            Notifications.success('@lang('bf::translations.stored')');
+                                        @endif
                                     @endif
                                 }
                             } else if (this.status === 419) {
