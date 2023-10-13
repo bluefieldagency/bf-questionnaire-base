@@ -55,6 +55,22 @@ class Questionnaire extends Model
         parent::__construct($attributes);
     }
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            self::generateHash($model);
+        });
+    }
+
+    protected static function generateHash($model)
+    {
+        if ( ! $model->hash) {
+            $model->hash = md5(implode(',', [$model->title, $model->start_button_label, $model->tenant_id, time()]));
+        }
+    }
+
     /**
      * Create a new factory instance for the model.
      *
