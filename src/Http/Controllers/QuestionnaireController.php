@@ -40,7 +40,7 @@ class QuestionnaireController extends Controller
                 return redirect(route('requires-invite'));
             }
 
-            return redirect(route($questionnaire->getRouteNameFor('intro'), [$questionnaire]));
+            return redirect($questionnaire->getRoute('intro'));
         }
 
         return redirect($this->firstPageUrl($questionnaire));
@@ -105,7 +105,7 @@ class QuestionnaireController extends Controller
     {
         $page = $questionnaire->pages()->active()->ordered()->first();
 
-        return route($questionnaire->getRouteNameFor('page'), [$questionnaire->slug, $page->slug]);
+        return $questionnaire->getRoute('page', $page);
     }
 
     protected function checkForQuestionnaireCode()

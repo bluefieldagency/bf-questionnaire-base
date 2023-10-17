@@ -184,6 +184,18 @@ class Questionnaire extends Model
         return false;
     }
 
+    public function getRoute($suffix, $page = null): string
+    {
+        if ($this->tenant_id !== null) {
+            $this->loadMissing('tenant');
+            $tenant = $this->tenant;
+
+            return route($this->getRouteNameFor($suffix), ['tenant_id' => $tenant->id, 'questionnaire_slug' => $this->slug, 'page_slug' => $page->slug]);
+        }
+
+        return route($this->getRouteNameFor($suffix), [$this, $page]);
+    }
+
     public function getRoutePrefix(): mixed
     {
         if ($this->hasOption('route_prefix')) {

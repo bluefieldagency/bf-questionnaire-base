@@ -8,7 +8,7 @@
 
                         @if ($questionnaire->hasOption('intermediate_store_allowed') && $questionnaire->getOption('intermediate_store_allowed') === true && isset($page))
                             @if ($questionnaire->hasProgressPages() && $questionnaire->showProgressForThisPage($page))
-                                <a class="large-link intermediate-store-link" href="{{ route('questionnaire.intermediate-store', ['questionnaire' => $questionnaire, 'page' => $page]) }}" target="_blank">
+                                <a class="large-link intermediate-store-link" href="{{ $questionnaire->getRoute('intermediate-store', $page) }}" target="_blank">
                                     @if ($questionnaire->hasOption('intermediate_store_label'))
                                         {{ $questionnaire->getOption('intermediate_store_label') }}
                                     @else

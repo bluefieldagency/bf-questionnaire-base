@@ -233,7 +233,7 @@
             @if (Route::has('questionnaire.intermediate-store'))
                 if ( ! checkIntermediateStoreLoading) {
                     const xmlhttp = new XMLHttpRequest();
-                    const url = '{{ route('questionnaire.intermediate-store', ['questionnaire' => $questionnaire, 'page' => $page]) }}';
+                    const url = '{{ $questionnaire->getRoute('intermediate-store', $page) }}';
                     const form = document.getElementById('questionnaire_page_{{ $page->id }}');
                     const formData = new FormData(form);
                     form.classList.add('sending');

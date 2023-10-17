@@ -2,7 +2,6 @@
 
 namespace Questionnaire\Http\Controllers;
 
-use App\Models\Department;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -91,7 +90,7 @@ class PageController extends Controller
             }
 
             if ( ! session()->has('questionnaire.page.' . $questionnairePage->id)) {
-                return redirect(route($questionnaire->getRouteNameFor('page'), [$questionnaire->slug, $questionnairePage->slug]));
+                return redirect($questionnaire->getRoute('page', $questionnairePage));
             }
         }
 
@@ -109,7 +108,7 @@ class PageController extends Controller
             // Determine the previous page, to have a previous step link
             $previousPage = $this->getPreviousPage($questionnaire, $page);
             if ($previousPage) {
-                $previousPageUrl = route($questionnaire->getRouteNameFor('page'), [$questionnaire->slug, $previousPage->slug]);
+                $previousPageUrl = $questionnaire->getRoute('page', $previousPage);
             }
         }
 
@@ -155,13 +154,13 @@ class PageController extends Controller
         // Determine the next page to show to the attendee
         $nextPage = $this->getNextPage($questionnaire, $page);
         if ($nextPage) {
-            return redirect(route($questionnaire->getRouteNameFor('page'), [$questionnaire->slug, $nextPage->slug]));
+            return redirect($questionnaire->getRoute('page', $nextPage));
         }
 
         // No more pages to do? Then we are done!
         $this->completeQuestionnaire($questionnaire);
 
-        return redirect(route($questionnaire->getRouteNameFor('completed'), [$questionnaire->slug]));
+        return redirect($questionnaire->getRoute('completed'));
     }
 
     protected function storeSpecificValues($request, Page $page)
