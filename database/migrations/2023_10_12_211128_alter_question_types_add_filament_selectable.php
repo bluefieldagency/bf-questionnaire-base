@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Questionnaire\Models\QuestionType;
 
 return new class extends Migration
 {
@@ -19,7 +20,7 @@ return new class extends Migration
             $table->boolean('is_selectable')->default('1')->after('options');
         });
 
-        \App\Models\QuestionType::where('type', 'hidden')->update(['is_selectable' => '0']);
+        QuestionType::where('type', 'hidden')->update(['is_selectable' => '0']);
     }
 
     /**
