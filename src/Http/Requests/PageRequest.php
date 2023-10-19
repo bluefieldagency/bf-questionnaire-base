@@ -2,11 +2,14 @@
 
 namespace Questionnaire\Http\Requests;
 
+use App\Traits\TenantTrait;
 use Questionnaire\Rules\CheckboxRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PageRequest extends FormRequest
 {
+
+    use TenantTrait;
 
     protected $page;
 
@@ -27,8 +30,17 @@ class PageRequest extends FormRequest
      */
     public function rules()
     {
-        // Get bound Booking model from route
-        $this->page = $this->route('page');
+        // Get bound Page model from route
+        if ($this->route('page')) {
+            $this->page = $this->route('page');
+        } else {
+            $parameters = request()->route()->parameters();
+
+            $questionnaire = $this->getQuestionnaire($parameters['tenant_id'], $parameters['questionnaire_slug']);
+
+            $this->page = $this->getPage($questionnaire, $parameters['page_slug']);
+        }
+
         $this->page->loadMissing([
             'questions' => function($query) {
                 $query->whereNull('parent_id');
