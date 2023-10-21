@@ -186,7 +186,7 @@ class Questionnaire extends Model
 
     public function getRoute($suffix, $page = null): string
     {
-        if ($this->tenant_id !== null && $this->hasOption('requires_invite') && $this->getOption('requires_invite') !== false) {
+        if ($this->tenant_id !== null && $this->hasOption('created_by') && $this->getOption('created_by') > 0) {
             $this->loadMissing('tenant');
             $tenant = $this->tenant;
 
