@@ -9,5 +9,9 @@
 <div class="error-form">{{ $errors->first('question_' . $question->id . '_answer') }}</div>
 
 <div class="question-answers-container">
-    @include('questionnaire::question_types.' . $question->question_type->type)
+    @if (sizeof($question->answers) < 1 && in_array($question->question_type->type, ['radio', 'checkbox', 'select']))
+        @include('questionnaire::question_types.missing_answers')
+    @else
+        @include('questionnaire::question_types.' . $question->question_type->type)
+    @endif
 </div>

@@ -1,1 +1,1 @@
-@include('questionnaire::questions.page_question_text')
+@include('questionnaire::questions.page_question_radio')

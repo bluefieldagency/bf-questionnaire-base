@@ -3,7 +3,7 @@
 @endif
 
 @if ( ! empty($page->intro))
-    <p class="page-intro">{!! $page->intro !!}</p>
+    <p class="page-intro">{!! nl2br($page->intro) !!}</p>
 @endif
 
 @if ($questionnaire->show_progress_text && $questionnaire->showProgressForThisPage($page))
@@ -30,7 +30,11 @@
                         @if ($loop->first)
                             current
                         @elseif( ! in_array($question->question_type->type, ['text', 'textarea', 'email', 'number']))
-                            disabled
+                            @if (sizeof($question->answers) < 1 && in_array($question->question_type->type, ['radio', 'checkbox', 'select']))
+                                {{-- do not disable questions with missing answers, so the link to the CMS works --}}
+                            @else
+                                disabled
+                            @endif
                         @endif
                         @if (sizeof($question->children))
                             has-children

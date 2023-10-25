@@ -1,5 +1,5 @@
 @php
-    $min = 0;
+    $min = 1;
     if ($question->hasOption('min')) {
         $min = $question->getOption('min');
     }
@@ -12,10 +12,25 @@
         $step = $question->getOption('step');
     }
 
-    $steps = [];
-    for($i = $min; $i <= $max; $i += $step) {
-        $steps[] = $i;
+    $desiredLength = 10; // How many items we want in the array
+    $maxLengthBeforeAdjustment = 20; // The max number of items before we adjust the step size
+
+    // Calculate the total range
+    $range = $max - $min;
+
+    // Calculate the number of values the current setup will produce
+    $currentLength = floor($range / $step) + 1;
+
+    // If currentLength exceeds maxLengthBeforeAdjustment, recompute the step size
+    if ($currentLength > $maxLengthBeforeAdjustment) {
+        $step = $range / ($desiredLength - 1); // -1 because for 10 numbers, there are 9 intervals
     }
+
+    $steps = [];
+    for ($i = $min; $i < $max; $i += $step) {
+        $steps[] = round($i); // Use round() to avoid potential floating point inaccuracies
+    }
+    $steps[] = $max;
 @endphp
 
 <div class="range-slider range-slider-container">
