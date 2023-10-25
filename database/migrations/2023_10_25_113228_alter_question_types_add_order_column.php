@@ -12,15 +12,34 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::connection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'))->hasColumn('question_types', 'is_unique')) {
-            return;
-        }
-
         Schema::connection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'))->table('question_types', function (Blueprint $table) {
-            $table->boolean('is_unique')->default('0')->after('options');
+            $table->smallInteger('order_column')->after('options');
         });
 
-        QuestionType::whereIn('type', ['nps', 'ces'])->update(['is_unique' => '1']);
+        // define the new order based on the order in the following array
+        $types = [
+            'text',
+            'email',
+            'textarea',
+            'radio',
+            'checkbox',
+            'select',
+            'range',
+            'stars',
+            'nps',
+            'ces',
+            'file',
+            'hidden',
+        ];
+        $typeIds = [];
+        foreach($types as $type) {
+            $questionType = QuestionType::where('type', $type)->first();
+            if ($questionType) {
+                $typeIds[] = $questionType->id;
+            }
+        }
+
+        QuestionType::setNewOrder($typeIds);
     }
 
     /**
@@ -31,7 +50,7 @@ return new class extends Migration
     public function down()
     {
         Schema::connection(((env('QUESTIONNAIRE_DATABASE') !== null && env('QUESTIONNAIRE_DATABASE') !== '') ? env('QUESTIONNAIRE_DATABASE') : 'mysql'))->table('question_types', function (Blueprint $table) {
-            $table->dropColumn('is_unique');
+            $table->dropColumn('order_column');
         });
     }
 };
