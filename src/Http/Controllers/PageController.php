@@ -112,9 +112,13 @@ class PageController extends Controller
             }
         }
 
-        $viewTemplate = 'questionnaire::questionnaire.page';
-        if ( ! empty($page->custom_view_template)) {
-            $viewTemplate = $page->custom_view_template;
+        if ($page && $page->questions && ! sizeof($page->questions)) {
+            $viewTemplate = 'questionnaire::question_types.missing_questions';
+        } else {
+            $viewTemplate = 'questionnaire::questionnaire.page';
+            if ( ! empty($page->custom_view_template)) {
+                $viewTemplate = $page->custom_view_template;
+            }
         }
 
         $skipIterators = 1;
