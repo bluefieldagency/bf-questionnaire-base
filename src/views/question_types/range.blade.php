@@ -1,14 +1,14 @@
 @php
     $min = 1;
-    if ($question->hasOption('min')) {
+    if ($question->hasOption('min') && $question->getOption('min') !== null) {
         $min = $question->getOption('min');
     }
     $max = 100;
-    if ($question->hasOption('max')) {
+    if ($question->hasOption('max') && $question->getOption('max') !== null) {
         $max = $question->getOption('max');
     }
     $step = 1;
-    if ($question->hasOption('step')) {
+    if ($question->hasOption('step') && $question->getOption('step') !== null) {
         $step = $question->getOption('step');
     }
 
