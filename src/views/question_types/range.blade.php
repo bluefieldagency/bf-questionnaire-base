@@ -3,7 +3,7 @@
     if ($question->hasOption('min') && $question->getOption('min') !== null) {
         $min = $question->getOption('min');
     }
-    $max = 100;
+    $max = 10;
     if ($question->hasOption('max') && $question->getOption('max') !== null) {
         $max = $question->getOption('max');
     }
