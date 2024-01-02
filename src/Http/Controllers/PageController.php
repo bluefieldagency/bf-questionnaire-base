@@ -139,7 +139,7 @@ class PageController extends Controller
 
         $questionnaireLogo = null;
         if ($tenant = save_resolve('tenant')) {
-            $questionnaireLogo = $tenant->getTenantLogo();
+            $questionnaireLogo = $tenant->getTenantLogo(true, false);
         }
 
         return view($viewTemplate, compact('questionnaire', 'page', 'previousPageUrl', 'skipIterators', 'questionnaireLogo'));
