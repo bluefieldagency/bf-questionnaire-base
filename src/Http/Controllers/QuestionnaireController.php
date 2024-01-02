@@ -79,7 +79,7 @@ class QuestionnaireController extends Controller
 
         $questionnaireLogo = null;
         if ($tenant = save_resolve('tenant')) {
-            $questionnaireLogo = $tenant->getSettingValue('company_logo');
+            $questionnaireLogo = $tenant->getTenantLogo(true, false);
         }
 
         session(['questionnaire.id' => $questionnaire->id]);

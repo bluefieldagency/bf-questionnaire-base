@@ -28,7 +28,7 @@
 
                         @if ($questionnaireLogo)
                             <div class="mb-6 lg:mb-9">
-                                <img src="{{ asset('storage/' . $questionnaireLogo) }}" alt="Logo" class="tenant-questionnaire-logo header-tenant-logo">
+                                <img src="{{ $questionnaireLogo }}" alt="Logo" class="tenant-questionnaire-logo header-tenant-logo">
                             </div>
                         @endif
                     @elseif ( ! empty(config('project.default_logo_inverted')))
