@@ -27,7 +27,7 @@
                         @endif
 
                         @if ($questionnaireLogo)
-                            <div class="mb-6 lg:mb-9">
+                            <div class="mb-6 lg:mb-9 questionnaire-company-logo">
                                 <img src="{{ $questionnaireLogo }}" alt="Logo" class="tenant-questionnaire-logo header-tenant-logo">
                             </div>
                         @endif
