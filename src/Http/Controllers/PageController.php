@@ -138,7 +138,9 @@ class PageController extends Controller
         }
 
         $questionnaireLogo = null;
-        if ($tenant = save_resolve('tenant')) {
+        if ($questionnaire->tenant_id > 0) {
+            $tenant = $questionnaire->tenant;
+
             $questionnaireLogo = $tenant->getTenantLogo(true, false);
         }
 
