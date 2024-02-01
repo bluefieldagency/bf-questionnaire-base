@@ -139,6 +139,8 @@ class PageController extends Controller
 
         $questionnaireLogo = null;
         if ($questionnaire->tenant_id > 0) {
+            $questionnaire->loadMissing('tenant');
+            
             $tenant = $questionnaire->tenant;
 
             $questionnaireLogo = $tenant->getTenantLogo(true, false);
