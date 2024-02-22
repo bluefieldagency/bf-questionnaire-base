@@ -23,6 +23,7 @@ class QuestionType extends Model implements Sortable
         'order_column',
         'is_unique',
         'is_selectable',
+        'is_chartable',
     ];
 
     protected $casts = [
