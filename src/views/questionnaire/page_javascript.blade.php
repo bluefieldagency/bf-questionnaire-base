@@ -32,7 +32,7 @@
             // questions can have additonal questions (children), which are triggered by specific answer data types
             // todo: multiple additional questions per element are not handled correctly right now (lean working)
             let nextQuestion = null;
-            if (parent.classList.contains('has-children') && event.target.dataset.data_type !== undefined) {
+            if (parent.classList.contains('has-children')) {
                 let additionalChildrenContainer = parent.querySelector('ul.additional-questions-container');
                 if (additionalChildrenContainer) {
                     additionalChildrenContainer.classList.remove('visible');
@@ -48,7 +48,9 @@
                             });
                         });
                     }
+                }
 
+                if (event.target.dataset.data_type !== undefined) {
                     // and now make the relevant additional questions visible
                     additionalChildren = parent.querySelectorAll('li[data-answer_trigger="' + event.target.dataset.data_type + '"]');
                     if (additionalChildren.length > 0) {
