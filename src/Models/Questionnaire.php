@@ -188,9 +188,8 @@ class Questionnaire extends Model
     {
         if ($this->tenant_id !== null && $this->hasOption('created_by') && $this->getOption('created_by') > 0) {
             $this->loadMissing('tenant');
-            $tenant = $this->tenant;
 
-            return route($this->getRouteNameFor($suffix), ['tenant_id' => $tenant->id, 'questionnaire_slug' => $this->slug, 'page_slug' => $page->slug]);
+            return route($this->getRouteNameFor($suffix), ['tenant_id' => $this->tenant->id, 'questionnaire_slug' => $this->slug, 'page_slug' => $page->slug]);
         }
 
         return route($this->getRouteNameFor($suffix), [$this, $page]);
