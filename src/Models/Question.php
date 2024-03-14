@@ -83,6 +83,17 @@ class Question extends Model implements Sortable
     public function getAnswer($answerId)
     {
         $answers = $this->answers->keyBy('id');
+        if (is_array($answerId)) {
+            $givenAnswers = [];
+
+            foreach($answerId as $id => $value) {
+                if (isset($answers[$id])) {
+                    $givenAnswers[] = $answers[$id];
+                }
+            }
+
+            return $givenAnswers;
+        }
 
         return $answers[$answerId];
     }
