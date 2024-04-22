@@ -25,6 +25,7 @@ class Question extends Model implements Sortable
 
     protected $fillable = [
         'title',
+        'short_title',
         'options',
         'order_column',
         'is_active',

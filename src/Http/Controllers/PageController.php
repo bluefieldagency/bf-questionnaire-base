@@ -309,14 +309,14 @@ class PageController extends Controller
 
                         if ($answer) {
                             if ($question->question_type->type == 'radio' || $question->question_type->type == 'stars') {
-                                $anwserModel = $question->getAnswer($answer);
+                                $answerModel = $question->getAnswer($answer);
 
-                                $score = $anwserModel->getOption('score');
+                                $score = $answerModel->getOption('score');
                             } else if ($question->question_type->type == 'checkbox') {
                                 foreach($answer as $key => $value) {
-                                    $anwserModel = $question->getAnswer($key);
+                                    $answerModel = $question->getAnswer($key);
 
-                                    $score += $anwserModel->getOption('score');
+                                    $score += $answerModel->getOption('score');
                                 }
 
                                 if ($question->hasOption('score_max')) {

@@ -37,6 +37,7 @@ class QuestionnaireEntry extends Model
 
     protected $casts = [
         'options' => AsCollection::class,
+        'scores' => AsCollection::class,
         'name' => 'encrypted',
         'email' => 'encrypted',
         'project_name' => 'encrypted',
@@ -201,19 +202,28 @@ class QuestionnaireEntry extends Model
 
     public function getAnswersContent()
     {
-        $questionnaire = $this->questionnaire;
-        $questionnaire->loadMissing('pages.questions.answers');
-        $givenAnswers = json_decode($this->answers, true);
         $pagesAnswered = [];
-
         $questions = [];
-        foreach($questionnaire->pages as $page) {
-            foreach($page->questions as $question) {
-                foreach($givenAnswers as $key => $givenAnswer) {
+        $questionnaire = $this->questionnaire;
+        $handler = app($questionnaire->handler_class);
+        $questionnaire->loadMissing([
+            'pages.questions',
+            'pages.questions.question_type',
+            'pages.questions.answers',
+        ]);
+        $givenAnswers = json_decode($this->answers, true);
+
+        foreach ($questionnaire->pages as $page) {
+            foreach ($page->questions as $question) {
+                foreach ($givenAnswers as $givenAnswer) {
+                    if ($question->question_type->type == 'hidden') {
+                        continue;
+                    }
+
                     if (isset($givenAnswer['question_' . $question->id . '_answer'])) {
                         $foundAnswer = null;
 
-                        foreach($question->answers as $answer) {
+                        foreach ($question->answers as $answer) {
                             if ($answer->id == $givenAnswer['question_' . $question->id . '_answer']) {
                                 $foundAnswer = $answer->title;
                             }
@@ -231,24 +241,41 @@ class QuestionnaireEntry extends Model
             }
         }
 
-        $content = '';
+        $reponse = [
+            'fixed_data_types' => [],
+            'pages' => [],
+            'properties' => [],
+            'options' => [],
+            'scores' => [],
+        ];
+
+        $reponse['properties']['created_at'] = $this->created_at;
+        $reponse['properties']['updated_at'] = $this->updated_at;
+
+        foreach(QuestionnaireEntry::$fixedDataTypes as $fixedDataType) {
+            $reponse['fixed_data_types'][$fixedDataType] = $this->getAttribute($fixedDataType);
+        }
+
+        foreach($this->options as $key => $option) {
+            $reponse['options'][$key] = $option;
+        }
+
+        foreach($this->scores as $key => $score) {
+            $reponse['scores'][$key] = $score;
+        }
+
         foreach($questionnaire->pages as $page) {
             if ($pagesAnswered[$page->id]) {
-                $content .= $page->title . PHP_EOL;
-                $content .= '---' . PHP_EOL;
-
-                foreach($page->questions as $question) {
+                $reponse['pages'][$page->id] = [];
+                foreach ($page->questions as $question) {
                     if (isset($questions[$question->id])) {
-                        $content .= $question->title . ': ' . $questions[$question->id] . PHP_EOL;
+                        $reponse['pages'][$page->id][$handler->enrichTitle($question, $question->title)] = $questions[$question->id];
                     }
                 }
-
-                $content .= '---------' . PHP_EOL;
-                $content .= PHP_EOL;
             }
         }
 
-        return $content;
+        return $reponse;
     }
 
 }
