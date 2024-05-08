@@ -207,7 +207,6 @@ class QuestionnaireEntry extends Model
         $questionnaire = $this->questionnaire;
         $handler = app($questionnaire->handler_class);
         $questionnaire->loadMissing([
-            'pages.questions',
             'pages.questions.question_type',
             'pages.questions.answers',
         ]);
@@ -242,13 +241,14 @@ class QuestionnaireEntry extends Model
         }
 
         $reponse = [
+            'properties' => [],
             'fixed_data_types' => [],
             'pages' => [],
-            'properties' => [],
             'options' => [],
             'scores' => [],
         ];
 
+        $reponse['properties']['id'] = $this->id;
         $reponse['properties']['created_at'] = $this->created_at;
         $reponse['properties']['updated_at'] = $this->updated_at;
 
@@ -266,10 +266,18 @@ class QuestionnaireEntry extends Model
 
         foreach($questionnaire->pages as $page) {
             if ($pagesAnswered[$page->id]) {
-                $reponse['pages'][$page->id] = [];
+                $reponse['pages'][$page->id] = [
+                    'questions' => [],
+                ];
+
                 foreach ($page->questions as $question) {
                     if (isset($questions[$question->id])) {
-                        $reponse['pages'][$page->id][$handler->enrichTitle($question, $question->title)] = $questions[$question->id];
+                        $reponse['pages'][$page->id]['questions'][] = [
+                            'id' => $question->id,
+                            'given_answer_value' => $questions[$question->id],
+                            'title' => $handler->enrichTitle($question, $question->title),
+                            'title_raw' => $question->title,
+                        ];
                     }
                 }
             }
