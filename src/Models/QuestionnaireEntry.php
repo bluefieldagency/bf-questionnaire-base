@@ -142,7 +142,7 @@ class QuestionnaireEntry extends Model
     public function getScores()
     {
         if ( ! $this->scoredScores) {
-            $this->scoredScores = json_decode($this->scores, true);
+            $this->scoredScores = $this->scores;
         }
 
         return $this->scoredScores;
@@ -172,7 +172,7 @@ class QuestionnaireEntry extends Model
 
     public function setScores($scores)
     {
-        $this->scores = json_encode($scores);
+        $this->scores = $scores;
 
         $this->scoredScores = $scores;
     }
@@ -187,7 +187,7 @@ class QuestionnaireEntry extends Model
             $this->scoredScores[$key] = $value;
         }
 
-        $this->scores = json_encode($this->scoredScores);
+        $this->scores = $this->scoredScores;
     }
 
     public function isComplete()

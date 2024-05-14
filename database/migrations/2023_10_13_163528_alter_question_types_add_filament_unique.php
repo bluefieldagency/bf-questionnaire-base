@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
 use Questionnaire\Models\QuestionType;
 
@@ -20,7 +21,7 @@ return new class extends Migration
             $table->boolean('is_unique')->default('0')->after('options');
         });
 
-        QuestionType::whereIn('type', ['nps', 'ces'])->update(['is_unique' => '1']);
+        Artisan::call('db:seed', ['--class' => 'QuestionTypesSeeder']);
     }
 
     /**

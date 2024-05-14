@@ -10,7 +10,7 @@ trait OptionsTrait
         if ( ! $this->options) {
             return false;
         }
-        
+
         return $this->options->isNotEmpty();
     }
 
@@ -60,6 +60,15 @@ trait OptionsTrait
         }
 
         return $this->options->put($key, $value);
+    }
+
+    public function forgetOption($key)
+    {
+        if ( ! $this->hasOptions()) {
+            $this->options = collect([]);
+        }
+
+        return $this->options->forget($key);
     }
 
 }

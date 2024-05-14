@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
 use Questionnaire\Models\QuestionType;
 
@@ -18,17 +19,7 @@ return new class extends Migration
             });
         }
 
-        QuestionType::whereIn('type', [
-            'hidden',
-            'text',
-            'textarea',
-            'file',
-            'select',
-            'hidden',
-            'ces',
-            'nps',
-            'enps',
-        ])->update(['is_chartable' => '0']);
+        Artisan::call('db:seed', ['--class' => 'QuestionTypesSeeder']);
     }
 
     /**
