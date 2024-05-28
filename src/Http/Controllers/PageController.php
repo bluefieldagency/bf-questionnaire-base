@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Questionnaire\Jobs\SendNotifyQuestionnaireOwner;
 use Questionnaire\Http\Requests\PageRequest;
-use Questionnaire\Models\Page;
+use App\Models\Page;
 use App\Models\Questionnaire;
 use Questionnaire\Models\QuestionnaireEntry;
 use Questionnaire\Models\QuestionnaireInvite;

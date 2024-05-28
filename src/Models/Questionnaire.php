@@ -186,7 +186,7 @@ class Questionnaire extends Model
 
     public function getRoute($suffix, $page = null): string
     {
-        if ($this->tenant_id !== null && $this->hasOption('created_by') && $this->getOption('created_by') > 0) {
+        if ($this->tenant_id !== null) {
             $this->loadMissing('tenant');
 
             return route($this->getRouteNameFor($suffix), ['tenant_id' => $this->tenant->id, 'questionnaire_slug' => $this->slug, 'page_slug' => $page->slug]);
@@ -199,6 +199,8 @@ class Questionnaire extends Model
     {
         if ($this->hasOption('route_prefix')) {
             return $this->getOption('route_prefix');
+        } else if ($this->tenant_id !== null) {
+            return 'tenant-questionnaire';
         }
 
         return 'questionnaire.';
