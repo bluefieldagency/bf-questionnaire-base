@@ -22,6 +22,18 @@
                             @endif
                         @endif
 
+                        @if (session()->has('tenant_languages'))
+                            <nav class="language-dropdown dark-mode">
+                                <div class="dropdown-button large-link grey">@svg('globe') <span>EN</span></div>
+
+                                <ul class="dropdown-content">
+                                    @foreach(session('tenant_languages') as $code => $languageName)
+                                        <li><a href="{{ $questionnaire->getRoute('switch-language', $page, ['language' => $code]) }}" class="aeonik16">{{ ucfirst($languageName) }}</a></li>
+                                    @endforeach
+                                </ul>
+                            </nav>
+                        @endif
+
                         @if ( ! $questionnaire->hasOption('contact_form_enabled') || ($questionnaire->hasOption('contact_form_enabled') && $questionnaire->getOption('contact_form_enabled') !== false))
                             <a class="large-link contact-link" href="{{ route('contact') }}" target="_blank">@lang('bf::translations.contact-us')</a>
                         @endif

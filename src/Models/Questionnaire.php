@@ -184,15 +184,26 @@ class Questionnaire extends Model
         return false;
     }
 
-    public function getRoute($suffix, $page = null): string
+    public function getRoute($suffix, $page = null, $additionalParameters = []): string
     {
         if ($this->tenant_id !== null) {
             $this->loadMissing('tenant');
 
-            return route($this->getRouteNameFor($suffix), ['tenant_id' => $this->tenant->id, 'questionnaire_slug' => $this->slug, 'page_slug' => $page->slug]);
+            $parameters = array_merge(['tenant_id' => $this->tenant->id, 'questionnaire_slug' => $this->slug, 'page_slug' => $page->slug], $additionalParameters);
+
+            return route($this->getRouteNameFor($suffix), $parameters);
         }
 
-        return route($this->getRouteNameFor($suffix), [$this, $page]);
+        $parameters = array_merge([$this, $page], $additionalParameters);
+
+        return route($this->getRouteNameFor($suffix), $parameters);
+    }
+
+    public function getRouteNameFor($suffix): string
+    {
+        $prefix = rtrim($this->getRoutePrefix(), '.') . '.';
+
+        return $prefix . $suffix;
     }
 
     public function getRoutePrefix(): mixed
@@ -204,13 +215,6 @@ class Questionnaire extends Model
         }
 
         return 'questionnaire.';
-    }
-
-    public function getRouteNameFor($suffix): string
-    {
-        $prefix = rtrim($this->getRoutePrefix(), '.') . '.';
-
-        return $prefix . $suffix;
     }
 
     static public function resetSession()
