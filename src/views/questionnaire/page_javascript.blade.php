@@ -35,13 +35,13 @@
             if (parent.classList.contains('has-children')) {
                 let additionalChildrenContainer = parent.querySelector('ul.additional-questions-container');
                 if (additionalChildrenContainer) {
-                    additionalChildrenContainer.classList.remove('visible');
+                    // additionalChildrenContainer.classList.remove('visible');
 
                     // reset all the additional questions back to hidden
                     let additionalChildren = parent.querySelectorAll('li.additional-question-container');
                     if (additionalChildren.length > 0) {
                         additionalChildren.forEach(function (element, index) {
-                            element.classList.remove('visible');
+                            // element.classList.remove('visible');
 
                             element.querySelectorAll('input, textarea').forEach(function(input, index) {
                                 input.required = false;
@@ -181,13 +181,13 @@
             if (parent.classList.contains('has-children')) {
                 let additionalChildrenContainer = parent.querySelector('ul.additional-questions-container');
                 if (additionalChildrenContainer) {
-                    additionalChildrenContainer.classList.remove('visible');
+                    // additionalChildrenContainer.classList.remove('visible');
 
                     // reset all the additional questions back to hidden
                     let additionalChildren = parent.querySelectorAll('li.additional-question-container');
                     if (additionalChildren.length > 0) {
                         additionalChildren.forEach(function (element, index) {
-                            element.classList.remove('visible');
+                            // element.classList.remove('visible');
 
                             element.querySelectorAll('input, textarea').forEach(function(input, index) {
                                 input.required = false;
@@ -549,7 +549,7 @@
 
             let additionalChildrenContainer = parent.querySelector('ul.additional-questions-container');
             if (additionalChildrenContainer) {
-                additionalChildrenContainer.classList.remove('visible');
+                // additionalChildrenContainer.classList.remove('visible');
             }
 
             // questions can have additonal questions (children), which are triggered by specific answer data types
@@ -561,7 +561,7 @@
                     let additionalChildren = parent.querySelectorAll('li.additional-question-container');
                     if (additionalChildren.length > 0) {
                         additionalChildren.forEach(function (element, index) {
-                            element.classList.remove('visible');
+                            // element.classList.remove('visible');
 
                             element.querySelectorAll('input, textarea').forEach(function(input, index) {
                                 input.required = false;

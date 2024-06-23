@@ -33,7 +33,7 @@
                             @if (sizeof($question->answers) < 1 && in_array($question->question_type->type, ['radio', 'checkbox', 'select']))
                                 {{-- do not disable questions with missing answers, so the link to the CMS works --}}
                             @else
-                                disabled
+                                disablednot
                             @endif
                         @endif
                         @if (sizeof($question->children))
