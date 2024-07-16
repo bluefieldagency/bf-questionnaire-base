@@ -186,7 +186,7 @@ class Questionnaire extends Model
 
     public function getRoute($suffix, $page = null, $additionalParameters = []): string
     {
-        if ($this->tenant_id !== null) {
+        if ($this->tenant_id !== null && ! $this->hasOption('is_global')) {
             $this->loadMissing('tenant');
 
             $parameters = array_merge(['tenant_id' => $this->tenant->id, 'questionnaire_slug' => $this->slug, 'page_slug' => $page->slug], $additionalParameters);

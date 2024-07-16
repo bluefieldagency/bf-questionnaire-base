@@ -66,7 +66,9 @@ completed_view | string, a view to show when you have completed the questionnair
 
 show_fixed_data_types | boolean, should the fixed data types (found in the QuestionnaireEntry class) be put in the admin notification mail?
 
-notify_owner | boolean, sometimes you do not want the default admin mail to happen, and handle it yourself in the ProjectHandler 
+notify_owner | boolean, sometimes you do not want the default admin mail to happen, and handle it yourself in the ProjectHandler
+
+is_global | boolean, for a questionnaire that is not linked to a specific tenant, but available to all tenants
 
 ### QuestionnaireInvite
 
