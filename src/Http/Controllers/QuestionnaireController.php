@@ -4,8 +4,8 @@ namespace Questionnaire\Http\Controllers;
 
 use App\Models\QuestionnaireInvite;
 use Illuminate\Support\Facades\Auth;
-use Questionnaire\Models\Page;
-use Questionnaire\Models\Questionnaire;
+use App\Models\Page;
+use App\Models\Questionnaire;
 
 class QuestionnaireController extends Controller
 {
