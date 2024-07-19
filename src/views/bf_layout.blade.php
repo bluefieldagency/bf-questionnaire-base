@@ -22,7 +22,7 @@
                             @endif
                         @endif
 
-                        @if (session()->has('tenant_languages') && ($questionnaire->hasOption('is_translatable') && $questionnaire->getOption('is_translatable') !== false))
+                        @if (session()->has('tenant_languages') && (($questionnaire->hasOption('is_translatable') && $questionnaire->getOption('is_translatable') !== false) || ! $questionnaire->hasOption('is_translatable')))
                             <nav class="language-dropdown dark-mode">
                                 <div class="dropdown-button large-link grey">@svg('globe') <span>EN</span></div>
 
