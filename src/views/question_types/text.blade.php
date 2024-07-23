@@ -7,10 +7,10 @@
     @elseif ($question->hasOption('data_type') && session()->has('questionnaire.' . $question->getOption('data_type')))
         value="{{ session('questionnaire.' . $question->getOption('data_type')) }}"
     @endif
-    @if ($question->hasOption('placeholder'))
-        placeholder="{{ $question->getOption('placeholder') }}"
-    @elseif ($question->question_type->hasOption('placeholder'))
-        placeholder="{{ $question->question_type->getOption('placeholder') }}"
+    @if ($question->placeholder)
+        placeholder="{{ $question->placeholder }}"
+    @elseif ($question->question_type->placeholder)
+        placeholder="{{ $question->question_type->placeholder }}"
     @endif
     @if ($question->is_required && ( ! isset($child) || $child === false))
         required

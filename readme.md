@@ -42,7 +42,9 @@ answer_trigger | string, if this question is a child of another question, this d
 
 score_max | int, how many points could you possibly score for this question? Used in multi checkbox questions
 
-placeholder | string, what placeholder should this input show?
+// DEPRECATED: this is now an attribute in questions
+// placeholder | string, what placeholder should this input show?
+// DEPRECATED
 
 columns | int, the number of columns multiple checkboxes should be displayed in
 

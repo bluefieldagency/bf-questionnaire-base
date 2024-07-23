@@ -99,19 +99,6 @@ class Question extends Model implements Sortable
         return $answers[$answerId];
     }
 
-    public function getPlaceholderAttribute(): mixed
-    {
-        if ($this->hasOption('placeholder')) {
-            return $this->getOption('placeholder');
-        }
-
-        if ($this->question_type->hasOption('placeholder')) {
-            return $this->question_type->getOption('placeholder');
-        }
-
-        return null;
-    }
-
     /**
      * Scope a query to only include active entries
      *
