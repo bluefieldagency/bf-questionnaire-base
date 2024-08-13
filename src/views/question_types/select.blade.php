@@ -4,9 +4,9 @@
     class="@if ($question->is_required && ( ! isset($child) || $child === false)) is-required @endif"
 >
     @if ($question->placeholder)
-        <option value="">{{ $question->placeholder }}</option>
+        <option value="" disabled>{{ $question->placeholder }}</option>
     @elseif ($question->question_type->placeholder)
-        <option value="">{{ $question->question_type->placeholder }}</option>
+        <option value="" disabled>{{ $question->question_type->placeholder }}</option>
     @endif
     @foreach($question->answers as $answer)
         <option
