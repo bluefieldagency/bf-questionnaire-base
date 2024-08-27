@@ -30,15 +30,27 @@ class PageRequest extends FormRequest
      */
     public function rules()
     {
+        $parameters = request()->route()->parameters();
+
         // Get bound Page model from route
         if ($this->route('page')) {
             $this->page = $this->route('page');
-        } else {
-            $parameters = request()->route()->parameters();
+        }
 
-            $questionnaire = $this->getQuestionnaire($parameters['tenant_id'], $parameters['questionnaire_slug']);
+        if ( ! is_a($this->page, 'Page') || is_string($this->page)) {
+            if (isset($parameters['tenant_id'])) {
+                $questionnaire = $this->getQuestionnaire($parameters['questionnaire_slug'], $parameters['tenant_id']);
+            } else if (isset($parameters['questionnaire_slug'])) {
+                $questionnaire = $this->getQuestionnaire($parameters['questionnaire_slug']);
+            } else {
+                $questionnaire = $this->getQuestionnaire($parameters['questionnaire']);
+            }
 
-            $this->page = $this->getPage($questionnaire, $parameters['page_slug']);
+            if (isset($parameters['page_slug'])) {
+                $this->page = $this->getPage($questionnaire, $parameters['page_slug']);
+            } else {
+                $this->page = $this->getPage($questionnaire, $parameters['page']);
+            }
         }
 
         $this->page->loadMissing([
