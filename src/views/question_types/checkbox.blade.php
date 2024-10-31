@@ -5,7 +5,7 @@
                 type="checkbox"
                 id="question_{{ $question->id }}_answer_{{ $answer->id }}"
                 name="question_{{ $question->id }}_answer[{{ $answer->id }}]"
-                value="1"
+                value="{{ $answer->id }}"
                 class="
                     @if ($question->is_required) is-required @endif
                 "
