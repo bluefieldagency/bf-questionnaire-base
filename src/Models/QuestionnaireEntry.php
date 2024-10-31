@@ -219,7 +219,17 @@ class QuestionnaireEntry extends Model
                         continue;
                     }
 
-                    if (isset($givenAnswer['question_' . $question->id . '_answer'])) {
+                    if (in_array($question->question_type->type, ['radio', 'checkbox']) && is_array($givenAnswer['question_' . $question->id . '_answer'])) {
+                        $selectedAnswers = [];
+                        foreach($givenAnswer['question_' . $question->id . '_answer'] as $answerId => $value) {
+                            foreach($question->answers as $answer) {
+                                if ($answer->id == $answerId) {
+                                    $selectedAnswers[] = $answer->title;
+                                }
+                            }
+                        }
+                        $foundAnswer = implode(', ', $selectedAnswers);
+                    } else if (isset($givenAnswer['question_' . $question->id . '_answer'])) {
                         $foundAnswer = null;
 
                         foreach ($question->answers as $answer) {
@@ -231,11 +241,11 @@ class QuestionnaireEntry extends Model
                         if ( ! $foundAnswer) {
                             $foundAnswer = $givenAnswer['question_' . $question->id . '_answer'];
                         }
-
-                        $questions[$question->id] = $foundAnswer;
-
-                        $pagesAnswered[$page->id] = true;
                     }
+
+                    $questions[$question->id] = $foundAnswer;
+
+                    $pagesAnswered[$page->id] = true;
                 }
             }
         }
