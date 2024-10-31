@@ -148,12 +148,14 @@ class QuestionnaireEntry extends Model
         return $this->scoredScores;
     }
 
-    public function getScore($category)
+    public function getScore($category, $questionId = null)
     {
         $this->getScores();
 
         if (isset($this->scoredScores[$category])) {
             return (int) $this->scoredScores[$category];
+        } else if (isset($this->scoredScores['scorePerQuestion'][$questionId])) {
+            return (int) $this->scoredScores['scorePerQuestion'][$questionId];
         }
 
         return false;
