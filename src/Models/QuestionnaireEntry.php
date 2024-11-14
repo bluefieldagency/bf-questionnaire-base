@@ -163,12 +163,14 @@ class QuestionnaireEntry extends Model
         return $this->scoredScores;
     }
 
-    public function getScore($category)
+    public function getScore($category, $questionId = null)
     {
         $this->getScores();
 
         if (isset($this->scoredScores[$category])) {
             return (int) $this->scoredScores[$category];
+        } else if (isset($this->scoredScores['scorePerQuestion'][$questionId])) {
+            return (int) $this->scoredScores['scorePerQuestion'][$questionId];
         }
 
         return false;
@@ -234,9 +236,18 @@ class QuestionnaireEntry extends Model
                         continue;
                     }
 
-                    if (isset($givenAnswer['question_' . $question->id . '_answer'])) {
-                        $foundAnswer = null;
-
+                    $foundAnswer = null;
+                    if (in_array($question->question_type->type, ['radio', 'checkbox']) && is_array($givenAnswer['question_' . $question->id . '_answer'])) {
+                        $selectedAnswers = [];
+                        foreach($givenAnswer['question_' . $question->id . '_answer'] as $answerId => $value) {
+                            foreach($question->answers as $answer) {
+                                if ($answer->id == $answerId) {
+                                    $selectedAnswers[] = $answer->title;
+                                }
+                            }
+                        }
+                        $foundAnswer = implode(', ', $selectedAnswers);
+                    } else if (isset($givenAnswer['question_' . $question->id . '_answer'])) {
                         foreach ($question->answers as $answer) {
                             if ($answer->id == $givenAnswer['question_' . $question->id . '_answer']) {
                                 $foundAnswer = $answer->title;
@@ -246,7 +257,9 @@ class QuestionnaireEntry extends Model
                         if ( ! $foundAnswer) {
                             $foundAnswer = $givenAnswer['question_' . $question->id . '_answer'];
                         }
+                    }
 
+                    if ($foundAnswer) {
                         $questions[$question->id] = $foundAnswer;
 
                         $pagesAnswered[$page->id] = true;
