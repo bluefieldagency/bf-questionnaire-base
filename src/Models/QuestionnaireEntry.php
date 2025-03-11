@@ -153,6 +153,10 @@ class QuestionnaireEntry extends Model
         $this->getScores();
 
         if (isset($this->scoredScores[$category])) {
+            if (is_array($this->scoredScores[$category])) {
+                return $this->scoredScores[$category];
+            }
+
             return (int) $this->scoredScores[$category];
         } else if (isset($this->scoredScores['scorePerQuestion'][$questionId])) {
             return (int) $this->scoredScores['scorePerQuestion'][$questionId];

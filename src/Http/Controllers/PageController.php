@@ -470,9 +470,17 @@ class PageController extends Controller
             $questionnaireEntry->user_id = Auth::user()->id;
         }
 
+        if ( ! empty($questionnaire->handler_class)) {
+            $handler = app($questionnaire->handler_class);
+        }
+
         foreach (QuestionnaireEntry::$fixedDataTypes as $fixedDataType) {
             if (session()->has('questionnaire.' . $fixedDataType)) {
                 $questionnaireEntry->setAttribute($fixedDataType, session('questionnaire.' . $fixedDataType));
+            } else {
+                if ($handler) {
+                    $questionnaireEntry->setAttribute($fixedDataType, $handler->getDefaultValue($fixedDataType));
+                }
             }
         }
 

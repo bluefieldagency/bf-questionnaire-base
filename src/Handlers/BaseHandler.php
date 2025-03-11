@@ -64,4 +64,6 @@ class BaseHandler
         return preg_replace('/\[[^\]]*\]/', '', $value);
     }
 
+    public function getDefaultValue($fixedDataType) {}
+
 }
