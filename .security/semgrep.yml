@@ -1,0 +1,45 @@
+# Semgrep Configuration voor PHP/Laravel Security Analysis
+# ISO 27001 Annex A Controls Mapping
+
+rules:
+  # A.9.4.2 - Secure log-on procedures
+  - id: laravel-debug-mode-production
+    pattern-either:
+      - pattern: |
+          'debug' => true
+      - pattern: |
+          "debug" => true
+    message: "Debug mode should be disabled in production (ISO 27001 A.12.4.1)"
+    languages: [php]
+    severity: HIGH
+    metadata:
+      iso27001: "A.12.4.1 - Event logging"
+      cvss: "5.3"
+
+  # A.14.2.1 - Secure development policy  
+  - id: laravel-sql-injection
+    pattern-either:
+      - pattern: |
+          DB::raw($VAR)
+      - pattern: |
+          \DB::raw($VAR)
+    message: "Potential SQL injection via DB::raw() (ISO 27001 A.14.2.1)"
+    languages: [php]
+    severity: HIGH
+    metadata:
+      iso27001: "A.14.2.1 - Secure development policy"
+      cvss: "9.8"
+
+  # A.9.2.3 - Management of privileged access rights
+  - id: laravel-authorization-bypass
+    pattern-either:
+      - pattern: |
+          return true;
+      - pattern: |
+          function authorize() { return true; }
+    message: "Authorization always returns true (ISO 27001 A.9.2.3)"
+    languages: [php]
+    severity: HIGH
+    metadata:
+      iso27001: "A.9.2.3 - Management of privileged access rights"
+      cvss: "8.8"
