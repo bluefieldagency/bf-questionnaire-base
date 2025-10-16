@@ -47,3 +47,9 @@ Thumbs.db
 *.mov
 *.wmv
 
+# Security testing reports (keep templates, ignore generated files)
+/reports/*.json
+/reports/*.tmp
+/reports/*.log
+/reports/*-output.txt
+
