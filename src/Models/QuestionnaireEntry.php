@@ -72,6 +72,21 @@ class QuestionnaireEntry extends Model
                 ]));
             }
         });
+
+        static::deleting(function ($model) {
+            // Check if the class exists, because it's a vendor package and
+            // the class might not be available in the app.
+            if (! class_exists('App\Models\TextSuggestion')) {
+                return;
+            }
+
+            $textSuggestions = app('App\Models\TextSuggestion')
+                ->where('questionnaire_entry_id', $model->id)
+                ->get()
+                ->each(function($textSuggestion) {
+                    $textSuggestion->delete();
+                });
+        });
     }
 
     /**
